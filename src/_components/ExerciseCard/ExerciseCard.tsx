@@ -1,8 +1,10 @@
 import React from "react";
 
 import clsx from "clsx";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { IExerciseData } from "./interface";
+import { useNavigate } from "react-router";
 
 interface IProps {
   data: IExerciseData;
@@ -13,8 +15,17 @@ interface IProps {
 export const ExerciseCard = (props: IProps) => {
   const { data, index, gradient = "from-blue-500 to-cyan-500" } = props;
 
+  const navigate = useNavigate();
+
+  const openApproaches = () => {
+    navigate(data.title);
+  };
+
   return (
-    <div className="text-card-foreground rounded-xl p-5 cursor-pointer hover:shadow-xl bg-white/85">
+    <div
+      className="text-card-foreground rounded-xl p-5 cursor-pointer hover:shadow-xl bg-white/85"
+      onClick={openApproaches}
+    >
       <div className="flex items-center gap-4">
         <div
           className={clsx(
@@ -30,6 +41,11 @@ export const ExerciseCard = (props: IProps) => {
             {data.approaches} подхода
           </div>
         </div>
+        <ArrowForwardIosIcon
+          className="ml-auto"
+          fontSize="small"
+          color="action"
+        />
       </div>
     </div>
   );

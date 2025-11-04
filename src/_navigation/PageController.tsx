@@ -8,6 +8,7 @@ import { Main } from "./pages/Main/Main";
 import { Calendar } from "./pages/Calendar";
 import { Progress } from "./pages/Progress";
 import { Exercises } from "./pages/Exercises/Exercises";
+import Approaches from "./pages/Approaches/Approaches";
 
 const PageController = () => {
   const [url, setUrl] = useState(EPageRoutes.main);
@@ -29,6 +30,10 @@ const PageController = () => {
           <Route
             path={EPageRoutes.exercises + "/:program"}
             element={<Exercises />}
+          />
+          <Route
+            path={EPageRoutes.exercises + "/:program" + "/:exercise"}
+            element={<Approaches />}
           />
         </Routes>
       </div>

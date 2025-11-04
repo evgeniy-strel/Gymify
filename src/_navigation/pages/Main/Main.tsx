@@ -10,10 +10,10 @@ export const Main = () => {
 
   useEffect(() => {
     getPrograms().then((data) => setPrograms(data));
-  });
+  }, []);
 
   if (!programs) {
-    return "Loading...";
+    return <></>;
   }
 
   return (

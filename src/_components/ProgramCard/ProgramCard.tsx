@@ -90,7 +90,7 @@ const ProgramCard = (props: IProps) => {
             </div>
           </div>
         </div>
-        <ArrowForwardIosIcon fontSize="small" color="disabled" />
+        <ArrowForwardIosIcon fontSize="small" color="action" />
       </div>
       <ProgressBar
         gradient={mainGradient}
