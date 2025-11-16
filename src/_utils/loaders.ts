@@ -1,5 +1,14 @@
 import { supabase } from "./supabase";
 
+export interface IExercise {
+  id: string;
+  day_id: string;
+  title: string;
+  is_completed: boolean;
+  sets_count: number;
+  created_at: Date;
+}
+
 export interface IProgram {
   id: string;
   title: string;
@@ -26,6 +35,20 @@ export interface IDay {
   exercises_count: number;
 }
 
+export async function getSets(exerciseId: string) {
+  const { data, error } = await supabase
+    .from("Sets")
+    .select("*")
+    .eq("exercise_id", exerciseId)
+    .order("order", { ascending: true });
+
+  if (error) {
+    return [];
+  }
+
+  return data;
+}
+
 export async function getPrograms(): IProgram[] {
   const { data, error } = await supabase.from("Programs").select("*");
   if (error) {
@@ -47,6 +70,40 @@ export async function getProgram(id: string) {
   }
 
   return data;
+}
+
+export async function getExercises(
+  programId: string,
+  week: number,
+  day: number
+) {
+  const dayId = `${programId}_${week}_${day}`;
+
+  const { data, error } = await supabase
+    .from("Exercises")
+    .select(
+      `
+      *,
+      Sets(count)
+    `
+    )
+    .eq("day_id", dayId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    return [];
+  }
+
+  // Преобразуем Sets(count) в sets_count
+  return data.map((ex) => {
+    const sets_count = ex.Sets?.[0]?.count ?? 0;
+    const { Sets, ...rest } = ex;
+
+    return {
+      ...rest,
+      sets_count,
+    };
+  });
 }
 
 export async function getWeeks(programId: string): IWeek[] {

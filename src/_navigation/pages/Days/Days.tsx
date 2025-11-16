@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import clsx from "clsx";
+import { EPageRoutes } from "../../consts";
 
 interface IHeaderProps {
   program: IWeek;
@@ -64,7 +65,9 @@ interface IProps {
 const ItemTemplate = ({ item }: IProps) => {
   const navigate = useNavigate();
 
-  const onClick = useCallback(() => {}, []);
+  const onClick = useCallback(() => {
+    navigate(EPageRoutes.days.slice(1) + "/" + item.number);
+  }, []);
 
   const iconUrl = useMemo(() => MAP_ICON[item.title], [item]);
 

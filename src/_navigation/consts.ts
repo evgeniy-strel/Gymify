@@ -4,6 +4,7 @@ export enum EPageRoutes {
   progress = "/progress",
   exercises = "/exercises",
   weeks = "/weeks",
+  days = "/days",
   auth = "/auth",
 }
 

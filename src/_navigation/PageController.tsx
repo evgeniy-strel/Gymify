@@ -37,7 +37,24 @@ const PageController = () => {
             element={<Days />}
           />
           <Route
-            path={EPageRoutes.exercises + "/:program" + "/:exercise"}
+            path={
+              "/:programId" +
+              EPageRoutes.weeks +
+              "/:weekNumber" +
+              EPageRoutes.days +
+              "/:dayNumber"
+            }
+            element={<Exercises />}
+          />
+          <Route
+            path={
+              "/:programId" +
+              EPageRoutes.weeks +
+              "/:weekNumber" +
+              EPageRoutes.days +
+              "/:dayNumber" +
+              "/:exerciseId"
+            }
             element={<Approaches />}
           />
         </Routes>

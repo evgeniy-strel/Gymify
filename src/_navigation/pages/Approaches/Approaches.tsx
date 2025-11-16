@@ -41,7 +41,7 @@ const Header = (props: any) => {
 };
 
 const Approaches = () => {
-  const { exercise: exerciseTitle, program: programId } = useParams();
+  const { programId, weekNumber, dayNumber, exerciseId } = useParams();
   const [exercise, setExercise] = useState<IExercise>();
   const [program, setProgram] = useState<IProgram>();
 

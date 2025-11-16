@@ -7,18 +7,17 @@ import { useNavigate } from "react-router";
 import type { IExercise } from "../../utils";
 
 interface IProps {
-  data: IExercise;
+  item: IExercise;
   index: number;
-  gradient: string;
 }
 
 export const ExerciseCard = (props: IProps) => {
-  const { data, index, gradient = "from-blue-500 to-cyan-500" } = props;
+  const { item, index } = props;
 
   const navigate = useNavigate();
 
   const openApproaches = () => {
-    navigate(data.title);
+    navigate(item.id);
   };
 
   return (
@@ -27,18 +26,15 @@ export const ExerciseCard = (props: IProps) => {
       onClick={openApproaches}
     >
       <div className="flex items-center gap-4">
-        <div
-          className={clsx(
-            "w-13 h-13 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg text-white flex-shrink-0",
-            gradient
-          )}
-        >
+        <div className="w-13 h-13 rounded-2xl flex items-center justify-center shadow-lg text-white flex-shrink-0 bg-blue-600">
           <div className="text-xl">{index}</div>
         </div>
         <div>
-          <div className="mb-1">{data.title}</div>
+          <div className="mb-1">{item.title}</div>
           <div className="rounded-full flex items-center gap-2 text-sm text-gray-500">
-            {data.approaches.length} подхода
+            {item.sets_count
+              ? `${item.sets_count} подхода`
+              : "подходы не заполнены"}
           </div>
         </div>
         <ArrowForwardIosIcon
