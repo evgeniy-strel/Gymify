@@ -3,6 +3,8 @@ export enum EPageRoutes {
   calendar = "/calendar",
   progress = "/progress",
   exercises = "/exercises",
+  weeks = "/weeks",
+  auth = "/auth",
 }
 
 const PAGES = {

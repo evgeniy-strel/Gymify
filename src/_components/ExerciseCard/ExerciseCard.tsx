@@ -3,11 +3,11 @@ import React from "react";
 import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import { IExerciseData } from "./interface";
 import { useNavigate } from "react-router";
+import type { IExercise } from "../../utils";
 
 interface IProps {
-  data: IExerciseData;
+  data: IExercise;
   index: number;
   gradient: string;
 }
@@ -38,7 +38,7 @@ export const ExerciseCard = (props: IProps) => {
         <div>
           <div className="mb-1">{data.title}</div>
           <div className="rounded-full flex items-center gap-2 text-sm text-gray-500">
-            {data.approaches} подхода
+            {data.approaches.length} подхода
           </div>
         </div>
         <ArrowForwardIosIcon

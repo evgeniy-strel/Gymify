@@ -8,22 +8,20 @@ import { useNavigate } from "react-router";
 import { EPageRoutes } from "../../navigation";
 
 const ProgressBar = (props: any) => {
-  const { currentWeek, totalWeek } = props;
+  const { currentWeek, countWeek, gradient } = props;
 
-  const percent = (currentWeek / totalWeek) * 100;
+  const percent = (currentWeek / countWeek) * 100;
 
   return (
     <div>
       <div className="flex justify-between text-xs text-gray-500 mb-1">
         <div className="">Прогресс цикла</div>
-        <div className="">
-          {currentWeek} / {totalWeek} неделя
-        </div>
+        <div className="">{percent}%</div>
       </div>
-      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-gray-200 w-full rounded-full overflow-hidden">
         <div
           style={{ width: `${percent}%` }}
-          className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+          className={clsx("h-full bg-gradient-to-r", gradient)}
         ></div>
       </div>
     </div>
@@ -49,34 +47,59 @@ interface IProps {
   id: string;
   title: string;
   description: string;
+  className: string;
+  mainGradient: string;
+  addGradient: string;
+  iconUrl: string;
   currentWeek: number;
-  totalWeek: number;
+  countWeek: number;
 }
 
 const ProgramCard = (props: IProps) => {
-  const { id, title, description, currentWeek, totalWeek } = props;
+  const {
+    id,
+    title,
+    description,
+    className,
+    mainGradient,
+    addGradient,
+    iconUrl,
+    currentWeek,
+    countWeek,
+  } = props;
 
   const navigate = useNavigate();
 
   const onClick = useCallback(() => {
-    navigate("/" + id + EPageRoutes.weeks);
+    navigate(EPageRoutes.exercises + "/" + id);
   }, [id]);
 
   return (
     <div
-      className="w-full bg-white rounded-2xl shadow-md p-5"
+      className={clsx(
+        "p-6 rounded-xl cursor-pointer bg-gradient-to-br",
+        className,
+        addGradient
+      )}
       onClick={onClick}
     >
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <div className="text-blue-600 text-xl mb-1">{title}</div>
-          <div className="text-gray-600 text-sm">
-            {totalWeek}-недельная программа
+      <div className="flex items-center justify-between">
+        <div className="flex gap-4 items-center mb-4">
+          <Icon className={mainGradient} url={iconUrl} />
+          <div>
+            <div className="text-xl">{title}</div>
+            <div>
+              Неделя {currentWeek} из {countWeek}
+            </div>
           </div>
         </div>
         <ArrowForwardIosIcon fontSize="small" color="action" />
       </div>
-      <ProgressBar currentWeek={currentWeek} totalWeek={totalWeek} />
+      <ProgressBar
+        gradient={mainGradient}
+        currentWeek={currentWeek}
+        countWeek={countWeek}
+      />
     </div>
   );
 };

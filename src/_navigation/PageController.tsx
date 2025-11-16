@@ -9,6 +9,9 @@ import { Calendar } from "./pages/Calendar";
 import { Progress } from "./pages/Progress";
 import { Exercises } from "./pages/Exercises/Exercises";
 import Approaches from "./pages/Approaches/Approaches";
+import Auth from "./pages/Auth/Auth";
+import Weeks from "./pages/Weeks/Weeks";
+import Days from "./pages/Days/Days";
 
 const PageController = () => {
   const [url, setUrl] = useState(EPageRoutes.main);
@@ -21,15 +24,17 @@ const PageController = () => {
   }, []);
 
   return (
-    <div className="flex flex-col overflow-hidden h-dvh">
+    <div className="flex flex-col overflow-hidden h-dvh bg-gradient-to-br from-blue-50 to-white">
       <div className="h-full overflow-hidden">
         <Routes>
           <Route path={EPageRoutes.main} element={<Main />} />
           <Route path={EPageRoutes.calendar} element={<Calendar />} />
           <Route path={EPageRoutes.progress} element={<Progress />} />
+          <Route path={EPageRoutes.auth} element={<Auth />} />
+          <Route path={"/:programId" + EPageRoutes.weeks} element={<Weeks />} />
           <Route
-            path={EPageRoutes.exercises + "/:program"}
-            element={<Exercises />}
+            path={"/:programId" + EPageRoutes.weeks + "/:weekNumber"}
+            element={<Days />}
           />
           <Route
             path={EPageRoutes.exercises + "/:program" + "/:exercise"}
