@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { getDays, IDay, IWeek } from "../../../utils";
+import { EPageRoutes } from "../../consts";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DoneIcon from "@mui/icons-material/Done";
 import clsx from "clsx";
-import { EPageRoutes } from "../../consts";
 
 interface IHeaderProps {
   program: IWeek;
@@ -39,12 +40,15 @@ const Header = ({ program }: any) => {
 };
 
 const Icon = (props: any) => {
-  const { url } = props;
+  const { url, item } = props;
 
   return (
     <div
       className={clsx(
-        "w-16 h-16 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg p-2 shrink-0 from-blue-500 to-blue-600"
+        "w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg p-2 shrink-0 bg-gradient-to-br from-blue-500 to-blue-600",
+        {
+          "border-1": item.is_completed,
+        }
       )}
     >
       <img className="w-full h-full" src={url} />
@@ -72,16 +76,31 @@ const ItemTemplate = ({ item }: IProps) => {
   const iconUrl = useMemo(() => MAP_ICON[item.title], [item]);
 
   return (
-    <div className="w-full p-5 rounded-xl bg-white shadow-sm" onClick={onClick}>
+    <div
+      className={clsx("w-full p-5 rounded-xl shadow-sm", {
+        "bg-white text-black": !item.is_completed,
+        "bg-gradient-to-r from-blue-500 to-blue-600 text-white":
+          item.is_completed,
+      })}
+      onClick={onClick}
+    >
       <div className="flex items-center justify-between">
         <div className="flex gap-4 items-center">
-          <Icon url={iconUrl} />
+          <Icon url={iconUrl} item={item} />
           <div>
             <div className="text-xl">{item.title}</div>
             <div>{item.exercises_count} упражнений</div>
           </div>
         </div>
-        <ArrowForwardIosIcon fontSize="small" color="action" />
+        {item.is_completed ? (
+          <DoneIcon className="ml-auto" sx={{ color: "white" }} />
+        ) : (
+          <ArrowForwardIosIcon
+            className="ml-auto"
+            fontSize="small"
+            color="action"
+          />
+        )}
       </div>
     </div>
   );

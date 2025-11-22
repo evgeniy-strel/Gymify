@@ -1,12 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import {
-  SetsService,
-  type IApproache,
-  type IExercise,
-  type IProgram,
-  type ISet,
-} from "../../../utils";
+import type { IApproache, IExercise, IProgram, ISet } from "../../../utils";
 import { ApproachesContext } from "./Context";
 import styles from "./List.module.less";
 
@@ -19,7 +13,7 @@ const Header = () => {
   return (
     <div
       className={clsx(
-        "px-5 pb-1 text-xs text-gray-500 uppercase tracking-wide",
+        "px-4 pb-1 text-xs text-gray-500 uppercase tracking-wide",
         styles.GridItem
       )}
     >
@@ -48,14 +42,11 @@ const ItemTemplate = ({
 
   return (
     <div
-      className={clsx(
-        "grid rounded-xl p-5 shadow-sm rounded-xl border-0 bg-white",
-        styles.GridItem,
-        {
-          "bg-white border-gray-200": !item.is_completed,
-          "bg-gradient-to-r from-blue-500 to-blue-600": item.is_completed,
-        }
-      )}
+      className={clsx("grid rounded-xl p-4 border-2", styles.GridItem, {
+        "bg-white border-gray-200": !item.is_completed,
+        "bg-gradient-to-r from-blue-500 to-blue-600 border-blue-700":
+          item.is_completed,
+      })}
     >
       <div className="flex items-center justify-center min-w-10 text-center py-2 px-2 rounded-lg text-sm bg-gray-100 text-gray-600">
         #{index + 1}
@@ -97,16 +88,10 @@ interface IListProps {
 const List = (props: IListProps) => {
   const { items, setItems } = props;
 
-  const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
-    const newItem: ISet = { ...item, is_completed: isCompleted };
-    SetsService.update({
-      id: newItem.id,
-      is_completed: newItem.is_completed,
-    });
-
+  const onToggleCheckBox = (isCompleted: boolean, item: ISet) => {
     const newItems: ISet[] = items.map((_item: ISet, _index: number) => {
       if (_item.id === item.id) {
-        return newItem;
+        return { ...item, is_completed: isCompleted };
       }
       return _item;
     });
@@ -122,19 +107,15 @@ const List = (props: IListProps) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div>
-        <Header />
-      </div>
-      <div className="flex flex-col gap-2.5">
-        {items.map((item, index) => (
-          <ItemTemplate
-            item={item}
-            index={index}
-            key={index}
-            onToggleCheckbox={onToggleCheckBox}
-          />
-        ))}
-      </div>
+      <Header />
+      {items.map((item, index) => (
+        <ItemTemplate
+          item={item}
+          index={index}
+          key={index}
+          onToggleCheckbox={onToggleCheckBox}
+        />
+      ))}
     </div>
   );
 };

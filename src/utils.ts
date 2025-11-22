@@ -8,5 +8,9 @@ export {
   getDays,
   getProgram,
   getExercises,
+  getExerciseById,
+  getSets,
 } from "./_utils/loaders";
-export type { IWeek, IDay, IProgram, IExercise } from "./_utils/loaders";
+export { default as SetsService } from "./_utils/service/Sets";
+export { default as ExercisesService } from "./_utils/service/Exercises";
+export type { IWeek, IDay, IProgram, IExercise, ISet } from "./_utils/loaders";

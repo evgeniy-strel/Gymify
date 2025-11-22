@@ -1,19 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  getExercise,
-  getProgram,
-  IApproache,
-  type IProgram,
+  ExercisesService,
+  getExerciseById,
+  getSets,
   type IExercise,
+  type ISet,
 } from "../../../utils";
-import { ApproachesContext } from "./Context";
 import List from "./List";
 
 import clsx from "clsx";
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button } from "@mui/material";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const Header = (props: any) => {
   const { exercise } = props;
@@ -41,63 +40,74 @@ const Header = (props: any) => {
 };
 
 const Approaches = () => {
-  const { programId, weekNumber, dayNumber, exerciseId } = useParams();
+  const { exerciseId } = useParams();
+  const [sets, setSets] = useState<ISet[]>();
   const [exercise, setExercise] = useState<IExercise>();
-  const [program, setProgram] = useState<IProgram>();
 
-  const completed = useMemo(() => {
-    return (
-      exercise?.approaches.filter((item: IApproache) => item.isCompleted)
-        .length || 0
-    );
-  }, [exercise]);
+  const allCompleted = useMemo(() => {
+    return sets?.every((item: ISet) => item.is_completed);
+  }, [sets]);
 
   useEffect(() => {
-    Promise.all([
-      getExercise({ program: programId, title: exerciseTitle }),
-      getProgram({ id: programId }),
-    ]).then((data: any) => {
-      const [exerciseData, programData] = data;
-      setExercise(exerciseData);
-      setProgram(programData);
-    });
-  }, [programId]);
+    Promise.all([getSets(exerciseId), getExerciseById(exerciseId)]).then(
+      (data) => {
+        setSets(data[0]);
+        setExercise(data[1]);
+      }
+    );
+  }, [exerciseId]);
 
-  if (!exercise || !program) {
+  const finishExercise = () => {
+    ExercisesService.update({
+      id: exerciseId as string,
+      is_completed: true,
+    });
+  };
+
+  if (!sets || !exercise) {
     return <></>;
   }
 
   return (
-    <ApproachesContext.Provider
-      value={{ exercise, program, setExercise, setProgram }}
-    >
-      <div className="bg-gray-100 h-dvh w-full flex flex-col">
-        <Header exercise={exercise} />
-        <div className="p-3">
-          <div className="flex items-baseline justify-between">
-            <div className="text-xl font-medium shrink-0">Подходы</div>
-            <div className="h-3 bg-gray-200 w-full rounded-full overflow-hidden mx-4">
-              <div
-                className={clsx(
-                  "h-full bg-gradient-to-r transition-all duration-400",
-                  program.mainGradient
-                )}
-                style={{
-                  width: (completed / exercise.approaches.length) * 100 + "%",
-                }}
-              ></div>
-            </div>
-            <div className="text-m text-gray-500 shrink-0">
-              {completed} из {exercise.approaches.length}
-            </div>
+    // <ApproachesContext.Provider
+    //   value={{ exercise, program, setExercise, setProgram }}
+    // >
+    <div className="bg-gray-100 h-dvh w-full flex flex-col">
+      <Header exercise={exercise} />
+      <div className="px-2 py-3">
+        {/* <div className="flex items-baseline justify-between">
+          <div className="text-xl font-medium shrink-0">Подходы</div>
+          <div className="h-3 bg-gray-200 w-full rounded-full overflow-hidden mx-4">
+            <div
+              className={clsx(
+                "h-full bg-gradient-to-r transition-all duration-400 from-blue-500 to-blue-600"
+              )}
+              style={{
+                width: (countCompleted / sets?.length || 1) * 100 + "%",
+              }}
+            ></div>
           </div>
-          <div className="py-3">
-            <List />
+          <div className="text-m text-gray-500 shrink-0">
+            {countCompleted} из {sets?.length}
           </div>
-          <div className="py-3">{exercise.isCompleted ? "Завершить" : ""}</div>
+        </div> */}
+        <div>
+          <List items={sets} setItems={setSets} />
         </div>
+        {allCompleted && (
+          <div
+            className="rounded-md w-full mt-4 bg-blue-600 text-white h-14 flex items-center justify-center text-m"
+            onClick={finishExercise}
+          >
+            <div className="flex justify-between gap-2">
+              <div>Завершить</div>
+              <TaskAltIcon />
+            </div>
+          </div>
+        )}
       </div>
-    </ApproachesContext.Provider>
+    </div>
+    // </ApproachesContext.Provider>
   );
 };
 

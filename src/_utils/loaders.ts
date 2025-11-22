@@ -1,5 +1,16 @@
 import { supabase } from "./supabase";
 
+export interface ISet {
+  id: string;
+  reps: number;
+  weight_percent: number | null;
+  is_completed: boolean;
+  order: number;
+  day_id: string;
+  exercise_id: string;
+  created_at: Date;
+}
+
 export interface IExercise {
   id: string;
   day_id: string;
@@ -104,6 +115,20 @@ export async function getExercises(
       sets_count,
     };
   });
+}
+
+export async function getExerciseById(exerciseId: string) {
+  const { data, error } = await supabase
+    .from("Exercises")
+    .select("*")
+    .eq("id", exerciseId)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return data;
 }
 
 export async function getWeeks(programId: string): IWeek[] {
