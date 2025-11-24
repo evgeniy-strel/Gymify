@@ -23,13 +23,10 @@ export const ExerciseCard = (props: IProps) => {
 
   return (
     <div
-      className={clsx(
-        "text-card-foreground rounded-xl p-5 cursor-pointer hover:shadow-xl",
-        {
-          "bg-gradient-to-r from-blue-500 to-blue-600": item.is_completed,
-          "bg-white/85": !item.is_completed,
-        }
-      )}
+      className={clsx("rounded-xl p-5 cursor-pointer hover:shadow-xl", {
+        "bg-gradient-to-r from-blue-500 to-blue-600": item.is_completed,
+        "bg-white/85": !item.is_completed,
+      })}
       onClick={openApproaches}
     >
       <div className="flex items-center gap-4">
@@ -42,9 +39,7 @@ export const ExerciseCard = (props: IProps) => {
             }
           )}
         >
-          <div className="text-xl">
-            {item.is_completed && false ? <DoneIcon /> : index}
-          </div>
+          <div className="text-xl">{item.order || index}</div>
         </div>
         <div>
           <div

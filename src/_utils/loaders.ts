@@ -16,6 +16,7 @@ export interface IExercise {
   day_id: string;
   title: string;
   is_completed: boolean;
+  order: number;
   sets_count: number;
   created_at: Date;
 }

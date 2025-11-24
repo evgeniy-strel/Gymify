@@ -8,6 +8,7 @@ export interface ISet {
   order: number;
   day_id: string;
   exercise_id: string;
+  exercise_title: string;
   created_at: Date;
 }
 
@@ -21,6 +22,21 @@ class SetsService {
 
     if (error) {
       return [];
+    }
+
+    return data;
+  }
+
+  async create(item: Partial<ISet>): Promise<any> {
+    const { data, error } = await supabase
+      .from("Sets")
+      .insert([item])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating set:", error);
+      throw error;
     }
 
     return data;

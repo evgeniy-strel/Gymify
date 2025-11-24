@@ -10,6 +10,21 @@ export interface IExercise {
 }
 
 class ExercisesService {
+  async create(item: Partial<IExercise>): Promise<any> {
+    const { data, error } = await supabase
+      .from("Exercises")
+      .insert([item])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating exercise:", error);
+      throw error;
+    }
+
+    return data;
+  }
+
   async update(
     item: Pick<IExercise, "id"> & Partial<IExercise>
   ): Promise<IExercise> {
