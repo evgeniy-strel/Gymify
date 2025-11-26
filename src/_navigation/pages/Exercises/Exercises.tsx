@@ -82,6 +82,10 @@ export const Exercises = () => {
       order: exercises ? exercises.length + 1 : 1,
     });
     await loadData();
+    closeAddForm();
+  };
+
+  const closeAddForm = () => {
     setIsAdded(false);
   };
 
@@ -100,7 +104,12 @@ export const Exercises = () => {
           <div>
             <AddButton onClick={startAddItem} />
             {isAdded && (
-              <AddForm onSave={onSaveItem} fields={FIELDS_FOR_ADD_FORM} />
+              <AddForm
+                onSave={onSaveItem}
+                onClose={closeAddForm}
+                fields={FIELDS_FOR_ADD_FORM}
+                description={`Неделя ${weekNumber} / День ${dayNumber}`}
+              />
             )}
           </div>
         )}

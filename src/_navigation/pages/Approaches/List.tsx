@@ -24,7 +24,7 @@ const Header = () => {
       )}
     >
       <div className=""></div>
-      <div className="shrink-0 truncate">Вес (кг)</div>
+      <div className="shrink-0 truncate">% от макс</div>
       <div className="shrink-0 truncate">Повторы</div>
       <div className=""></div>
     </div>

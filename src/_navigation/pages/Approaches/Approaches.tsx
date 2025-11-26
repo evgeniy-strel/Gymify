@@ -164,6 +164,8 @@ const Approaches = () => {
                 onSave={onSaveItem}
                 onClose={closeAddForm}
                 fields={FIELDS_FOR_ADD_FORM}
+                duplicateButton={true}
+                description={exercise.title}
               />
             )}
           </div>

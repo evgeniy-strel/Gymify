@@ -51,8 +51,9 @@ const ItemTemplate = ({ item }: IItemTemplate) => {
 
   return (
     <div
-      className={clsx("p-4 rounded-xl bg-gradient-to-br shadow-md relative", {
-        "from-blue-500 to-blue-600 text-white": item.is_completed,
+      className={clsx("p-4 rounded-xl bg-white shadow-md relative", {
+        "from-blue-500 to-blue-600 bg-gradient-to-br text-white":
+          item.is_completed,
       })}
       onClick={onClick}
     >

@@ -12,6 +12,7 @@ import clsx from "clsx";
 
 interface IHeaderProps {
   onClose: Function;
+  description?: string;
 }
 
 const Header = (props: IHeaderProps) => {
@@ -25,8 +26,11 @@ const Header = (props: IHeaderProps) => {
         <div className="p-2">
           <ArrowBackIcon />
         </div>
-        <div className="text-xl">Назад</div>
+        <div className="text-xl">Добавление данных</div>
       </div>
+      {props.description && (
+        <div className="text-sm px-2 text-gray-600">{props.description}</div>
+      )}
     </div>
   );
 };
@@ -42,11 +46,19 @@ interface IAddItem {
 
 interface IAddFormProps {
   fields: IAddItem[];
+  duplicateButton?: boolean;
+  description?: string;
   onSave: Function;
   onClose: Function;
 }
 
-const AddForm = ({ fields, onSave, onClose }: IAddFormProps) => {
+const AddForm = ({
+  fields,
+  onSave,
+  onClose,
+  duplicateButton,
+  description,
+}: IAddFormProps) => {
   const [fieldsValues, setFieldsValues] = useState({});
   const [duplicate, setDuplicate] = useState<number>(1);
 
@@ -72,7 +84,7 @@ const AddForm = ({ fields, onSave, onClose }: IAddFormProps) => {
 
   return (
     <div className="bg-gray-100 h-dvh w-full flex flex-col absolute top-0 left-0 z-1000">
-      <Header onClose={onClose} />
+      <Header description={description} onClose={onClose} />
       <div className="p-4 flex flex-col gap-2">
         {fields.map((field) => {
           if (field.type === "string") {
@@ -99,14 +111,18 @@ const AddForm = ({ fields, onSave, onClose }: IAddFormProps) => {
             );
           }
         })}
-        <div className="pb-1 pt-2">
-          <Divider />
-        </div>
-        <NumberSpinner
-          label="Продублировать раз"
-          defaultValue={duplicate}
-          onValueChange={onChangeDuplicate}
-        />
+        {duplicateButton && (
+          <>
+            <div className="pb-1 pt-2">
+              <Divider />
+            </div>
+            <NumberSpinner
+              label="Продублировать раз"
+              defaultValue={duplicate}
+              onValueChange={onChangeDuplicate}
+            />
+          </>
+        )}
         <div className="mt-1">
           <SaveButton onClick={saveHandler} />
         </div>
