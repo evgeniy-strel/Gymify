@@ -117,7 +117,7 @@ const Days = () => {
   }, []);
 
   if (!days) {
-    return <></>;
+    return <>Loading...</>;
   }
 
   return (

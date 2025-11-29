@@ -83,16 +83,18 @@ const Weeks = () => {
   const [program, setProgram] = useState<IProgram[]>();
 
   useEffect(() => {
-    Promise.all([getWeeks(programId), getProgram(programId)]).then(
-      ([weeksData, programData]) => {
+    Promise.all([getWeeks(programId), getProgram(programId)])
+      .then(([weeksData, programData]) => {
         setWeeks(weeksData);
         setProgram(programData);
-      }
-    );
+      })
+      .catch((error: any) => {
+        alert("Ошибка загрузки недель и программ", error?.message);
+      });
   }, []);
 
   if (!weeks || !program) {
-    return <></>;
+    return <>Loading...</>;
   }
 
   return (
