@@ -61,27 +61,42 @@ export async function getSets(exerciseId: string) {
   return data;
 }
 
-export async function getPrograms(): IProgram[] {
-  const { data, error } = await supabase.from("Programs").select("*");
-  if (error) {
+export async function getPrograms(): Promise<IProgram[]> {
+  try {
+    const res = await fetch(`https://gymify-backend-ten.vercel.app/programs`);
+
+    if (!res.ok) {
+      const text = await res.text();
+      alert("Error loading programs:\n" + text);
+      return [];
+    }
+
+    const data: IProgram[] = await res.json();
+    return data;
+  } catch (err: any) {
+    alert("Error loading programs:\n" + err.message);
     return [];
   }
-
-  return data;
 }
 
-export async function getProgram(id: string) {
-  const { data, error } = await supabase
-    .from("Programs")
-    .select("*")
-    .eq("id", id)
-    .single();
+export async function getProgram(id: string): Promise<IProgram | null> {
+  try {
+    const res = await fetch(
+      `https://gymify-backend-ten.vercel.app/programs/${id}`
+    );
 
-  if (error) {
-    return [];
+    if (!res.ok) {
+      const text = await res.text();
+      alert("Error loading program:\n" + text);
+      return null;
+    }
+
+    const data: IProgram = await res.json();
+    return data;
+  } catch (err: any) {
+    alert("Error loading program:\n" + err.message);
+    return null;
   }
-
-  return data;
 }
 
 export async function getExercises(
@@ -132,18 +147,24 @@ export async function getExerciseById(exerciseId: string) {
   return data;
 }
 
-export async function getWeeks(programId: string): IWeek[] {
-  const { data, error } = await supabase
-    .from("Weeks")
-    .select("*")
-    .eq("program_id", programId)
-    .order("number", { ascending: true });
+export async function getWeeks(programId: string): Promise<IWeek[]> {
+  try {
+    const res = await fetch(
+      `https://gymify-backend-ten.vercel.app/weeks/${programId}`
+    );
 
-  if (error) {
+    if (!res.ok) {
+      const text = await res.text();
+      alert("Error loading weeks:\n" + text);
+      return [];
+    }
+
+    const data: IWeek[] = await res.json();
+    return data;
+  } catch (err: any) {
+    alert("Error loading weeks:\n" + err.message);
     return [];
   }
-
-  return data;
 }
 
 export async function getDays(programId: string, week: number): IDay[] {

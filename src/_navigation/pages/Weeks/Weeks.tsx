@@ -90,7 +90,8 @@ const Weeks = () => {
       })
       .catch((error: any) => {
         alert("Ошибка загрузки недель и программ", error?.message);
-      });
+      })
+      .finally(() => {});
   }, []);
 
   if (!weeks || !program) {
