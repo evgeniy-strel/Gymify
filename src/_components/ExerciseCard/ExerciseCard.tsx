@@ -6,6 +6,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useNavigate } from "react-router";
 import type { IExercise } from "../../utils";
 import DoneIcon from "@mui/icons-material/Done";
+import { Skeleton } from "@mui/material";
 
 interface IProps {
   item: IExercise;
@@ -73,5 +74,15 @@ export const ExerciseCard = (props: IProps) => {
     </div>
   );
 };
+
+const SkeletonCard = () => {
+  return (
+    <div className="w-full h-full rounded-xl overflow-hidden">
+      <Skeleton variant="rounded" animation="wave" height={92} />
+    </div>
+  );
+};
+
+ExerciseCard.Skeleton = SkeletonCard;
 
 export default ExerciseCard;

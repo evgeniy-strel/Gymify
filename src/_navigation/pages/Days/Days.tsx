@@ -8,6 +8,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DoneIcon from "@mui/icons-material/Done";
 import clsx from "clsx";
+import { Skeleton } from "@mui/material";
 
 interface IHeaderProps {
   program: IWeek;
@@ -106,6 +107,17 @@ const ItemTemplate = ({ item }: IProps) => {
   );
 };
 
+const SkeletonItemTemplate = () => {
+  return (
+    <div className="w-full h-full rounded-2xl overflow-hidden">
+      <Skeleton variant="rounded" animation="wave" height={104} />
+    </div>
+  );
+};
+
+const COUNT_SKELETONS = 3;
+const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
+
 const Days = () => {
   const { programId, weekNumber: weekNumberString } = useParams();
   const weekNumber = Number(weekNumberString);
@@ -118,17 +130,15 @@ const Days = () => {
     );
   }, []);
 
-  if (!days) {
-    return <>Loading...</>;
-  }
-
   return (
     <div className="h-dvh w-full flex flex-col">
       <Header />
       <div className="py-4 px-3 flex flex-col gap-3">
-        {days.map((item) => (
-          <ItemTemplate key={item.id} item={item} />
-        ))}
+        {days
+          ? days.map((item) => <ItemTemplate key={item.id} item={item} />)
+          : SKELETON_ITEMS.map((item, index) => (
+              <SkeletonItemTemplate key={index} />
+            ))}
       </div>
     </div>
   );

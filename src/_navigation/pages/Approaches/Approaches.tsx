@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { AddButton, AddForm } from "../../../components";
+import { Skeleton } from "@mui/material";
 
 const Header = (props: any) => {
   const { exercise } = props;
@@ -35,7 +36,11 @@ const Header = (props: any) => {
         <div className="p-2" onClick={redirectToMain}>
           <ArrowBackIcon />
         </div>
-        <div className="text-xl">{exercise.title}</div>
+        {exercise ? (
+          <div className="text-xl">{exercise.title}</div>
+        ) : (
+          <Skeleton variant="rounded" height={32} width={250} />
+        )}
       </div>
     </div>
   );
@@ -124,10 +129,6 @@ const Approaches = () => {
     setIsAdded(false);
   };
 
-  if (!sets || !exercise) {
-    return <></>;
-  }
-
   return (
     // <ApproachesContext.Provider
     //   value={{ exercise, program, setExercise, setProgram }}
@@ -135,22 +136,6 @@ const Approaches = () => {
     <div className="bg-gray-100 h-dvh w-full flex flex-col">
       <Header exercise={exercise} />
       <div className="px-2 py-3 flex flex-col gap-4">
-        {/* <div className="flex items-baseline justify-between">
-          <div className="text-xl font-medium shrink-0">Подходы</div>
-          <div className="h-3 bg-gray-200 w-full rounded-full overflow-hidden mx-4">
-            <div
-              className={clsx(
-                "h-full bg-gradient-to-r transition-all duration-400 from-blue-500 to-blue-600"
-              )}
-              style={{
-                width: (countCompleted / sets?.length || 1) * 100 + "%",
-              }}
-            ></div>
-          </div>
-          <div className="text-m text-gray-500 shrink-0">
-            {countCompleted} из {sets?.length}
-          </div>
-        </div> */}
         <div>
           <List items={sets} setItems={setSets} />
         </div>

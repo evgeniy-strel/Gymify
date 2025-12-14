@@ -5,6 +5,7 @@ import styles from "./List.module.less";
 
 import CheckIcon from "@mui/icons-material/Check";
 import clsx from "clsx";
+import { Skeleton } from "@mui/material";
 
 const Header = () => {
   return (
@@ -80,10 +81,21 @@ const ItemTemplate = ({
   );
 };
 
+const SkeletonItemTemplate = () => {
+  return (
+    <div className="w-full h-full rounded-2xl overflow-hidden">
+      <Skeleton variant="rounded" animation="wave" height={76} />
+    </div>
+  );
+};
+
 interface IListProps {
-  items: ISet[];
+  items?: ISet[];
   setItems: Function;
 }
+
+const COUNT_SKELETONS = 5;
+const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
 const List = (props: IListProps) => {
   const { items, setItems } = props;
@@ -103,12 +115,6 @@ const List = (props: IListProps) => {
     });
 
     setItems(newItems);
-
-    // setExercise({
-    //   ...items,
-    //   approaches,
-    //   isCompleted: approaches.every((item) => item.isCompleted),
-    // });
   };
 
   return (
@@ -117,14 +123,18 @@ const List = (props: IListProps) => {
         <Header />
       </div>
       <div className="flex flex-col gap-2.5">
-        {items.map((item, index) => (
-          <ItemTemplate
-            item={item}
-            index={index}
-            key={index}
-            onToggleCheckbox={onToggleCheckBox}
-          />
-        ))}
+        {items
+          ? items.map((item, index) => (
+              <ItemTemplate
+                item={item}
+                index={index}
+                key={index}
+                onToggleCheckbox={onToggleCheckBox}
+              />
+            ))
+          : SKELETON_ITEMS.map((item, index) => (
+              <SkeletonItemTemplate key={index} />
+            ))}
       </div>
     </div>
   );

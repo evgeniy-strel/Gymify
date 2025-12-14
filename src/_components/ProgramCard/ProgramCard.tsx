@@ -6,6 +6,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import styles from "./ProgramCard.module.less";
 import { useNavigate } from "react-router";
 import { EPageRoutes } from "../../navigation";
+import { Skeleton } from "@mui/material";
 
 const ProgressBar = (props: any) => {
   const { currentWeek, totalWeek } = props;
@@ -80,5 +81,15 @@ const ProgramCard = (props: IProps) => {
     </div>
   );
 };
+
+const SkeletonCard = () => {
+  return (
+    <div className="w-full h-full rounded-2xl overflow-hidden">
+      <Skeleton variant="rounded" animation="wave" height={131} />
+    </div>
+  );
+};
+
+ProgramCard.Skeleton = SkeletonCard;
 
 export default ProgramCard;

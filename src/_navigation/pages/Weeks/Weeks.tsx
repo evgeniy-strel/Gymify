@@ -7,9 +7,10 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import clsx from "clsx";
+import { Skeleton } from "@mui/material";
 
 interface IHeaderProps {
-  program: IProgram;
+  program?: IProgram;
 }
 
 const Header = ({ program }: IHeaderProps) => {
@@ -29,10 +30,16 @@ const Header = ({ program }: IHeaderProps) => {
         <div className="p-2" onClick={redirectToMain}>
           <ArrowBackIcon />
         </div>
-        <div className="flex items-baseline gap-2">
-          <div className="text-xl">{program.title}</div>
-          <div className="text-m text-gray-500">{program.totalWeek} недель</div>
-        </div>
+        {program ? (
+          <div className="flex items-baseline gap-2">
+            <div className="text-xl">{program.title}</div>
+            <div className="text-m text-gray-500">
+              {program.totalWeek} недель
+            </div>
+          </div>
+        ) : (
+          <Skeleton width={140} height={32} />
+        )}
       </div>
     </div>
   );
@@ -76,6 +83,17 @@ const ItemTemplate = ({ item }: IItemTemplate) => {
   );
 };
 
+const SkeletonItemTemplate = () => {
+  return (
+    <div className="w-full h-full rounded-xl overflow-hidden">
+      <Skeleton variant="rounded" animation="wave" height={84} />
+    </div>
+  );
+};
+
+const COUNT_SKELETONS = 16;
+const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
+
 const Weeks = () => {
   const { programId } = useParams();
 
@@ -97,17 +115,15 @@ const Weeks = () => {
       .finally(() => {});
   }, []);
 
-  if (!weeks || !program) {
-    return <>Loading...</>;
-  }
-
   return (
     <div className="h-dvh w-full flex flex-col">
       <Header program={program} />
       <div className="py-4 px-3 grid grid-cols-4 gap-3">
-        {weeks.map((item) => (
-          <ItemTemplate key={item.id} item={item} />
-        ))}
+        {weeks
+          ? weeks.map((item) => <ItemTemplate key={item.id} item={item} />)
+          : SKELETON_ITEMS.map((item, index) => (
+              <SkeletonItemTemplate key={index} />
+            ))}
       </div>
     </div>
   );
