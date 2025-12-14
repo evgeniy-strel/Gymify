@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { ProgramCard } from "../../../components";
-import { getPrograms, IProgram } from "../../../utils";
+import { ProgramsService, IProgram } from "../../../utils";
 
 import { Typography } from "@mui/material";
 
@@ -9,7 +9,7 @@ export const Main = () => {
   const [programs, setPrograms] = useState<IProgram[]>();
 
   useEffect(() => {
-    getPrograms().then((data: IProgram[]) => setPrograms(data));
+    ProgramsService.getAll().then((data: IProgram[]) => setPrograms(data));
   }, []);
 
   if (!programs) {

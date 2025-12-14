@@ -1,15 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { AddButton, AddForm, ExerciseCard } from "../../../components";
-import {
-  ExercisesService,
-  getExercise,
-  getExercises,
-  getIsAdmin,
-  getProgram,
-  IExercise,
-} from "../../../utils";
-import { EPageRoutes } from "../../consts";
+import { ExercisesService, getIsAdmin, IExercise } from "../../../utils";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -60,9 +52,11 @@ export const Exercises = () => {
   const isAdmin = useMemo(getIsAdmin, []);
 
   const loadData = () => {
-    getExercises(programId, weekNumber, dayNumber).then((data: IExercise[]) => {
-      setExercises(data);
-    });
+    ExercisesService.getAll(programId, weekNumber, dayNumber).then(
+      (data: IExercise[]) => {
+        setExercises(data);
+      }
+    );
   };
 
   useEffect(() => {

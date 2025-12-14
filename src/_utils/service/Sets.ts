@@ -1,4 +1,5 @@
 import { supabase } from "../supabase";
+import api from "../axios";
 
 export interface ISet {
   id: string;
@@ -14,47 +15,34 @@ export interface ISet {
 
 class SetsService {
   async get(exerciseId: string) {
-    const { data, error } = await supabase
-      .from("Sets")
-      .select("*")
-      .eq("exercise_id", exerciseId)
-      .order("order", { ascending: true });
-
-    if (error) {
+    try {
+      const res = await api.get(`/sets/${exerciseId}`);
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to fetch sets:", error);
       return [];
     }
-
-    return data;
   }
 
-  async create(item: Partial<ISet>): Promise<any> {
-    const { data, error } = await supabase
-      .from("Sets")
-      .insert([item])
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error creating set:", error);
-      throw error;
+  async create(item: Partial<ISet>): Promise<ISet | null> {
+    try {
+      const res = await api.post("/sets", item);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to create set:", error);
+      return null;
     }
-
-    return data;
   }
 
-  async update(item: Pick<ISet, "id"> & Partial<ISet>): Promise<ISet> {
-    const { id, ...fields } = item;
-
-    const { data, error } = await supabase
-      .from("Sets")
-      .update(fields)
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    return data;
+  async update(item: Pick<ISet, "id"> & Partial<ISet>): Promise<ISet | null> {
+    try {
+      const { id, ...fields } = item;
+      const res = await api.put(`/sets/${id}`, fields);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to update set:", error);
+      return null;
+    }
   }
 }
 

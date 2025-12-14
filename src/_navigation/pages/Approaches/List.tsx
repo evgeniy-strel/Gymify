@@ -1,17 +1,8 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 
-import {
-  SetsService,
-  type IApproache,
-  type IExercise,
-  type IProgram,
-  type ISet,
-} from "../../../utils";
-import { ApproachesContext } from "./Context";
+import { SetsService, type ISet } from "../../../utils";
 import styles from "./List.module.less";
 
-import { Checkbox, TextField } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import CheckIcon from "@mui/icons-material/Check";
 import clsx from "clsx";
 

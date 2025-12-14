@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getProgram, getWeeks, IProgram, IWeek } from "../../../utils";
+import { ProgramsService, WeeksService, IProgram, IWeek } from "../../../utils";
 
 import { useNavigate, useParams } from "react-router";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -83,7 +83,10 @@ const Weeks = () => {
   const [program, setProgram] = useState<IProgram[]>();
 
   useEffect(() => {
-    Promise.all([getWeeks(programId), getProgram(programId)])
+    Promise.all([
+      WeeksService.get(programId),
+      ProgramsService.getById(programId),
+    ])
       .then(([weeksData, programData]) => {
         setWeeks(weeksData);
         setProgram(programData);

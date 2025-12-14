@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { getDays, IDay, IWeek } from "../../../utils";
+import { DaysService, IDay, IWeek } from "../../../utils";
 import { EPageRoutes } from "../../consts";
 
 import { useNavigate, useParams } from "react-router";
@@ -113,7 +113,9 @@ const Days = () => {
   const [days, setDays] = useState<IDay[]>();
 
   useEffect(() => {
-    getDays(programId, weekNumber).then((data: IDay[]) => setDays(data));
+    DaysService.getAll(programId, weekNumber).then((data: IDay[]) =>
+      setDays(data)
+    );
   }, []);
 
   if (!days) {

@@ -3,11 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import {
   duplicateCall,
   ExercisesService,
-  getExerciseById,
   getIsAdmin,
-  getSets,
   SetsService,
-  supabase,
   type IExercise,
   type ISet,
 } from "../../../utils";
@@ -77,12 +74,13 @@ const Approaches = () => {
   }, [sets]);
 
   const loadData = () => {
-    Promise.all([getSets(exerciseId), getExerciseById(exerciseId)]).then(
-      (data) => {
-        setSets(data[0]);
-        setExercise(data[1]);
-      }
-    );
+    Promise.all([
+      SetsService.get(exerciseId),
+      ExercisesService.getById(exerciseId),
+    ]).then((data) => {
+      setSets(data[0]);
+      setExercise(data[1]);
+    });
   };
 
   useEffect(() => {
