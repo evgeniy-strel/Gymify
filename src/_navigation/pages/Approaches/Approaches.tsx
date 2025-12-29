@@ -53,7 +53,7 @@ const FIELDS_FOR_ADD_FORM = [
     placeholder: "% от максимума",
     options: {
       min: 1,
-      max: 100,
+      max: 999,
     },
   },
   {
