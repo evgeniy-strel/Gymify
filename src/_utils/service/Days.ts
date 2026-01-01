@@ -20,6 +20,17 @@ class DaysService {
       return [];
     }
   }
+
+  async update(item: Pick<IDay, "id"> & Partial<IDay>): Promise<IDay | null> {
+    try {
+      const { id, ...fields } = item;
+      const res = await api.put(`/days/${id}`, fields);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to update set:", error);
+      return null;
+    }
+  }
 }
 
 export default new DaysService();

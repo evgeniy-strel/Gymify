@@ -1,13 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { AddButton, AddForm, ExerciseCard } from "../../../components";
-import { ExercisesService, getIsAdmin, IExercise } from "../../../utils";
+import {
+  AddButton,
+  AddForm,
+  CompleteButton,
+  ExerciseCard,
+} from "../../../components";
+import {
+  DaysService,
+  ExercisesService,
+  getIsAdmin,
+  IExercise,
+} from "../../../utils";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import clsx from "clsx";
-import { Skeleton } from "@mui/material";
 
 const Header = (props: any) => {
   const { weekNumber, dayNumber } = useParams();
@@ -52,8 +60,21 @@ export const Exercises = () => {
   const { programId, weekNumber, dayNumber } = useParams();
   const [exercises, setExercises] = useState<IExercise[]>();
   const [isAdded, setIsAdded] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const isAdmin = useMemo(getIsAdmin, []);
+
+  const dayId = useMemo(
+    () => `${programId}_${weekNumber}_${dayNumber}`,
+    [programId, weekNumber, dayNumber]
+  );
+
+  const allCompleted = useMemo(() => {
+    return (
+      Number(exercises?.length) > 0 &&
+      exercises?.every((item: IExercise) => item.is_completed)
+    );
+  }, [exercises]);
 
   const loadData = () => {
     ExercisesService.getAll(programId, weekNumber, dayNumber).then(
@@ -72,8 +93,6 @@ export const Exercises = () => {
   };
 
   const onSaveItem = async (item: Partial<IExercise>) => {
-    const dayId = `${programId}_${weekNumber}_${dayNumber}`;
-
     const answer = await ExercisesService.create({
       ...item,
       day_id: dayId,
@@ -85,6 +104,14 @@ export const Exercises = () => {
 
   const closeAddForm = () => {
     setIsAdded(false);
+  };
+
+  const finishDay = async () => {
+    await DaysService.update({
+      id: dayId as string,
+      is_completed: true,
+    });
+    navigate(-1);
   };
 
   return (
@@ -110,6 +137,9 @@ export const Exercises = () => {
               />
             )}
           </div>
+        )}
+        {(allCompleted || exercises?.length === 0) && (
+          <CompleteButton caption="Закончить тренировку" onClick={finishDay} />
         )}
       </div>
     </div>

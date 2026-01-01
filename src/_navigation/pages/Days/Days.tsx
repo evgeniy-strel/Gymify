@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { DaysService, IDay, IWeek } from "../../../utils";
+import { DaysService, IDay, IWeek, WeeksService } from "../../../utils";
 import { EPageRoutes } from "../../consts";
 
 import { useNavigate, useParams } from "react-router";
@@ -9,6 +9,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DoneIcon from "@mui/icons-material/Done";
 import clsx from "clsx";
 import { Skeleton } from "@mui/material";
+import { CompleteButton } from "../../../components";
 
 interface IHeaderProps {
   program: IWeek;
@@ -120,9 +121,25 @@ const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
 const Days = () => {
   const { programId, weekNumber: weekNumberString } = useParams();
+  const navigate = useNavigate();
   const weekNumber = Number(weekNumberString);
 
   const [days, setDays] = useState<IDay[]>();
+
+  const finishWeek = async () => {
+    const weekId = `${programId}_${weekNumber}`;
+    await WeeksService.update({
+      id: weekId as string,
+      is_completed: true,
+    });
+    navigate(-1);
+  };
+
+  const allCompleted = useMemo(() => {
+    return (
+      Number(days?.length) > 0 && days?.every((item: IDay) => item.is_completed)
+    );
+  }, [days]);
 
   useEffect(() => {
     DaysService.getAll(programId, weekNumber).then((data: IDay[]) =>
@@ -139,6 +156,9 @@ const Days = () => {
           : SKELETON_ITEMS.map((item, index) => (
               <SkeletonItemTemplate key={index} />
             ))}
+        {allCompleted && (
+          <CompleteButton caption="Закончить неделю" onClick={finishWeek} />
+        )}
       </div>
     </div>
   );

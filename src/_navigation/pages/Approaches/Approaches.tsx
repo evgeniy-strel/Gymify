@@ -14,7 +14,7 @@ import clsx from "clsx";
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { AddButton, AddForm } from "../../../components";
+import { AddButton, AddForm, CompleteButton } from "../../../components";
 import { Skeleton } from "@mui/material";
 
 const Header = (props: any) => {
@@ -154,15 +154,10 @@ const Approaches = () => {
           </div>
         )}
         {allCompleted && (
-          <div
-            className="rounded-md w-full bg-blue-600 text-white h-14 flex items-center justify-center text-m"
+          <CompleteButton
+            caption="Закончить упражнение"
             onClick={finishExercise}
-          >
-            <div className="flex justify-between gap-2">
-              <div>Завершить</div>
-              <TaskAltIcon />
-            </div>
-          </div>
+          />
         )}
       </div>
     </div>

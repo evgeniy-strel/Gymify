@@ -17,6 +17,19 @@ class WeeksService {
       return [];
     }
   }
+
+  async update(
+    item: Pick<IWeek, "id"> & Partial<IWeek>
+  ): Promise<IWeek | null> {
+    try {
+      const { id, ...fields } = item;
+      const res = await api.put(`/weeks/${id}`, fields);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to update set:", error);
+      return null;
+    }
+  }
 }
 
 export default new WeeksService();
