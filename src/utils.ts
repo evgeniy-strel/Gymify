@@ -11,11 +11,7 @@ export { default as WeeksService } from "./_utils/service/Weeks";
 export type { IWeek } from "./_utils/service/Weeks";
 export { default as DaysService } from "./_utils/service/Days";
 export type { IDay } from "./_utils/service/Days";
+export { default as TimersService } from "./_utils/service/Timers";
+export type { ITimerData, ICheckData } from "./_utils/service/Timers";
 
-export {
-  duplicateCall,
-  requestNotifications,
-  notifyTimerFinished,
-  startTimer,
-  enablePush,
-} from "./_utils/helpers";
+export { duplicateCall } from "./_utils/helpers";

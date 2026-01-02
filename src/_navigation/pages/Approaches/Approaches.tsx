@@ -4,8 +4,6 @@ import {
   duplicateCall,
   ExercisesService,
   getIsAdmin,
-  notifyTimerFinished,
-  requestNotifications,
   SetsService,
   type IExercise,
   type ISet,

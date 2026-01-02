@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { enablePush, SetsService, startTimer, type ISet } from "../../../utils";
+import {
+  ICheckData,
+  ITimerData,
+  SetsService,
+  TimersService,
+  type ISet,
+} from "../../../utils";
 import styles from "./List.module.less";
 
 import CheckIcon from "@mui/icons-material/Check";
@@ -27,6 +33,7 @@ const Header = () => {
 interface IItemTemplateProps {
   item: ISet;
   index: number;
+  timerData: ITimerData;
   isRest: boolean;
   onToggleCheckbox: (isCompleted: boolean, item: ISet) => void;
 }
@@ -35,6 +42,7 @@ const ItemTemplate = ({
   item,
   index,
   isRest,
+  timerData,
   onToggleCheckbox,
 }: IItemTemplateProps) => {
   const onToggleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +90,7 @@ const ItemTemplate = ({
           )}
         </label>
       </div>
-      {isRest && <Timer className="mt-2.5" />}
+      {isRest && timerData && <Timer className="mt-2.5" data={timerData} />}
     </div>
   );
 };
@@ -102,19 +110,27 @@ interface IListProps {
 
 const COUNT_SKELETONS = 5;
 const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
+const TIMER_DURATION = 120;
 
 const List = (props: IListProps) => {
+  const [timerData, setTimerData] = useState<ITimerData>();
   const [restSetId, setRestSetId] = useState<string>();
   const { items, setItems } = props;
 
-  const notify = () => {
-    enablePush();
+  const checkTimer = () => {
+    return TimersService.check().then(({ data }) => {
+      if (data.status) {
+        setRestSetId(data.status.event);
+        setTimerData(data.status);
+      }
+    });
   };
 
-  const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
-    await notify();
-    await startTimer();
+  useEffect(() => {
+    checkTimer();
+  }, []);
 
+  const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
     const newItem: ISet = { ...item, is_completed: isCompleted };
     SetsService.update({
       id: newItem.id,
@@ -129,7 +145,13 @@ const List = (props: IListProps) => {
     });
 
     const isLast = item.id === items?.at(-1).id;
+
     if (isCompleted && !isLast) {
+      await TimersService.start({
+        seconds: TIMER_DURATION,
+        event: newItem.id,
+      });
+      await checkTimer();
       setRestSetId(newItem.id);
     } else if (newItem.id === restSetId || isLast) {
       setRestSetId(undefined);
@@ -150,6 +172,7 @@ const List = (props: IListProps) => {
                 index={index}
                 key={index}
                 isRest={restSetId === item.id}
+                timerData={timerData}
                 onToggleCheckbox={onToggleCheckBox}
               />
             ))

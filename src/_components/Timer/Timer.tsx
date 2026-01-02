@@ -1,15 +1,16 @@
+import { useMemo } from "react";
+
+import { useTimer } from "./useTimer";
+import { ITimerData } from "../../utils";
+
 import clsx from "clsx";
-import { useEffect, useMemo, useState } from "react";
-import { useTimer } from "react-timer-hook";
-import { useAutoPwaTimer } from "./useAutoPwaTimer";
-import { startTimer } from "../../utils";
 
 interface ITimerProps {
-  seconds?: number;
+  data: ITimerData;
   className?: string;
-  onFinish?: Function;
 }
 
+/* Возвращает строковой вид времени, например 1:35 */
 const formatTime = (seconds: number): string => {
   const min = Math.floor(seconds / 60);
   let sec = String(seconds % 60);
@@ -19,15 +20,23 @@ const formatTime = (seconds: number): string => {
   return `${min}:${sec}`;
 };
 
-const SECONDS = 20;
+/**
+ * Компонент таймера в виде прогрессбара
+ */
+const Timer = ({ className, data }: ITimerProps) => {
+  const duration = useMemo<number>(
+    () => (new Date(data.end) - new Date(data.started)) / 1000,
+    [data.end, data.started]
+  );
+  const { secondsLeft, isFinished } = useTimer(data.secondsLeft);
 
-const Timer = ({ className }: ITimerProps) => {
-  const { secondsLeft, reset, isFinished } = useAutoPwaTimer(SECONDS);
-
-  const seconds = SECONDS;
   const formattedTime = useMemo(() => formatTime(secondsLeft), [secondsLeft]);
 
-  const percent = ((SECONDS - secondsLeft) / SECONDS) * 100;
+  const percent = ((duration - secondsLeft) / duration) * 100;
+
+  if (isFinished) {
+    return <></>;
+  }
 
   return (
     <div

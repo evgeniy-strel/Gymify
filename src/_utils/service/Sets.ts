@@ -1,4 +1,3 @@
-import { supabase } from "../supabase";
 import api from "../axios";
 
 export interface ISet {
