@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { SetsService, type ISet } from "../../../utils";
+import { enablePush, SetsService, startTimer, type ISet } from "../../../utils";
 import styles from "./List.module.less";
 
 import CheckIcon from "@mui/icons-material/Check";
@@ -107,7 +107,14 @@ const List = (props: IListProps) => {
   const [restSetId, setRestSetId] = useState<string>();
   const { items, setItems } = props;
 
+  const notify = () => {
+    enablePush();
+  };
+
   const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
+    await notify();
+    await startTimer();
+
     const newItem: ISet = { ...item, is_completed: isCompleted };
     SetsService.update({
       id: newItem.id,

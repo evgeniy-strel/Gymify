@@ -1,8 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
 import { useTimer } from "react-timer-hook";
-import { useAutoPwaTimer } from "./useAutoPwaTimer";
-import { startTimer } from "../../utils";
 
 interface ITimerProps {
   seconds?: number;
@@ -20,14 +18,37 @@ const formatTime = (seconds: number): string => {
 };
 
 const SECONDS = 20;
+const date = new Date(new Date().getTime() + SECONDS * 1000);
 
 const Timer = ({ className }: ITimerProps) => {
-  const { secondsLeft, reset, isFinished } = useAutoPwaTimer(SECONDS);
+  const seconds = 20;
+  const [currentSecond, setCurrentSecond] = useState<number>(0);
+  const formattedTime = useMemo(
+    () => formatTime(seconds - currentSecond),
+    [seconds, currentSecond]
+  );
 
-  const seconds = SECONDS;
-  const formattedTime = useMemo(() => formatTime(secondsLeft), [secondsLeft]);
+  useEffect(() => {
+    let intervalId;
+    intervalId = setInterval(() => {
+      setCurrentSecond((value) => {
+        if (value > seconds) {
+          clearInterval(intervalId);
+        }
+        return value + 1;
+      });
+    }, 1000);
 
-  const percent = ((SECONDS - secondsLeft) / SECONDS) * 100;
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const percent = (currentSecond / seconds) * 100;
+
+  if (currentSecond >= seconds) {
+    return <></>;
+  }
 
   return (
     <div

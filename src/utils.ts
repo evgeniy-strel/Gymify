@@ -1,4 +1,5 @@
 export { ERoles, getIsAdmin, saveRoleToLocalStorage } from "./_utils/auth";
+export { default as api } from "./_utils/axios";
 
 export { default as SetsService } from "./_utils/service/Sets";
 export type { ISet } from "./_utils/service/Sets";
@@ -11,4 +12,10 @@ export type { IWeek } from "./_utils/service/Weeks";
 export { default as DaysService } from "./_utils/service/Days";
 export type { IDay } from "./_utils/service/Days";
 
-export { duplicateCall } from "./_utils/helpers";
+export {
+  duplicateCall,
+  requestNotifications,
+  notifyTimerFinished,
+  startTimer,
+  enablePush,
+} from "./_utils/helpers";
