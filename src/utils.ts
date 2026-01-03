@@ -14,4 +14,4 @@ export type { IDay } from "./_utils/service/Days";
 export { default as TimersService } from "./_utils/service/Timers";
 export type { ITimerData, ICheckData } from "./_utils/service/Timers";
 
-export { duplicateCall } from "./_utils/helpers";
+export { duplicateCall, isIOSPWA } from "./_utils/helpers";

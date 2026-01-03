@@ -1,6 +1,7 @@
 import { SyntheticEvent, useCallback } from "react";
 
 import { EPageRoutes } from "./consts";
+import { isIOSPWA } from "../utils";
 
 import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
@@ -38,7 +39,13 @@ export default function BottomTabs({
   onChange,
 }: IProps) {
   return (
-    <Paper className="" elevation={3}>
+    <Paper
+      className=""
+      elevation={3}
+      sx={{
+        paddingBottom: isIOSPWA ? "20px" : 0,
+      }}
+    >
       <Box>
         <BottomNavigation showLabels value={activeKey} onChange={onChange}>
           {TABS.map((tab) => (
