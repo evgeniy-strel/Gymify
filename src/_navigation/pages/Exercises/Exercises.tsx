@@ -3,19 +3,22 @@ import { useEffect, useMemo, useState } from "react";
 import {
   AddButton,
   AddForm,
-  CompleteButton,
+  PrimaryButton,
   ExerciseCard,
 } from "../../../components";
 import {
   DaysService,
   ExercisesService,
   getIsAdmin,
+  IDay,
   IExercise,
 } from "../../../utils";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const Header = (props: any) => {
   const { weekNumber, dayNumber } = useParams();
@@ -59,10 +62,18 @@ const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 export const Exercises = () => {
   const { programId, weekNumber, dayNumber } = useParams();
   const [exercises, setExercises] = useState<IExercise[]>();
+  const [day, setDay] = useState<IDay>();
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const isAdmin = useMemo(getIsAdmin, []);
+  const trainingDuration = useMemo<number>(
+    () =>
+      day?.started_at
+        ? Math.floor((Date.now() - new Date(day?.started_at)) / 1000)
+        : 0,
+    [day?.started_at]
+  );
 
   const dayId = useMemo(
     () => `${programId}_${weekNumber}_${dayNumber}`,
@@ -77,16 +88,18 @@ export const Exercises = () => {
   }, [exercises]);
 
   const loadData = () => {
-    ExercisesService.getAll(programId, weekNumber, dayNumber).then(
-      (data: IExercise[]) => {
-        setExercises(data);
-      }
-    );
+    Promise.all([
+      ExercisesService.getAll(programId, weekNumber, dayNumber),
+      DaysService.getById(dayId),
+    ]).then((data) => {
+      setExercises(data[0]);
+      setDay(data[1]);
+    });
   };
 
   useEffect(() => {
     loadData();
-  }, [programId]);
+  }, [programId, weekNumber, dayNumber]);
 
   const startAddItem = () => {
     setIsAdded(true);
@@ -109,15 +122,32 @@ export const Exercises = () => {
   const finishDay = async () => {
     await DaysService.update({
       id: dayId as string,
+      completed_at: new Date(),
       is_completed: true,
     });
     navigate(-1);
+  };
+
+  const startTraining = async () => {
+    const data = await DaysService.update({
+      id: dayId as string,
+      started_at: new Date(),
+    });
+    setDay(data);
   };
 
   return (
     <div className="bg-gray-100 h-dvh w-full flex flex-col">
       <Header exercises={exercises} />
       <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3 pb-[72px]">
+        {exercises && !allCompleted && !day?.started_at && (
+          <PrimaryButton
+            caption="Начать тренировку"
+            icon={PlayArrowIcon}
+            iconPosition="beforeText"
+            onClick={startTraining}
+          />
+        )}
         {exercises
           ? exercises.map((item, index) => (
               <ExerciseCard key={item.id} index={index + 1} item={item} />
@@ -138,8 +168,16 @@ export const Exercises = () => {
             )}
           </div>
         )}
-        {(allCompleted || exercises?.length === 0) && (
-          <CompleteButton caption="Закончить тренировку" onClick={finishDay} />
+        {day?.started_at && !day.completed_at && (
+          <PrimaryButton
+            readOnly={!allCompleted && exercises.length !== 0}
+            iconPosition="beforeText"
+            icon={TaskAltIcon}
+            caption="Закончить тренировку"
+            onClick={finishDay}
+            withStopWatch={true}
+            stopWatchSeconds={trainingDuration}
+          />
         )}
       </div>
     </div>

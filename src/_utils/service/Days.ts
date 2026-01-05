@@ -7,6 +7,8 @@ export interface IDay {
   week_id: string;
   title: string;
   created_at: Date;
+  started_at: Date | null;
+  completed_at: Date | null;
   exercises_count: number;
 }
 
@@ -18,6 +20,16 @@ class DaysService {
     } catch (error: any) {
       console.error("Failed to fetch days:", error);
       return [];
+    }
+  }
+
+  async getById(dayId: string): Promise<IDay | null> {
+    try {
+      const res = await api.get(`/days/${dayId}`);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to fetch day:", error);
+      return null;
     }
   }
 

@@ -2,14 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { DaysService, IDay, IWeek, WeeksService } from "../../../utils";
 import { EPageRoutes } from "../../consts";
+import { PrimaryButton } from "../../../components";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import DoneIcon from "@mui/icons-material/Done";
-import clsx from "clsx";
 import { Skeleton } from "@mui/material";
-import { CompleteButton } from "../../../components";
+import clsx from "clsx";
 
 interface IHeaderProps {
   program: IWeek;
@@ -157,7 +158,11 @@ const Days = () => {
               <SkeletonItemTemplate key={index} />
             ))}
         {allCompleted && (
-          <CompleteButton caption="Закончить неделю" onClick={finishWeek} />
+          <PrimaryButton
+            caption="Закончить неделю"
+            icon={TaskAltIcon}
+            onClick={finishWeek}
+          />
         )}
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { useTimer } from "./useTimer";
-import { ITimerData } from "../../utils";
+import { formatTime, ITimerData } from "../../utils";
 
 import clsx from "clsx";
 
@@ -9,16 +9,6 @@ interface ITimerProps {
   data: ITimerData;
   className?: string;
 }
-
-/* Возвращает строковой вид времени, например 1:35 */
-const formatTime = (seconds: number): string => {
-  const min = Math.floor(seconds / 60);
-  let sec = String(seconds % 60);
-  if (sec.length === 1) {
-    sec = `0${sec}`;
-  }
-  return `${min}:${sec}`;
-};
 
 /**
  * Компонент таймера в виде прогрессбара

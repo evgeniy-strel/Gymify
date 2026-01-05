@@ -14,7 +14,7 @@ import clsx from "clsx";
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { AddButton, AddForm, CompleteButton } from "../../../components";
+import { AddButton, AddForm, PrimaryButton } from "../../../components";
 import { Skeleton } from "@mui/material";
 
 const Header = (props: any) => {
@@ -97,7 +97,6 @@ const Approaches = () => {
       id: exerciseId as string,
       is_completed: true,
     });
-    // navigate(-1);
   };
 
   const startAddItem = () => {
@@ -130,9 +129,6 @@ const Approaches = () => {
   };
 
   return (
-    // <ApproachesContext.Provider
-    //   value={{ exercise, program, setExercise, setProgram }}
-    // >
     <div className="bg-gray-100 h-dvh w-full flex flex-col">
       <Header exercise={exercise} />
       <div className="px-2 py-3 flex flex-col gap-4">
@@ -154,8 +150,9 @@ const Approaches = () => {
           </div>
         )}
         {allCompleted && (
-          <CompleteButton
+          <PrimaryButton
             caption="Закончить упражнение"
+            icon={TaskAltIcon}
             onClick={finishExercise}
           />
         )}
