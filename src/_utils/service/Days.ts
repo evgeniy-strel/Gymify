@@ -6,9 +6,9 @@ export interface IDay {
   is_completed: boolean;
   week_id: string;
   title: string;
-  created_at: Date;
-  started_at: Date | null;
-  completed_at: Date | null;
+  created_at: string;
+  started_at: string | null;
+  completed_at: string | null;
   exercises_count: number;
 }
 

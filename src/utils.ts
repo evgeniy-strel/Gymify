@@ -13,5 +13,11 @@ export { default as DaysService } from "./_utils/service/Days";
 export type { IDay } from "./_utils/service/Days";
 export { default as TimersService } from "./_utils/service/Timers";
 export type { ITimerData, ICheckData } from "./_utils/service/Timers";
+export { default as HistoryService } from "./_utils/service/History";
 
-export { duplicateCall, isIOSPWA, formatTime } from "./_utils/helpers";
+export {
+  duplicateCall,
+  isIOSPWA,
+  formatTime,
+  formatTimeForDuration,
+} from "./_utils/helpers";

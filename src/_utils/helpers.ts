@@ -22,3 +22,10 @@ export const formatTime = (seconds: number): string => {
 
   return `${hours === 0 ? "" : hours + ":"}${minFormatted}:${secFormatted}`;
 };
+
+export const formatTimeForDuration = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const min = Math.floor(seconds / 60) - hours * 60;
+
+  return `${hours ? hours + "ч" : ""} ${min ? min + "м" : ""}`.trim();
+};

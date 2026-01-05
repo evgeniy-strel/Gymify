@@ -1,11 +1,11 @@
 import { useCallback, useState, SyntheticEvent, useMemo } from "react";
 
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import { EPageRoutes } from "./consts";
 import { default as BottomTabs, TABS } from "./BottomTabs";
 import { Main } from "./pages/Main/Main";
-import { Calendar } from "./pages/Calendar";
+import { Calendar } from "./pages/Calendar/Calendar";
 import { Progress } from "./pages/Progress";
 import { Exercises } from "./pages/Exercises/Exercises";
 import Approaches from "./pages/Approaches/Approaches";
@@ -14,8 +14,9 @@ import Weeks from "./pages/Weeks/Weeks";
 import Days from "./pages/Days/Days";
 
 const PageController = () => {
-  const [url, setUrl] = useState(EPageRoutes.main);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [url, setUrl] = useState(location.pathname);
 
   const onChange = useCallback((event: SyntheticEvent, value: EPageRoutes) => {
     setUrl(value);
