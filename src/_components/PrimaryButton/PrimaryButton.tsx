@@ -49,15 +49,15 @@ const PrimaryButton = ({
   return (
     <div
       className={clsx(
-        "rounded-md w-full h-14 flex items-center justify-center text-m px-4",
+        "rounded-lg w-full p-3.5 flex items-center justify-center text-lg px-4",
         {
           "bg-blue-400 text-blue-100": readOnly,
-          "bg-blue-600 text-white": !readOnly,
+          "bg-blue-600 text-white ": !readOnly,
         }
       )}
       onClick={readOnly ? emptyFunction : onClick}
     >
-      <div className="flex justify-between gap-2">
+      <div className="flex justify-between items-center gap-2">
         {iconPosition === "beforeText" && Icon ? <Icon /> : <></>}
         <div>{caption}</div>
         {iconPosition === "afterText" && Icon ? <Icon /> : <></>}

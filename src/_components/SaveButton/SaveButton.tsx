@@ -13,7 +13,7 @@ const SaveButton = ({
 }: IAddButtonProps) => {
   return (
     <div
-      className="rounded-xl p-4 flex items-center justify-center text-lg text-white bg-gradient-to-br from-blue-500 to-blue-600 gap-2"
+      className="rounded-xl p-4 flex items-center justify-center text-white text-lg bg-gradient-to-br from-blue-500 to-blue-600 gap-2"
       onClick={onClick}
     >
       <SaveIcon />

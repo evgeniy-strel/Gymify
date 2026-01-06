@@ -22,7 +22,7 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const Header = (props: any) => {
   const { weekNumber, dayNumber } = useParams();
-  const { exercises } = props;
+  const { exercises, day } = props;
 
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const Header = (props: any) => {
         <div className="p-2" onClick={redirectBack}>
           <ArrowBackIcon />
         </div>
-        <div className="text-xl">День {dayNumber}</div>
+        <div className="text-xl">{day?.title}</div>
       </div>
       <div className="flex items-center gap-2 px-2 text-sm text-gray-600">
         <DateRangeIcon fontSize="small" color="action" />
@@ -138,7 +138,7 @@ export const Exercises = () => {
 
   return (
     <div className="bg-gray-100 h-dvh w-full flex flex-col">
-      <Header exercises={exercises} />
+      <Header exercises={exercises} day={day} />
       <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3 pb-[72px]">
         {exercises && !allCompleted && !day?.started_at && (
           <PrimaryButton

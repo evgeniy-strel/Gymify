@@ -6,9 +6,11 @@ import SaveButton from "../SaveButton/SaveButton";
 import { TextField } from "@mui/material";
 import { useNavigate } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SaveIcon from "@mui/icons-material/Save";
 import Divider from "@mui/material/Divider";
 
 import clsx from "clsx";
+import PrimaryButton from "../PrimaryButton/PrimaryButton";
 
 interface IHeaderProps {
   onClose: Function;
@@ -123,8 +125,13 @@ const AddForm = ({
             />
           </>
         )}
-        <div className="mt-1">
-          <SaveButton onClick={saveHandler} />
+        <div className="mt-1 flex flex-col gap-2">
+          <PrimaryButton
+            caption="Сохранить запись"
+            icon={SaveIcon}
+            iconPosition="beforeText"
+            onClick={saveHandler}
+          />
         </div>
       </div>
     </div>
