@@ -3,7 +3,7 @@ import { ChangeEvent, MouseEventHandler, useState } from "react";
 import { NumberSpinner } from "../../baseUIComponents";
 import SaveButton from "../SaveButton/SaveButton";
 
-import { TextField } from "@mui/material";
+import { LinearProgress, TextField } from "@mui/material";
 import { useNavigate } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
@@ -63,30 +63,50 @@ const AddForm = ({
 }: IAddFormProps) => {
   const [fieldsValues, setFieldsValues] = useState({});
   const [duplicate, setDuplicate] = useState<number>(1);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const onChangeTextField = (
     field: string,
     event: ChangeEvent<HTMLInputElement>
   ) => {
+    if (isSaving) {
+      return;
+    }
+
     const value = event.target.value;
     setFieldsValues((prev) => ({ ...prev, [field]: value }));
   };
 
   const onChangeNumber = (field: string, value: number) => {
+    if (isSaving) {
+      return;
+    }
+
     setFieldsValues((prev) => ({ ...prev, [field]: value }));
   };
 
   const onChangeDuplicate = (value: number) => {
+    if (isSaving) {
+      return;
+    }
+
     setDuplicate(value);
   };
 
-  const saveHandler = () => {
-    onSave(fieldsValues, duplicate);
+  const saveHandler = async () => {
+    if (isSaving) {
+      return;
+    }
+
+    setIsSaving(true);
+    await onSave(fieldsValues, duplicate);
+    setIsSaving(false);
   };
 
   return (
     <div className="bg-gray-100 h-dvh w-full flex flex-col absolute top-0 left-0 z-1000">
       <Header description={description} onClose={onClose} />
+      {isSaving && <LinearProgress />}
       <div className="p-4 flex flex-col gap-2">
         {fields.map((field) => {
           if (field.type === "string") {
@@ -95,6 +115,7 @@ const AddForm = ({
                 label={field.placeholder}
                 variant="outlined"
                 required
+                disabled={isSaving}
                 onChange={(...args: any[]) =>
                   onChangeTextField(field.name, ...args)
                 }
@@ -105,6 +126,7 @@ const AddForm = ({
             return (
               <NumberSpinner
                 label={field.placeholder}
+                disabled={isSaving}
                 {...field.options}
                 onValueChange={(...args: any[]) =>
                   onChangeNumber(field.name, ...args)
@@ -121,6 +143,7 @@ const AddForm = ({
             <NumberSpinner
               label="Продублировать раз"
               defaultValue={duplicate}
+              disabled={isSaving}
               onValueChange={onChangeDuplicate}
             />
           </>
@@ -130,6 +153,7 @@ const AddForm = ({
             caption="Сохранить запись"
             icon={SaveIcon}
             iconPosition="beforeText"
+            readOnly={isSaving}
             onClick={saveHandler}
           />
         </div>

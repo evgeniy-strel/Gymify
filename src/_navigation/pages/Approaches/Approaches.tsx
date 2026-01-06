@@ -16,7 +16,7 @@ import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { AddButton, AddForm, PrimaryButton } from "../../../components";
-import { Skeleton } from "@mui/material";
+import { CircularProgress, LinearProgress, Skeleton } from "@mui/material";
 
 const Header = (props: any) => {
   const { exercise } = props;
@@ -70,6 +70,7 @@ const Approaches = () => {
   const [sets, setSets] = useState<ISet[]>();
   const [exercise, setExercise] = useState<IExercise>();
   const [isAdded, setIsAdded] = useState<boolean>(false);
+  const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
   const isAdmin = useMemo(getIsAdmin, []);
 
@@ -118,9 +119,13 @@ const Approaches = () => {
       });
     };
 
+    setShowSpinner(true);
+
     await duplicateCall(createFunc, duplicate);
 
     const answer = await loadData();
+
+    setShowSpinner(false);
 
     closeAddForm();
   };
@@ -130,12 +135,17 @@ const Approaches = () => {
   };
 
   return (
-    <div className="bg-gray-100 h-dvh w-full flex flex-col">
+    <div className="bg-gray-100 h-dvh w-full flex flex-col relative">
       <Header exercise={exercise} />
       <div className="px-2 py-3 flex flex-col gap-4">
         <div>
           <List items={sets} setItems={setSets} />
         </div>
+        {false && (
+          <div className="absolute top-0 left-0 transform h-dvh w-dvw z-10000">
+            <div className="w-full"></div>
+          </div>
+        )}
         {isAdmin && (
           <div>
             <AddButton onClick={startAddItem} />
