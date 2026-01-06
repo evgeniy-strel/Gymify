@@ -17,6 +17,10 @@ const PageController = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [url, setUrl] = useState(location.pathname);
+  const activeKeyTab = useMemo(
+    () => (Object.values(EPageRoutes).includes(url) ? url : EPageRoutes.main),
+    [url]
+  );
 
   const onChange = useCallback((event: SyntheticEvent, value: EPageRoutes) => {
     setUrl(value);
@@ -62,7 +66,7 @@ const PageController = () => {
       </div>
 
       <div className="h-full flex-1">
-        <BottomTabs activeKey={url} onChange={onChange} />
+        <BottomTabs activeKey={activeKeyTab} onChange={onChange} />
       </div>
     </div>
   );
