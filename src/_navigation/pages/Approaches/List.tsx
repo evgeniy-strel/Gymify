@@ -13,6 +13,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import clsx from "clsx";
 import { Skeleton } from "@mui/material";
 import { Timer } from "../../../components";
+import { useAppResume } from "../../../hooks";
 
 const Header = () => {
   return (
@@ -110,7 +111,7 @@ interface IListProps {
 
 const COUNT_SKELETONS = 5;
 const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
-const TIMER_DURATION = 120;
+const TIMER_DURATION = 90;
 
 const List = (props: IListProps) => {
   const [timerData, setTimerData] = useState<ITimerData>();
@@ -129,6 +130,7 @@ const List = (props: IListProps) => {
   useEffect(() => {
     checkTimer();
   }, []);
+  useAppResume(checkTimer);
 
   const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
     const newItem: ISet = { ...item, is_completed: isCompleted };

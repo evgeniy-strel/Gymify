@@ -6,6 +6,10 @@ export function useTimer(seconds: number) {
   const [secondsLeft, setSecondsLeft] = useState<number>(seconds);
 
   useEffect(() => {
+    setSecondsLeft(seconds);
+  }, [seconds]);
+
+  useEffect(() => {
     let interval;
     interval = setInterval(() => {
       setSecondsLeft((value) => {

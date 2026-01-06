@@ -13,6 +13,7 @@ import {
   IDay,
   IExercise,
 } from "../../../utils";
+import { useAppResume } from "../../../hooks";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -100,6 +101,7 @@ export const Exercises = () => {
   useEffect(() => {
     loadData();
   }, [programId, weekNumber, dayNumber]);
+  useAppResume(loadData);
 
   const startAddItem = () => {
     setIsAdded(true);
