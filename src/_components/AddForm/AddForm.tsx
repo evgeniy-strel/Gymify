@@ -8,9 +8,14 @@ import { useNavigate } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
 import Divider from "@mui/material/Divider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import clsx from "clsx";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
+import { IAddItem } from "./interface";
+import DatePickerValue from "./DatePicker";
+import { Dayjs } from "dayjs";
 
 interface IHeaderProps {
   onClose: Function;
@@ -36,15 +41,6 @@ const Header = (props: IHeaderProps) => {
     </div>
   );
 };
-
-type TTypeFields = "string" | "number";
-
-interface IAddItem {
-  name: string;
-  type: TTypeFields;
-  placeholder: string;
-  options?: object;
-}
 
 interface IAddFormProps {
   fields: IAddItem[];
@@ -78,6 +74,14 @@ const AddForm = ({
   };
 
   const onChangeNumber = (field: string, value: number) => {
+    if (isSaving) {
+      return;
+    }
+
+    setFieldsValues((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const onChangeDate = (field: string, value: Dayjs) => {
     if (isSaving) {
       return;
     }
@@ -131,6 +135,14 @@ const AddForm = ({
                 onValueChange={(...args: any[]) =>
                   onChangeNumber(field.name, ...args)
                 }
+              />
+            );
+          }
+          if (field.type === "date") {
+            return (
+              <DatePickerValue
+                {...field}
+                onChange={(...args: any[]) => onChangeDate(field.name, ...args)}
               />
             );
           }

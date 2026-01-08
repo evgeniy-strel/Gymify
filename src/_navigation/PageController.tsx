@@ -6,7 +6,7 @@ import { EPageRoutes } from "./consts";
 import { default as BottomTabs, TABS } from "./BottomTabs";
 import { Main } from "./pages/Main/Main";
 import { Calendar } from "./pages/Calendar/Calendar";
-import { Progress } from "./pages/Progress";
+import { Progress } from "./pages/Progress/Progress";
 import { Exercises } from "./pages/Exercises/Exercises";
 import Approaches from "./pages/Approaches/Approaches";
 import Auth from "./pages/Auth/Auth";

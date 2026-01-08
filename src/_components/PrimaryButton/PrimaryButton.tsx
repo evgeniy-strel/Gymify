@@ -7,7 +7,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import clsx from "clsx";
 
 interface IProps {
-  onClick: MouseEventHandler<HTMLDivElement>;
+  onClick?: MouseEventHandler<HTMLDivElement>;
   icon?: React.ElementType;
   iconPosition?: "beforeText" | "afterText";
   caption?: string;
