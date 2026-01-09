@@ -29,3 +29,14 @@ export const formatTimeForDuration = (seconds: number): string => {
 
   return `${hours ? hours + "ч" : ""} ${min ? min + "м" : ""}`.trim();
 };
+
+export function formatDateNoYearSuffix(date: string | Date): string {
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })
+    .format(new Date(date))
+    .replace("г.", "")
+    .trim();
+}

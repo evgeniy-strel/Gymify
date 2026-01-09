@@ -99,6 +99,7 @@ const Approaches = () => {
       id: exerciseId as string,
       is_completed: true,
     });
+    navigate(-1);
   };
 
   const startAddItem = () => {

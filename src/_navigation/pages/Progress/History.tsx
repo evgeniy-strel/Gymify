@@ -2,6 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { BodyWeightService, IBodyWeight } from "../../../utils";
 
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
+
 interface IItemTemplateProps {
   item: IBodyWeight;
 }
@@ -17,33 +21,51 @@ function formatDateNoYearSuffix(date: string | Date): string {
     .trim();
 }
 
+const DynamicsIcon = ({ item }: IItemTemplateProps) => {
+  const dynamics = item.dynamics;
+  if (dynamics > 0) {
+    return <TrendingUpIcon color="success" />;
+  }
+
+  if (dynamics < 0) {
+    return <TrendingDownIcon color="error" />;
+  }
+
+  return <TrendingFlatIcon color="action" />;
+};
+
 const ItemTemplate = ({ item }: IItemTemplateProps) => {
   const date = useMemo<string>(
     () => formatDateNoYearSuffix(item.measured_at),
     [item.measured_at]
   );
 
+  if (item.is_year) {
+    return (
+      <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+        <div className="text-sm font-semibold text-gray-600">
+          {new Date(item.measured_at).getFullYear()}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center justify-between p-4">
       <div className="text-sm text-gray-500">{date}</div>
       <div className="flex items-center gap-2">
-        <div className="text-gray-700 font-semibold">{item.value_kg} кг</div>
+        <div className="font-semibold">{item.value_kg} кг</div>
+        <DynamicsIcon item={item} />
       </div>
     </div>
   );
 };
 
-const History = () => {
-  const [items, setItems] = useState<IBodyWeight[]>();
+interface IProps {
+  items: IBodyWeight[];
+}
 
-  const loadData = () => {
-    BodyWeightService.getAll().then(setItems);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
+const History = ({ items }: IProps) => {
   if (!items?.length) {
     return <></>;
   }

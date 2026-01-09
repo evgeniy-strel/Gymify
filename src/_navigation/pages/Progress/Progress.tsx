@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState } from "react";
+import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
 
 import Graph from "./Graph";
 import { AddForm } from "../../../components";
@@ -8,7 +8,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
 import History from "./History";
-import { BodyWeightService, IBodyWeight } from "../../../utils";
+import {
+  BodyWeightService,
+  formatDateNoYearSuffix,
+  IBodyWeight,
+} from "../../../utils";
 import { Dayjs } from "dayjs";
 
 const AddButton = ({
@@ -60,11 +64,27 @@ interface IProps {
 }
 
 const Header2 = ({ startAddItem }: IProps) => {
+  const [currentWeight, setCurrentWeight] = useState<IBodyWeight | null>();
   const navigate = useNavigate();
+  const lastMeasure = useMemo(
+    () =>
+      currentWeight?.measured_at
+        ? formatDateNoYearSuffix(currentWeight.measured_at)
+        : "",
+    [currentWeight?.measured_at]
+  );
 
   const redirectBack = () => {
     navigate(-1);
   };
+
+  const loadCurrentWeight = () => {
+    BodyWeightService.getCurrent().then(setCurrentWeight);
+  };
+
+  useEffect(() => {
+    loadCurrentWeight();
+  }, []);
 
   return (
     <div className="shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-2 z-10 shadow-sm">
@@ -76,11 +96,11 @@ const Header2 = ({ startAddItem }: IProps) => {
         <AddButton onClick={startAddItem} />
       </div>
       <div className="text-3xl flex items-baseline gap-1.5 font-semibold text-center justify-center">
-        <div className="">78.6</div>
+        <div className="">{currentWeight?.value_kg}</div>
         <div>кг</div>
       </div>
       <div className="text-sm text-gray-500 ml-10">
-        Последнее взвешивание: 8 января 2026
+        Последнее взвешивание: {lastMeasure}
       </div>
     </div>
   );
@@ -101,6 +121,24 @@ const FIELDS_FOR_ADD_FORM = [
 
 export const Progress = () => {
   const [isAdded, setIsAdded] = useState<boolean>(false);
+  const [weightItems, setWeightItems] = useState<IBodyWeight[]>();
+
+  const graphItems = useMemo(
+    () =>
+      weightItems
+        ?.filter((item) => !item.is_year)
+        .slice(0, 5)
+        .reverse(),
+    [weightItems]
+  );
+
+  const loadData = () => {
+    BodyWeightService.getAll({ grouped: true }).then(setWeightItems);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const startAddItem = () => {
     setIsAdded(true);
@@ -122,8 +160,8 @@ export const Progress = () => {
     <div className="bg-gray-100 h-dvh w-full flex flex-col">
       <Header2 startAddItem={startAddItem} />
       <div className="flex flex-col pt-4 gap-4 overflow-scroll pb-[72px]">
-        <Graph />
-        <History />
+        <Graph items={graphItems} />
+        <History items={weightItems} />
       </div>
       <div>
         {isAdded && (

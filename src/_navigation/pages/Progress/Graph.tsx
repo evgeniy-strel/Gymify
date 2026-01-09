@@ -5,10 +5,20 @@ import {
   MarkElementProps,
 } from "@mui/x-charts/LineChart";
 import Box from "@mui/material/Box";
+import { IBodyWeight } from "../../../utils";
+import { useCallback, useMemo } from "react";
 
 const margin = { right: 24, left: -12, top: 24 };
-const uData = [71, 69.5, 71.4, 72.6, 73];
-const xLabels = ["янв 25", "февр 25", "март 25", "апр 25", "май 25"];
+
+function formatShortMonth(date: Date) {
+  return new Intl.DateTimeFormat("ru-RU", {
+    month: "short",
+    year: "2-digit",
+  })
+    .format(date)
+    .replace("г.", "")
+    .trim();
+}
 
 function CustomMark(props: MarkElementProps) {
   const { x, y, color } = props;
@@ -27,13 +37,38 @@ function CustomMark(props: MarkElementProps) {
           fontSize: 12,
         }}
       >
-        {uData[props.dataIndex].toString()}
+        {props.seriesData[props.dataIndex].toString()}
       </text>
     </g>
   );
 }
 
-export default function Graph() {
+interface IProps {
+  items: IBodyWeight[];
+}
+
+export default function Graph({ items }: IProps) {
+  const seriesData = useMemo(
+    () => items?.map((item) => item.value_kg),
+    [items]
+  );
+  const labelsData = useMemo(
+    () =>
+      items?.map((item, index) => formatShortMonth(new Date(item.measured_at))),
+    [items]
+  );
+
+  const Mark = useCallback(
+    (props: any) => {
+      return <CustomMark {...props} seriesData={seriesData} />;
+    },
+    [seriesData]
+  );
+
+  if (!items?.length) {
+    return <></>;
+  }
+
   return (
     <div className="bg-white rounded-2xl shadow-md px-1">
       <div className="text-gray-700 mb-2 text-xl font-medium px-3 py-2">
@@ -41,8 +76,8 @@ export default function Graph() {
       </div>
       <Box sx={{ width: "100%", height: 300 }}>
         <LineChart
-          series={[{ data: uData, area: true, baseline: "min" }]}
-          xAxis={[{ scaleType: "point", data: xLabels }]}
+          series={[{ data: seriesData, area: true, baseline: "min" }]}
+          xAxis={[{ scaleType: "point", data: labelsData }]}
           margin={margin}
           sx={{
             [`& .${areaElementClasses.root}`]: {
@@ -50,7 +85,7 @@ export default function Graph() {
             },
           }}
           slots={{
-            mark: CustomMark,
+            mark: Mark,
           }}
           grid={{ horizontal: true }}
         />
