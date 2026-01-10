@@ -5,20 +5,10 @@ import {
   MarkElementProps,
 } from "@mui/x-charts/LineChart";
 import Box from "@mui/material/Box";
-import { IBodyWeight } from "../../../utils";
-import { useCallback, useMemo } from "react";
+import { BodyWeightService, IBodyWeight } from "../../../utils";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-const margin = { right: 24, left: -12, top: 24 };
-
-function formatShortMonth(date: Date) {
-  return new Intl.DateTimeFormat("ru-RU", {
-    month: "short",
-    year: "2-digit",
-  })
-    .format(date)
-    .replace("г.", "")
-    .trim();
-}
+const margin = { right: 24, left: -16, top: 24 };
 
 function CustomMark(props: MarkElementProps) {
   const { x, y, color } = props;
@@ -27,8 +17,8 @@ function CustomMark(props: MarkElementProps) {
     <g>
       <circle cx={x} cy={y} r={4} fill={color || "currentColor"} />
       <text
-        x={x}
-        y={Number(y) - 12}
+        x={props.dataIndex === 0 ? Number(x) + 12 : x}
+        y={props.dataIndex === 0 ? Number(y) - 18 : Number(y) - 12}
         style={{
           textAnchor: "middle",
           dominantBaseline: "auto",
@@ -44,17 +34,18 @@ function CustomMark(props: MarkElementProps) {
 }
 
 interface IProps {
-  items: IBodyWeight[];
+  reloadKey: number;
 }
 
-export default function Graph({ items }: IProps) {
+export default function Graph({ reloadKey }: IProps) {
+  const [items, setItems] = useState<IBodyWeight[]>();
+
   const seriesData = useMemo(
     () => items?.map((item) => item.value_kg),
     [items]
   );
   const labelsData = useMemo(
-    () =>
-      items?.map((item, index) => formatShortMonth(new Date(item.measured_at))),
+    () => items?.map((item, index) => item.short_date),
     [items]
   );
 
@@ -64,6 +55,14 @@ export default function Graph({ items }: IProps) {
     },
     [seriesData]
   );
+
+  const loadData = () => {
+    BodyWeightService.getGraphData().then(setItems);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [reloadKey]);
 
   if (!items?.length) {
     return <></>;

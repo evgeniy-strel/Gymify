@@ -121,24 +121,7 @@ const FIELDS_FOR_ADD_FORM = [
 
 export const Progress = () => {
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const [weightItems, setWeightItems] = useState<IBodyWeight[]>();
-
-  const graphItems = useMemo(
-    () =>
-      weightItems
-        ?.filter((item) => !item.is_year)
-        .slice(0, 5)
-        .reverse(),
-    [weightItems]
-  );
-
-  const loadData = () => {
-    BodyWeightService.getAll({ grouped: true }).then(setWeightItems);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  const [reloadKey, setReloadKey] = useState<number>(0);
 
   const startAddItem = () => {
     setIsAdded(true);
@@ -150,6 +133,7 @@ export const Progress = () => {
       measured_at: item.measured_at.toISOString(),
     });
     closeAddForm();
+    setReloadKey((value) => value + 1);
   };
 
   const closeAddForm = () => {
@@ -159,9 +143,9 @@ export const Progress = () => {
   return (
     <div className="bg-gray-100 h-dvh w-full flex flex-col">
       <Header2 startAddItem={startAddItem} />
-      <div className="flex flex-col pt-4 gap-4 overflow-scroll pb-[72px]">
-        <Graph items={graphItems} />
-        <History items={weightItems} />
+      <div className="flex flex-col pt-4 gap-4 overflow-scroll pb-[92px]">
+        <Graph reloadKey={reloadKey} />
+        <History reloadKey={reloadKey} />
       </div>
       <div>
         {isAdded && (

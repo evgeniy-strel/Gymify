@@ -62,10 +62,20 @@ const ItemTemplate = ({ item }: IItemTemplateProps) => {
 };
 
 interface IProps {
-  items: IBodyWeight[];
+  reloadKey: number;
 }
 
-const History = ({ items }: IProps) => {
+const History = ({ reloadKey }: IProps) => {
+  const [items, setItems] = useState<IBodyWeight[]>();
+
+  const loadData = () => {
+    BodyWeightService.getAll({ grouped: true }).then(setItems);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [reloadKey]);
+
   if (!items?.length) {
     return <></>;
   }

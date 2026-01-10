@@ -141,7 +141,7 @@ export const Exercises = () => {
   return (
     <div className="bg-gray-100 h-dvh w-full flex flex-col">
       <Header exercises={exercises} day={day} />
-      <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3 pb-[72px]">
+      <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3 pb-[92px]">
         {exercises && !allCompleted && !day?.started_at && (
           <PrimaryButton
             caption="Начать тренировку"

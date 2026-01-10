@@ -7,6 +7,7 @@ export interface IBodyWeight {
   created_at: string;
   dynamics: number;
   is_year?: boolean;
+  short_date?: string;
 }
 
 class BodyWeightService {
@@ -32,6 +33,16 @@ class BodyWeightService {
       return res.data;
     } catch (error: any) {
       console.error("Failed to fetch bodyWeight:", error);
+      return [];
+    }
+  }
+
+  async getGraphData(): Promise<IBodyWeight[]> {
+    try {
+      const res = await api.get("/bodyWeight/graph");
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to fetch bodyWeight graph data:", error);
       return [];
     }
   }
