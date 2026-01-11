@@ -5,6 +5,7 @@ import { BodyWeightService, IBodyWeight } from "../../../utils";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
+import { Skeleton } from "@mui/material";
 
 interface IItemTemplateProps {
   item: IBodyWeight;
@@ -61,6 +62,25 @@ const ItemTemplate = ({ item }: IItemTemplateProps) => {
   );
 };
 
+const SkeletonItemTemplate = ({ index }: { index: number }) => {
+  if (index === 0) {
+    return (
+      <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+        <Skeleton variant="rounded" animation="wave" height={20} width={50} />
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center justify-between p-4">
+      <Skeleton variant="rounded" animation="wave" height={20} width={80} />
+      <Skeleton variant="rounded" animation="wave" height={20} width={60} />
+    </div>
+  );
+};
+
+const COUNT_SKELETONS = 10;
+const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
+
 interface IProps {
   reloadKey: number;
 }
@@ -76,19 +96,17 @@ const History = ({ reloadKey }: IProps) => {
     loadData();
   }, [reloadKey]);
 
-  if (!items?.length) {
-    return <></>;
-  }
-
   return (
     <div className="bg-white rounded-2xl shadow-md">
       <div className="text-gray-700 text-xl font-medium p-4 border-b border-gray-200">
         История взвешиваний
       </div>
       <div className="divide-y divide-gray-200">
-        {items.map((item) => (
-          <ItemTemplate key={item.id} item={item} />
-        ))}
+        {items?.length
+          ? items.map((item) => <ItemTemplate key={item.id} item={item} />)
+          : SKELETON_ITEMS.map((item, index) => (
+              <SkeletonItemTemplate key={index} index={index} />
+            ))}
       </div>
     </div>
   );

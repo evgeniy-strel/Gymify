@@ -3,7 +3,7 @@ import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
 import Graph from "./Graph";
 import { AddForm } from "../../../components";
 
-import { Typography } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
@@ -96,11 +96,27 @@ const Header2 = ({ startAddItem }: IProps) => {
         <AddButton onClick={startAddItem} />
       </div>
       <div className="text-3xl flex items-baseline gap-1.5 font-semibold text-center justify-center">
-        <div className="">{currentWeight?.value_kg}</div>
+        <div>
+          {currentWeight ? (
+            currentWeight?.value_kg
+          ) : (
+            <Skeleton
+              variant="rounded"
+              animation="wave"
+              height={30}
+              width={32}
+            />
+          )}
+        </div>
         <div>кг</div>
       </div>
-      <div className="text-sm text-gray-500 ml-10">
-        Последнее взвешивание: {lastMeasure}
+      <div className="flex gap-1 items-center text-sm text-gray-500 ml-10">
+        <div>Последнее взвешивание:</div>
+        {lastMeasure ? (
+          lastMeasure
+        ) : (
+          <Skeleton variant="rounded" animation="wave" height={20} width={90} />
+        )}
       </div>
     </div>
   );

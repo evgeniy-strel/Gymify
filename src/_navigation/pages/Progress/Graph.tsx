@@ -7,6 +7,7 @@ import {
 import Box from "@mui/material/Box";
 import { BodyWeightService, IBodyWeight } from "../../../utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Skeleton } from "@mui/material";
 
 const margin = { right: 24, left: -16, top: 24 };
 
@@ -64,31 +65,38 @@ export default function Graph({ reloadKey }: IProps) {
     loadData();
   }, [reloadKey]);
 
-  if (!items?.length) {
-    return <></>;
-  }
-
   return (
     <div className="bg-white rounded-2xl shadow-md px-1">
       <div className="text-gray-700 mb-2 text-xl font-medium px-3 py-2">
         График изменения веса
       </div>
-      <Box sx={{ width: "100%", height: 300 }}>
-        <LineChart
-          series={[{ data: seriesData, area: true, baseline: "min" }]}
-          xAxis={[{ scaleType: "point", data: labelsData }]}
-          margin={margin}
-          sx={{
-            [`& .${areaElementClasses.root}`]: {
-              fill: "#2967ed8e",
-            },
-          }}
-          slots={{
-            mark: Mark,
-          }}
-          grid={{ horizontal: true }}
-        />
-      </Box>
+      {items?.length ? (
+        <Box sx={{ width: "100%", height: 300 }}>
+          <LineChart
+            series={[{ data: seriesData, area: true, baseline: "min" }]}
+            xAxis={[{ scaleType: "point", data: labelsData }]}
+            margin={margin}
+            sx={{
+              [`& .${areaElementClasses.root}`]: {
+                fill: "#2967ed8e",
+              },
+            }}
+            slots={{
+              mark: Mark,
+            }}
+            grid={{ horizontal: true }}
+          />
+        </Box>
+      ) : (
+        <div className="h-[300px] pb-4 px-1 rounded-xl overflow-hidden box-border">
+          <Skeleton
+            className="h-full"
+            variant="rounded"
+            animation="wave"
+            height={"100%"}
+          />
+        </div>
+      )}
     </div>
   );
 }
