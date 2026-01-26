@@ -8,9 +8,19 @@ export interface IWeek {
 }
 
 class WeeksService {
+  async create(item: Pick<IWeek, "program_id">): Promise<IWeek | null> {
+    try {
+      const res = await api.post("/weeks", item);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error creating program:", error);
+      return null;
+    }
+  }
+
   async get(programId: string): Promise<IWeek[]> {
     try {
-      const response = await api.get(`weeks/${programId}`);
+      const response = await api.get(`/weeks/${programId}`);
       return response.data;
     } catch (error) {
       console.error("Error loading week:", error);
@@ -19,7 +29,7 @@ class WeeksService {
   }
 
   async update(
-    item: Pick<IWeek, "id"> & Partial<IWeek>
+    item: Pick<IWeek, "id"> & Partial<IWeek>,
   ): Promise<IWeek | null> {
     try {
       const { id, ...fields } = item;

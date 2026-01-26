@@ -13,6 +13,16 @@ export interface IDay {
 }
 
 class DaysService {
+  async create(item: Pick<IDay, "week_id" | "title">): Promise<IDay | null> {
+    try {
+      const res = await api.post("/days", item);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error creating program:", error);
+      return null;
+    }
+  }
+
   async getAll(programId: string, week: number): Promise<IDay[]> {
     try {
       const res = await api.get(`/days/${programId}/${week}`);

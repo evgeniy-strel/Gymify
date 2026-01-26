@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { DaysService, IDay, IWeek, WeeksService } from "../../../utils";
+import {
+  DaysService,
+  getIsAdmin,
+  IDay,
+  IWeek,
+  WeeksService,
+} from "../../../utils";
 import { EPageRoutes } from "../../consts";
-import { PrimaryButton } from "../../../components";
+import { AddButton, AddForm, PrimaryButton } from "../../../components";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -27,7 +33,7 @@ const Header = ({ program }: any) => {
   return (
     <div
       className={clsx(
-        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-1 z-10 shadow-sm"
+        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-1 z-10 shadow-sm",
       )}
     >
       <div className="flex items-center">
@@ -51,7 +57,7 @@ const Icon = (props: any) => {
         "w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg p-2 shrink-0 bg-gradient-to-br from-blue-500 to-blue-600",
         {
           "border-1": item.is_completed,
-        }
+        },
       )}
     >
       <img className="w-full h-full" src={url} />
@@ -89,7 +95,7 @@ const ItemTemplate = ({ item }: IProps) => {
     >
       <div className="flex items-center justify-between">
         <div className="flex gap-4 items-center">
-          <Icon url={iconUrl} item={item} />
+          {iconUrl && <Icon url={iconUrl} item={item} />}
           <div>
             <div className="text-xl">{item.title}</div>
             <div>{item.exercises_count} упражнений</div>
@@ -120,21 +126,23 @@ const SkeletonItemTemplate = () => {
 const COUNT_SKELETONS = 3;
 const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
+const FIELDS_FOR_ADD_FORM = [
+  {
+    name: "title",
+    type: "string",
+    placeholder: "Название дня",
+  },
+];
+
 const Days = () => {
   const { programId, weekNumber: weekNumberString } = useParams();
   const navigate = useNavigate();
   const weekNumber = Number(weekNumberString);
 
   const [days, setDays] = useState<IDay[]>();
-
-  const finishWeek = async () => {
-    const weekId = `${programId}_${weekNumber}`;
-    await WeeksService.update({
-      id: weekId as string,
-      is_completed: true,
-    });
-    navigate(-1);
-  };
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const isAdmin = useMemo(getIsAdmin, []);
+  const weekId = `${programId}_${weekNumber}`;
 
   const allCompleted = useMemo(() => {
     return (
@@ -142,27 +150,72 @@ const Days = () => {
     );
   }, [days]);
 
+  const finishWeek = async () => {
+    await WeeksService.update({
+      id: weekId as string,
+      is_completed: true,
+    });
+    navigate(-1);
+  };
+
+  const loadData = () => {
+    DaysService.getAll(programId, weekNumber).then(setDays);
+  };
+
   useEffect(() => {
-    DaysService.getAll(programId, weekNumber).then((data: IDay[]) =>
-      setDays(data)
-    );
+    loadData();
   }, []);
+
+  const startAddItem = () => {
+    setIsAdded(true);
+  };
+
+  const onSaveItem = async (item: Pick<IDay, "title">) => {
+    await DaysService.create({
+      ...item,
+      week_id: weekId,
+    });
+    await loadData();
+    closeAddForm();
+  };
+
+  const closeAddForm = () => {
+    setIsAdded(false);
+  };
 
   return (
     <div className="h-dvh w-full flex flex-col">
       <Header />
-      <div className="py-4 px-3 flex flex-col gap-3">
-        {days
-          ? days.map((item) => <ItemTemplate key={item.id} item={item} />)
-          : SKELETON_ITEMS.map((item, index) => (
-              <SkeletonItemTemplate key={index} />
-            ))}
-        {allCompleted && (
-          <PrimaryButton
-            caption="Закончить неделю"
-            icon={TaskAltIcon}
-            onClick={finishWeek}
-          />
+      <div className="py-4 px-3">
+        {days?.length === 0 ? (
+          <></>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {days
+              ? days.map((item) => <ItemTemplate key={item.id} item={item} />)
+              : SKELETON_ITEMS.map((item, index) => (
+                  <SkeletonItemTemplate key={index} />
+                ))}
+            {allCompleted && (
+              <PrimaryButton
+                caption="Закончить неделю"
+                icon={TaskAltIcon}
+                onClick={finishWeek}
+              />
+            )}
+          </div>
+        )}
+        {isAdmin && (
+          <div className="pt-3">
+            <AddButton onClick={startAddItem} />
+            {isAdded && (
+              <AddForm
+                onSave={onSaveItem}
+                onClose={closeAddForm}
+                fields={FIELDS_FOR_ADD_FORM}
+              />
+            )}
+          </div>
         )}
       </div>
     </div>

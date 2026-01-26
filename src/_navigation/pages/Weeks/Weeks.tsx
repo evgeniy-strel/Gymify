@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { ProgramsService, WeeksService, IProgram, IWeek } from "../../../utils";
+import {
+  ProgramsService,
+  WeeksService,
+  IProgram,
+  IWeek,
+  getIsAdmin,
+} from "../../../utils";
 
 import { useNavigate, useParams } from "react-router";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -8,6 +14,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import clsx from "clsx";
 import { Skeleton } from "@mui/material";
+import { AddButton, AddForm } from "../../../components";
 
 interface IHeaderProps {
   program?: IProgram;
@@ -23,7 +30,7 @@ const Header = ({ program }: IHeaderProps) => {
   return (
     <div
       className={clsx(
-        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-1 z-10 shadow-sm"
+        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-1 z-10 shadow-sm",
       )}
     >
       <div className="flex items-center">
@@ -99,8 +106,10 @@ const Weeks = () => {
 
   const [weeks, setWeeks] = useState<IWeek[]>();
   const [program, setProgram] = useState<IProgram[]>();
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const isAdmin = useMemo(getIsAdmin, []);
 
-  useEffect(() => {
+  const loadData = () => {
     Promise.all([
       WeeksService.get(programId),
       ProgramsService.getById(programId),
@@ -111,20 +120,41 @@ const Weeks = () => {
       })
       .catch((error: any) => {
         alert("Ошибка загрузки недель и программ", error?.message);
-      })
-      .finally(() => {});
+      });
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
+
+  const addItem = async () => {
+    if (!programId) {
+      return;
+    }
+
+    await WeeksService.create({ program_id: programId });
+    await loadData();
+  };
 
   return (
     <div className="h-dvh w-full flex flex-col">
       <Header program={program} />
-      <div className="py-4 px-3 grid grid-cols-4 gap-3">
-        {weeks
-          ? weeks.map((item) => <ItemTemplate key={item.id} item={item} />)
-          : SKELETON_ITEMS.map((item, index) => (
-              <SkeletonItemTemplate key={index} />
-            ))}
-      </div>
+      {weeks?.length === 0 ? (
+        <></>
+      ) : (
+        <div className="py-4 px-3 grid grid-cols-4 gap-3">
+          {weeks
+            ? weeks.map((item) => <ItemTemplate key={item.id} item={item} />)
+            : SKELETON_ITEMS.map((item, index) => (
+                <SkeletonItemTemplate key={index} />
+              ))}
+        </div>
+      )}
+      {isAdmin && (
+        <div className="px-3 py-3">
+          <AddButton onClick={addItem} />
+        </div>
+      )}
     </div>
   );
 };

@@ -73,12 +73,12 @@ export const Exercises = () => {
       day?.started_at
         ? Math.floor((Date.now() - new Date(day?.started_at)) / 1000)
         : 0,
-    [day?.started_at]
+    [day?.started_at],
   );
 
   const dayId = useMemo(
     () => `${programId}_${weekNumber}_${dayNumber}`,
-    [programId, weekNumber, dayNumber]
+    [programId, weekNumber, dayNumber],
   );
 
   const allCompleted = useMemo(() => {

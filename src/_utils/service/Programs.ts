@@ -10,6 +10,18 @@ export interface IProgram {
 }
 
 class ProgramsService {
+  async create(
+    item: Pick<IProgram, "id" | "title" | "description">,
+  ): Promise<IProgram | null> {
+    try {
+      const res = await api.post("/programs", item);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error creating program:", error);
+      return null;
+    }
+  }
+
   async getAll(): Promise<IProgram[]> {
     try {
       const response = await api.get("/programs");
