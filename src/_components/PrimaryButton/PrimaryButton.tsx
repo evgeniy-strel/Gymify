@@ -1,8 +1,16 @@
-import { MouseEventHandler, useEffect, useMemo, useState } from "react";
+import {
+  MouseEventHandler,
+  useEffect,
+  useMemo,
+  useState,
+  Fragment,
+  useCallback,
+} from "react";
 
 import { formatTime } from "../../utils";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { CircularProgress } from "@mui/material";
 
 import clsx from "clsx";
 
@@ -14,6 +22,7 @@ interface IProps {
   readOnly?: boolean;
   withStopWatch?: boolean;
   stopWatchSeconds?: number;
+  isLoading?: boolean;
 }
 
 const emptyFunction = () => {};
@@ -24,11 +33,12 @@ const emptyFunction = () => {};
 const PrimaryButton = ({
   onClick,
   caption = "",
-  icon: Icon,
+  icon: Icon = Fragment,
   iconPosition = "afterText",
   readOnly,
   withStopWatch,
   stopWatchSeconds,
+  isLoading,
 }: IProps) => {
   const [seconds, setSeconds] = useState<number>(stopWatchSeconds || 0);
 
@@ -46,6 +56,14 @@ const PrimaryButton = ({
 
   const formattedTime = useMemo(() => formatTime(seconds), [seconds]);
 
+  const DisplayIcon = useCallback(() => {
+    if (isLoading) {
+      return <CircularProgress size={24} sx={{ color: "white" }} />;
+    }
+
+    return <Icon />;
+  }, [Icon, isLoading]);
+
   return (
     <div
       className={clsx(
@@ -53,14 +71,14 @@ const PrimaryButton = ({
         {
           "bg-blue-400 text-blue-100": readOnly,
           "bg-blue-600 text-white ": !readOnly,
-        }
+        },
       )}
       onClick={readOnly ? emptyFunction : onClick}
     >
       <div className="flex justify-between items-center gap-2">
-        {iconPosition === "beforeText" && Icon ? <Icon /> : <></>}
+        {iconPosition === "beforeText" && Icon ? <DisplayIcon /> : <></>}
         <div>{caption}</div>
-        {iconPosition === "afterText" && Icon ? <Icon /> : <></>}
+        {iconPosition === "afterText" && Icon ? <DisplayIcon /> : <></>}
       </div>
       {withStopWatch && (
         <div className="flex gap-1.5 ml-auto">

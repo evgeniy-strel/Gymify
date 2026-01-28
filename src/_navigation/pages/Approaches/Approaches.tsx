@@ -9,14 +9,13 @@ import {
   type ISet,
 } from "../../../utils";
 import List from "./List";
-import { useAppResume } from "../../../hooks";
 
 import clsx from "clsx";
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { AddButton, AddForm, PrimaryButton } from "../../../components";
-import { CircularProgress, LinearProgress, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 
 const Header = (props: any) => {
   const { exercise } = props;
@@ -30,7 +29,7 @@ const Header = (props: any) => {
   return (
     <div
       className={clsx(
-        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pt-1 pb-2 z-10 shadow-sm"
+        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pt-1 pb-2 z-10 shadow-sm",
       )}
     >
       <div className="flex items-center">
@@ -70,7 +69,7 @@ const Approaches = () => {
   const [sets, setSets] = useState<ISet[]>();
   const [exercise, setExercise] = useState<IExercise>();
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const [showSpinner, setShowSpinner] = useState<boolean>(false);
+  const [isFinishCallActive, setIsFinishCallActive] = useState<boolean>();
 
   const isAdmin = useMemo(getIsAdmin, []);
 
@@ -95,10 +94,12 @@ const Approaches = () => {
   }, [exerciseId]);
 
   const finishExercise = async () => {
+    setIsFinishCallActive(true);
     await ExercisesService.update({
       id: exerciseId as string,
       is_completed: true,
     });
+    setIsFinishCallActive(false);
     navigate(-1);
   };
 
@@ -120,13 +121,9 @@ const Approaches = () => {
       });
     };
 
-    setShowSpinner(true);
-
     await duplicateCall(createFunc, duplicate);
 
     const answer = await loadData();
-
-    setShowSpinner(false);
 
     closeAddForm();
   };
@@ -164,6 +161,7 @@ const Approaches = () => {
         {allCompleted && (
           <PrimaryButton
             caption="Закончить упражнение"
+            isLoading={isFinishCallActive}
             icon={TaskAltIcon}
             onClick={finishExercise}
           />
