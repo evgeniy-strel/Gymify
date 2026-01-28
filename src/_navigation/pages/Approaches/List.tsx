@@ -11,7 +11,7 @@ import styles from "./List.module.less";
 
 import CheckIcon from "@mui/icons-material/Check";
 import clsx from "clsx";
-import { Skeleton } from "@mui/material";
+import { CircularProgress, Skeleton } from "@mui/material";
 import { Timer } from "../../../components";
 import { useAppResume } from "../../../hooks";
 
@@ -20,7 +20,7 @@ const Header = () => {
     <div
       className={clsx(
         "px-5 pb-1 text-xs text-gray-500 uppercase tracking-wide",
-        styles.GridItem
+        styles.GridItem,
       )}
     >
       <div className=""></div>
@@ -36,6 +36,7 @@ interface IItemTemplateProps {
   index: number;
   timerData: ITimerData;
   isRest: boolean;
+  isReloading: boolean;
   onToggleCheckbox: (isCompleted: boolean, item: ISet) => void;
 }
 
@@ -43,6 +44,7 @@ const ItemTemplate = ({
   item,
   index,
   isRest,
+  isReloading,
   timerData,
   onToggleCheckbox,
 }: IItemTemplateProps) => {
@@ -59,7 +61,7 @@ const ItemTemplate = ({
           {
             "bg-white border-gray-200": !item.is_completed,
             "bg-gradient-to-r from-blue-500 to-blue-600": item.is_completed,
-          }
+          },
         )}
       >
         <div className="flex items-center justify-center min-w-10 text-center py-2 px-2 rounded-lg text-sm bg-gray-100 text-gray-600">
@@ -75,21 +77,28 @@ const ItemTemplate = ({
           type="number"
           value={item.reps}
         />
-        {/* <input className="shrink-0 size-6 bg-gray-100" type="checkbox"></input> */}
-        <label className="relative flex">
-          <input
-            type="checkbox"
-            checked={item.is_completed}
-            className="appearance-none shrink-0 w-full h-full bg-gray-100 border border-gray-300 rounded checked:border-gray-800 checked:bg-white"
-            onChange={onToggleCheckBox}
+        {isReloading && (
+          <CircularProgress
+            size="100%"
+            sx={{ color: item.is_completed ? "white" : "#155dfc" }}
           />
-          {item.is_completed && (
-            <CheckIcon
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              sx={{ color: "black" }}
+        )}
+        {!isReloading && (
+          <label className="relative flex">
+            <input
+              type="checkbox"
+              checked={item.is_completed}
+              className="appearance-none shrink-0 w-full h-full bg-gray-100 border border-gray-300 rounded checked:border-gray-800 checked:bg-white"
+              onChange={onToggleCheckBox}
             />
-          )}
-        </label>
+            {item.is_completed && (
+              <CheckIcon
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                sx={{ color: "black" }}
+              />
+            )}
+          </label>
+        )}
       </div>
       {isRest && timerData && <Timer className="mt-2.5" data={timerData} />}
     </div>
@@ -116,6 +125,7 @@ const TIMER_DURATION = 90;
 const List = (props: IListProps) => {
   const [timerData, setTimerData] = useState<ITimerData>();
   const [restSetId, setRestSetId] = useState<string>();
+  const [reloadingItem, setReloadingItem] = useState<string>();
   const { items, setItems } = props;
 
   const checkTimer = () => {
@@ -127,13 +137,11 @@ const List = (props: IListProps) => {
     });
   };
 
-  useEffect(() => {
-    checkTimer();
-  }, []);
   useAppResume(checkTimer);
 
   const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
     const newItem: ISet = { ...item, is_completed: isCompleted };
+    setReloadingItem(newItem.id);
     SetsService.update({
       id: newItem.id,
       is_completed: newItem.is_completed,
@@ -159,6 +167,7 @@ const List = (props: IListProps) => {
       setRestSetId(undefined);
     }
     setItems(newItems);
+    setReloadingItem(undefined);
   };
 
   return (
@@ -174,6 +183,7 @@ const List = (props: IListProps) => {
                 index={index}
                 key={index}
                 isRest={restSetId === item.id}
+                isReloading={reloadingItem === item.id}
                 timerData={timerData}
                 onToggleCheckbox={onToggleCheckBox}
               />
