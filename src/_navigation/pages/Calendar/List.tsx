@@ -30,22 +30,22 @@ function formatWeekday(date: string | Date) {
 const ItemTemplate = ({ item }: IItemTemplateProps) => {
   const date = useMemo(
     () => formatDateNoYearSuffix(item.started_at as string),
-    [item.started_at]
+    [item.started_at],
   );
 
   const weekDay = useMemo(
     () => formatWeekday(item.started_at as string),
-    [item.started_at]
+    [item.started_at],
   );
 
   const duration = useMemo(
     () =>
       formatTimeForDuration(
         Math.floor(
-          (new Date(item.completed_at) - new Date(item.started_at)) / 1000
-        )
+          (new Date(item.completed_at) - new Date(item.started_at)) / 1000,
+        ),
       ),
-    [item.completed_at, item.started_at]
+    [item.completed_at, item.started_at],
   );
 
   return (
@@ -92,7 +92,7 @@ interface IListProps {
 
 const List = ({ items }: IListProps) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 px-2">
       <div className="capitalize">Январь 2026</div>
       {items.map((item) => (
         <ItemTemplate key={item.id} item={item} />
