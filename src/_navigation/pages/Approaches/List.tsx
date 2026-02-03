@@ -137,6 +137,10 @@ const List = (props: IListProps) => {
     });
   };
 
+  useEffect(() => {
+    checkTimer();
+  }, []);
+
   useAppResume(checkTimer);
 
   const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
