@@ -1,4 +1,4 @@
-export type TTypeFields = "string" | "number";
+export type TTypeFields = "string" | "number" | "date";
 
 export interface IAddItem {
   name: string;

@@ -15,7 +15,7 @@ import clsx from "clsx";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { IAddItem } from "./interface";
 import DatePickerValue from "./DatePicker";
-import { Dayjs } from "dayjs";
+import { Dayjs, default as dayjs } from "dayjs";
 
 interface IHeaderProps {
   onClose: Function;
@@ -26,7 +26,7 @@ const Header = (props: IHeaderProps) => {
   return (
     <div
       className={clsx(
-        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pt-1 pb-2 z-10 shadow-sm"
+        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pt-1 pb-2 z-10 shadow-sm",
       )}
     >
       <div className="flex items-center" onClick={props.onClose}>
@@ -57,13 +57,20 @@ const AddForm = ({
   duplicateButton,
   description,
 }: IAddFormProps) => {
-  const [fieldsValues, setFieldsValues] = useState({});
+  const [fieldsValues, setFieldsValues] = useState(
+    fields.reduce((result, field) => {
+      if (field.type === "date") {
+        result[field.name] = dayjs(new Date());
+      }
+      return result;
+    }, {}),
+  );
   const [duplicate, setDuplicate] = useState<number>(1);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const onChangeTextField = (
     field: string,
-    event: ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLInputElement>,
   ) => {
     if (isSaving) {
       return;
