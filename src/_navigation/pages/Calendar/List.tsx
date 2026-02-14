@@ -27,6 +27,25 @@ function formatWeekday(date: string | Date) {
   }).format(new Date(date));
 }
 
+const GroupTemplate = ({ item }: IItemTemplateProps) => {
+  const date = new Date(item.started_at)
+    .toLocaleDateString("ru-RU", {
+      month: "long",
+      year: "numeric",
+    })
+    .replace("г.", "")
+    .trim();
+
+  return (
+    <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between">
+      <div className="text-sm font-semibold text-gray-600 capitalize">
+        {date}
+      </div>
+      <div className="text-sm text-gray-500">{item.title}</div>
+    </div>
+  );
+};
+
 const ItemTemplate = ({ item }: IItemTemplateProps) => {
   const date = useMemo(
     () => formatDateNoYearSuffix(item.started_at as string),
@@ -49,31 +68,24 @@ const ItemTemplate = ({ item }: IItemTemplateProps) => {
   );
 
   return (
-    <div className="text-card-foreground flex flex-col gap-4 rounded-xl p-3 shadow-md bg-white">
-      <div className="flex items-center gap-2.5 w-full">
-        <div className="bg-blue-600 p-1 rounded-lg">
-          <CalendarMonthIcon sx={{ color: "white" }} />
-        </div>
-        <div className="w-full">
-          <div className="w-full">
-            <div className="text-gray-900">{date}</div>
-          </div>
-          <div className="flex justify-between w-full baseline">
-            <div className="text-xs text-gray-500 flex gap-1">
-              <div className="capitalize">{weekDay}</div>
-              <div>•</div>
-              <div className="capitalize"> {item.title}</div>
-            </div>
+    <div className="text-card-foreground flex flex-col gap-2 p-3 bg-white">
+      <div className="w-full flex items-baseline gap-3">
+        <div className="text-gray-900">{date}</div>
+        <div className="flex justify-between baseline">
+          <div className="text-xs text-gray-500 flex gap-1">
+            <div className="capitalize">{weekDay}</div>
+            <div>•</div>
+            <div className="capitalize"> {item.title}</div>
           </div>
         </div>
       </div>
       <div className="flex items-center gap-1.5 text-sm text-gray-600 baseline">
         <AccessTimeIcon color="action" fontSize="small" />
         <div>
-          {new Date(item.started_at).getHours()}:
-          {new Date(item.started_at).getMinutes()} -{" "}
-          {new Date(item.completed_at).getHours()}:
-          {new Date(item.completed_at).getMinutes()}
+          {String(new Date(item.started_at).getHours()).padStart(2, "0")}:
+          {String(new Date(item.started_at).getMinutes()).padStart(2, "0")} -{" "}
+          {String(new Date(item.completed_at).getHours()).padStart(2, "0")}:
+          {String(new Date(item.completed_at).getMinutes()).padStart(2, "0")}
         </div>
         <div className="flex items-center gap-4 text-sm text-gray-600 ml-2">
           <div className="flex items-center gap-1.5 text-xs text-gray-600">
@@ -86,16 +98,23 @@ const ItemTemplate = ({ item }: IItemTemplateProps) => {
   );
 };
 
+const RenderTemplate = ({ item }: IItemTemplateProps) => {
+  if (item.is_month) {
+    return <GroupTemplate item={item} />;
+  }
+
+  return <ItemTemplate item={item} />;
+};
+
 interface IListProps {
   items: IDay[];
 }
 
 const List = ({ items }: IListProps) => {
   return (
-    <div className="flex flex-col gap-3 px-2">
-      <div className="capitalize">Январь 2026</div>
+    <div className="flex flex-col divide-y divide-gray-200">
       {items.map((item) => (
-        <ItemTemplate key={item.id} item={item} />
+        <RenderTemplate key={item.id} item={item} />
       ))}
     </div>
   );

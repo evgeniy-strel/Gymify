@@ -2,9 +2,13 @@ import api from "../axios";
 import type { IDay } from "./Days";
 
 class HistoryService {
-  async getAll(): Promise<IDay[]> {
+  async getAll({ grouped }: { grouped?: boolean } = {}): Promise<IDay[]> {
     try {
-      const res = await api.get(`/history`);
+      const res = await api.get(`/history`, {
+        params: {
+          grouped,
+        },
+      });
       return res.data;
     } catch (error: any) {
       console.error("Failed to fetch history:", error);

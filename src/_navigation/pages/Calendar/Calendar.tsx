@@ -18,7 +18,7 @@ const Header = () => {
       )}
     >
       <div className="flex items-center p-2">
-        <div className="text-xl">История</div>
+        <div className="text-xl">Мои посещения</div>
       </div>
     </div>
   );
@@ -27,12 +27,12 @@ const Header = () => {
 export const Calendar = () => {
   const [history, setHistory] = useState<IDay[]>();
   useEffect(() => {
-    HistoryService.getAll().then(setHistory);
+    HistoryService.getAll({ grouped: true }).then(setHistory);
   }, []);
   return (
     <div className="h-dvh flex flex-col">
       <Header />
-      <div className="pt-2 overflow-scroll pb-[92px]">
+      <div className="bg-white overflow-scroll pb-[72px]">
         {history && <List items={history} />}
       </div>
     </div>

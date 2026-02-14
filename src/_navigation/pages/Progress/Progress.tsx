@@ -71,7 +71,7 @@ const Header2 = ({ startAddItem }: IProps) => {
       currentWeight?.measured_at
         ? formatDateNoYearSuffix(currentWeight.measured_at)
         : "",
-    [currentWeight?.measured_at]
+    [currentWeight?.measured_at],
   );
 
   const redirectBack = () => {
