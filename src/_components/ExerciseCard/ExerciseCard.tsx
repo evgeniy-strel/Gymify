@@ -13,6 +13,25 @@ interface IProps {
   index: number;
 }
 
+const getSetFormWord = (count: number): string => {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (
+    (10 <= lastTwoDigits && lastTwoDigits <= 20) ||
+    (5 <= lastDigit && lastDigit <= 9) ||
+    lastDigit === 0
+  ) {
+    return "подходов";
+  }
+
+  if (2 <= lastDigit && lastDigit <= 4) {
+    return "подхода";
+  }
+
+  return "подход";
+};
+
 export const ExerciseCard = (props: IProps) => {
   const { item, index } = props;
 
@@ -37,7 +56,7 @@ export const ExerciseCard = (props: IProps) => {
             {
               "bg-white text-black": item.is_completed,
               "bg-blue-600 text-white": !item.is_completed,
-            }
+            },
           )}
         >
           <div className="text-xl">{item.order || index}</div>
@@ -57,7 +76,7 @@ export const ExerciseCard = (props: IProps) => {
             })}
           >
             {item.sets_count
-              ? `${item.sets_count} подхода`
+              ? `${item.sets_count} ${getSetFormWord(item.sets_count)}`
               : "подходы не заполнены"}
           </div>
         </div>
