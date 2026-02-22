@@ -40,3 +40,22 @@ export function formatDateNoYearSuffix(date: string | Date): string {
     .replace("г.", "")
     .trim();
 }
+
+export function getExerciseWordForm(count: number): string {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (
+    (10 <= lastTwoDigits && lastTwoDigits <= 20) ||
+    (5 <= lastDigit && lastDigit <= 9) ||
+    lastDigit === 0
+  ) {
+    return "упражнений";
+  }
+
+  if (2 <= lastDigit && lastDigit <= 4) {
+    return "упражнения";
+  }
+
+  return "упражнение";
+}

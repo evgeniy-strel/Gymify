@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   DaysService,
+  getExerciseWordForm,
   getIsAdmin,
   IDay,
   IWeek,
@@ -98,7 +99,9 @@ const ItemTemplate = ({ item }: IProps) => {
           {iconUrl && <Icon url={iconUrl} item={item} />}
           <div>
             <div className="text-xl">{item.title}</div>
-            <div>{item.exercises_count} упражнений</div>
+            <div>
+              {item.exercises_count} {getExerciseWordForm(item.exercises_count)}
+            </div>
           </div>
         </div>
         {item.is_completed ? (

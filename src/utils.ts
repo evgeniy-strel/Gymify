@@ -23,4 +23,5 @@ export {
   formatTime,
   formatTimeForDuration,
   formatDateNoYearSuffix,
+  getExerciseWordForm,
 } from "./_utils/helpers";

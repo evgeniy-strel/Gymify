@@ -9,6 +9,7 @@ import {
 import {
   DaysService,
   ExercisesService,
+  getExerciseWordForm,
   getIsAdmin,
   IDay,
   IExercise,
@@ -43,7 +44,10 @@ const Header = (props: any) => {
         <DateRangeIcon fontSize="small" color="action" />
         <div>Неделя {weekNumber}</div>
         <div className="h-1 w-1 rounded-full bg-gray-400"></div>
-        <div>{exercises ? exercises.length : "..."} упражнений</div>
+        <div>
+          {exercises ? exercises.length : "..."}{" "}
+          {exercises && getExerciseWordForm(exercises.length)}
+        </div>
       </div>
     </div>
   );
