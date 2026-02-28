@@ -19,7 +19,7 @@ const PageController = () => {
   const [url, setUrl] = useState(location.pathname);
   const activeKeyTab = useMemo(
     () => (Object.values(EPageRoutes).includes(url) ? url : EPageRoutes.main),
-    [url]
+    [url],
   );
 
   const onChange = useCallback((event: SyntheticEvent, value: EPageRoutes) => {
@@ -29,7 +29,12 @@ const PageController = () => {
   }, []);
 
   return (
-    <div className="flex flex-col overflow-hidden h-dvh bg-gradient-to-br from-blue-50 to-white">
+    <div
+      className="flex flex-col overflow-hidden h-screen w-dvw absolute top-0 left-0 bg-gradient-to-br from-blue-50 to-white"
+      style={{
+        paddingTop: "env(safe-area-inset-top)",
+      }}
+    >
       <div className="h-full overflow-hidden">
         <Routes>
           <Route path={EPageRoutes.main} element={<Main />} />
@@ -64,7 +69,6 @@ const PageController = () => {
           />
         </Routes>
       </div>
-
       <div className="h-full flex-1">
         <BottomTabs activeKey={activeKeyTab} onChange={onChange} />
       </div>

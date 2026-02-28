@@ -17,12 +17,14 @@ import clsx from "clsx";
 interface IProps {
   onClick?: MouseEventHandler<HTMLDivElement>;
   icon?: React.ElementType;
+  iconProps?: object;
   iconPosition?: "beforeText" | "afterText";
   caption?: string;
   readOnly?: boolean;
   withStopWatch?: boolean;
   stopWatchSeconds?: number;
   isLoading?: boolean;
+  color?: "primary" | "light";
 }
 
 const emptyFunction = () => {};
@@ -34,11 +36,13 @@ const PrimaryButton = ({
   onClick,
   caption = "",
   icon: Icon = Fragment,
+  iconProps = {},
   iconPosition = "afterText",
   readOnly,
   withStopWatch,
   stopWatchSeconds,
   isLoading,
+  color = "primary",
 }: IProps) => {
   const [seconds, setSeconds] = useState<number>(stopWatchSeconds || 0);
 
@@ -58,19 +62,25 @@ const PrimaryButton = ({
 
   const DisplayIcon = useCallback(() => {
     if (isLoading) {
-      return <CircularProgress size={24} sx={{ color: "white" }} />;
+      return (
+        <CircularProgress
+          size={24}
+          sx={{ color: color === "primary" ? "white" : "primary" }}
+        />
+      );
     }
 
-    return <Icon />;
-  }, [Icon, isLoading]);
+    return <Icon {...iconProps} />;
+  }, [Icon, isLoading, iconProps, color]);
 
   return (
     <div
       className={clsx(
         "rounded-lg w-full p-3.5 flex items-center justify-center text-lg px-4",
         {
-          "bg-blue-400 text-blue-100": readOnly,
-          "bg-blue-600 text-white ": !readOnly,
+          "bg-blue-400 text-blue-100": color === "primary" && readOnly,
+          "bg-blue-600 text-white": color === "primary" && !readOnly,
+          "bg-white text-blue-600": color === "light",
         },
       )}
       onClick={readOnly ? emptyFunction : onClick}

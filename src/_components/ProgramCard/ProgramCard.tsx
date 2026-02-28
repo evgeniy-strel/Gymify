@@ -1,9 +1,8 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
 import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import styles from "./ProgramCard.module.less";
 import { useNavigate } from "react-router";
 import { EPageRoutes } from "../../navigation";
 import { Skeleton } from "@mui/material";
@@ -38,7 +37,7 @@ const Icon = (props: any) => {
     <div
       className={clsx(
         "w-16 h-16 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg p-2 shrink-0",
-        className
+        className,
       )}
     >
       <img className="w-full h-full" src={url} />
@@ -84,7 +83,7 @@ const ProgramCard = (props: IProps) => {
 
 const SkeletonCard = () => {
   return (
-    <div className="w-full h-full rounded-2xl overflow-hidden">
+    <div className="w-full rounded-2xl overflow-hidden">
       <Skeleton variant="rounded" animation="wave" height={131} />
     </div>
   );

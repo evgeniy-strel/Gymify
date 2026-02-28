@@ -11,7 +11,6 @@ import {
 import { useNavigate, useParams } from "react-router";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import clsx from "clsx";
 import { Skeleton } from "@mui/material";
 import { AddButton, AddForm } from "../../../components";
@@ -137,7 +136,7 @@ const Weeks = () => {
   };
 
   return (
-    <div className="h-dvh w-full flex flex-col">
+    <div className="h-full w-full flex flex-col">
       <Header program={program} />
       {weeks?.length === 0 ? (
         <></>

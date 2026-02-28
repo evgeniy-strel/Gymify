@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { HistoryService, IDay } from "../../../utils";
 import List from "./List";
 
-import { Typography } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import clsx from "clsx";
 import { useNavigate } from "react-router";
 
@@ -30,9 +28,9 @@ export const Calendar = () => {
     HistoryService.getAll({ grouped: true }).then(setHistory);
   }, []);
   return (
-    <div className="h-dvh flex flex-col">
+    <div className="h-full flex flex-col">
       <Header />
-      <div className="bg-white overflow-scroll pb-[72px]">
+      <div className="bg-white overflow-scroll">
         {history && <List items={history} />}
       </div>
     </div>

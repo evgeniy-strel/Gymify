@@ -157,9 +157,9 @@ export const Progress = () => {
   };
 
   return (
-    <div className="bg-gray-100 h-dvh w-full flex flex-col">
+    <div className="bg-gray-100 h-full w-full flex flex-col">
       <Header2 startAddItem={startAddItem} />
-      <div className="flex flex-col pt-4 gap-4 overflow-scroll pb-[92px]">
+      <div className="flex flex-col pt-4 gap-4 overflow-scroll pb-4">
         <Graph reloadKey={reloadKey} />
         <History reloadKey={reloadKey} />
       </div>

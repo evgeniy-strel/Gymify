@@ -16,6 +16,8 @@ export type { ITimerData, ICheckData } from "./_utils/service/Timers";
 export { default as HistoryService } from "./_utils/service/History";
 export { default as BodyWeightService } from "./_utils/service/BodyWeight";
 export type { IBodyWeight } from "./_utils/service/BodyWeight";
+export { default as WorkoutResultsService } from "./_utils/service/WorkoutResults";
+export type { IWorkoutResult } from "./_utils/service/WorkoutResults";
 
 export {
   duplicateCall,

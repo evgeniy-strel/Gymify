@@ -7,14 +7,3 @@ export enum EPageRoutes {
   days = "/days",
   auth = "/auth",
 }
-
-const PAGES = {
-  main: {
-    url: "/",
-    title: "Главная",
-  },
-  calendar: {
-    url: "/calendar",
-    title: "Календарь",
-  },
-};

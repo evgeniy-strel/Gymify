@@ -56,7 +56,7 @@ export const Main = () => {
   };
 
   return (
-    <div className="py-4 px-3 flex flex-col gap-3">
+    <div className="py-4 px-3 flex flex-col gap-3 h-full">
       <Typography variant="h4">Программы</Typography>
       {programs
         ? programs.map((program) => (

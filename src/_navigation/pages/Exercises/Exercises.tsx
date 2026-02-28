@@ -13,8 +13,11 @@ import {
   getIsAdmin,
   IDay,
   IExercise,
+  IWorkoutResult,
+  WorkoutResultsService,
 } from "../../../utils";
 import { useAppResume } from "../../../hooks";
+import { TrainingResult } from "../../../screens";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -70,11 +73,13 @@ export const Exercises = () => {
   const [day, setDay] = useState<IDay>();
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [showResults, setShowResults] = useState<boolean>(false);
+  const [workoutResults, setWorkoutResults] = useState<IWorkoutResult>();
 
   const isAdmin = useMemo(getIsAdmin, []);
   const trainingDuration = useMemo<number>(
     () =>
-      day?.started_at
+      day?.started_at && !day?.completed_at
         ? Math.floor((Date.now() - new Date(day?.started_at)) / 1000)
         : 0,
     [day?.started_at],
@@ -125,12 +130,23 @@ export const Exercises = () => {
     setIsAdded(false);
   };
 
+  const loadShowResults = async () => {
+    if (!programId || !weekNumber || !dayNumber) {
+      return;
+    }
+
+    return WorkoutResultsService.get(programId, weekNumber, dayNumber);
+  };
+
   const finishDay = async () => {
     await DaysService.update({
       id: dayId as string,
       completed_at: new Date(),
       is_completed: true,
     });
+    const data = await loadShowResults();
+    setWorkoutResults(data);
+    setShowResults(true);
     navigate(-1);
   };
 
@@ -142,50 +158,59 @@ export const Exercises = () => {
     setDay(data);
   };
 
+  const onCloseResults = async () => {
+    setShowResults(false);
+  };
+
   return (
-    <div className="bg-gray-100 h-dvh w-full flex flex-col">
-      <Header exercises={exercises} day={day} />
-      <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3 pb-[92px]">
-        {exercises && !allCompleted && !day?.started_at && (
-          <PrimaryButton
-            caption="Начать тренировку"
-            icon={PlayArrowIcon}
-            iconPosition="beforeText"
-            onClick={startTraining}
-          />
-        )}
-        {exercises
-          ? exercises.map((item, index) => (
-              <ExerciseCard key={item.id} index={index + 1} item={item} />
-            ))
-          : SKELETON_ITEMS.map((item, index) => (
-              <ExerciseCard.Skeleton key={index} />
-            ))}
-        {isAdmin && (
-          <div>
-            <AddButton onClick={startAddItem} />
-            {isAdded && (
-              <AddForm
-                onSave={onSaveItem}
-                onClose={closeAddForm}
-                fields={FIELDS_FOR_ADD_FORM}
-                description={`Неделя ${weekNumber} / День ${dayNumber}`}
-              />
-            )}
-          </div>
-        )}
-        {day?.started_at && !day.completed_at && (
-          <PrimaryButton
-            readOnly={!allCompleted && exercises.length !== 0}
-            iconPosition="beforeText"
-            icon={TaskAltIcon}
-            caption="Закончить тренировку"
-            onClick={finishDay}
-            withStopWatch={true}
-            stopWatchSeconds={trainingDuration}
-          />
-        )}
+    <>
+      <div className="bg-gray-100 h-full w-full flex flex-col">
+        <Header exercises={exercises} day={day} />
+        <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3">
+          {exercises && !allCompleted && !day?.started_at && (
+            <PrimaryButton
+              caption="Начать тренировку"
+              icon={PlayArrowIcon}
+              iconPosition="beforeText"
+              onClick={startTraining}
+            />
+          )}
+          {exercises
+            ? exercises.map((item, index) => (
+                <ExerciseCard key={item.id} index={index + 1} item={item} />
+              ))
+            : SKELETON_ITEMS.map((item, index) => (
+                <ExerciseCard.Skeleton key={index} />
+              ))}
+          {isAdmin && (
+            <div>
+              <AddButton onClick={startAddItem} />
+              {isAdded && (
+                <AddForm
+                  onSave={onSaveItem}
+                  onClose={closeAddForm}
+                  fields={FIELDS_FOR_ADD_FORM}
+                  description={`Неделя ${weekNumber} / День ${dayNumber}`}
+                />
+              )}
+            </div>
+          )}
+          {day?.started_at && !day.completed_at && (
+            <PrimaryButton
+              readOnly={!allCompleted && exercises.length !== 0}
+              iconPosition="beforeText"
+              icon={TaskAltIcon}
+              caption="Закончить тренировку"
+              onClick={finishDay}
+              withStopWatch={true}
+              stopWatchSeconds={trainingDuration}
+            />
+          )}
+        </div>
       </div>
-    </div>
+      {showResults && (
+        <TrainingResult data={workoutResults} onClose={onCloseResults} />
+      )}
+    </>
   );
 };

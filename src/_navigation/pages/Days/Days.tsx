@@ -187,7 +187,7 @@ const Days = () => {
   };
 
   return (
-    <div className="h-dvh w-full flex flex-col">
+    <div className="h-full w-full flex flex-col">
       <Header />
       <div className="py-4 px-3">
         {days?.length === 0 ? (

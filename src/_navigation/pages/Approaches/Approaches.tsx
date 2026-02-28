@@ -133,9 +133,9 @@ const Approaches = () => {
   };
 
   return (
-    <div className="bg-gray-100 h-dvh w-full flex flex-col relative">
+    <div className="bg-gray-100 h-full w-full flex flex-col relative">
       <Header exercise={exercise} />
-      <div className="px-2 py-3 flex flex-col gap-4 overflow-scroll pb-[72px]">
+      <div className="px-2 py-3 flex flex-col gap-4 overflow-scroll">
         <div>
           <List items={sets} setItems={setSets} />
         </div>
