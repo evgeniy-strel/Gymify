@@ -1,6 +1,6 @@
 import { ChangeEvent, MouseEventHandler, useState } from "react";
 
-import { NumberSpinner } from "../../baseUIComponents";
+import { NumberSpinner } from "../../baseComponents";
 import SaveButton from "../SaveButton/SaveButton";
 
 import { LinearProgress, TextField } from "@mui/material";
