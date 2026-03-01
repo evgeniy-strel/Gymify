@@ -147,7 +147,6 @@ export const Exercises = () => {
     const data = await loadShowResults();
     setWorkoutResults(data);
     setShowResults(true);
-    navigate(-1);
   };
 
   const startTraining = async () => {
