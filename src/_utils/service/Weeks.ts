@@ -5,6 +5,7 @@ export interface IWeek {
   number: number;
   is_completed: boolean;
   program_id: string;
+  progress: number;
 }
 
 class WeeksService {

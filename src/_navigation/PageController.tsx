@@ -30,12 +30,7 @@ const PageController = () => {
   }, []);
 
   return (
-    <div
-      className="flex flex-col overflow-hidden h-screen w-dvw absolute top-0 left-0"
-      style={{
-        paddingTop: "env(safe-area-inset-top)",
-      }}
-    >
+    <div className="flex flex-col overflow-hidden h-screen w-dvw absolute top-0 left-0 Gymify-safe-area-inset-top">
       <div className="h-full overflow-hidden">
         <Routes>
           <Route path={EPageRoutes.main} element={<Main />} />

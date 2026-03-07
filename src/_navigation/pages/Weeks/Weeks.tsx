@@ -64,10 +64,13 @@ const ItemTemplate = ({ item }: IItemTemplate) => {
 
   return (
     <div
-      className={clsx("p-4 rounded-xl bg-white shadow-md relative", {
-        "from-blue-500 to-blue-600 bg-gradient-to-br text-white":
-          item.is_completed,
-      })}
+      className={clsx(
+        "p-4 rounded-xl bg-white shadow-md relative overflow-hidden",
+        {
+          "from-blue-500 to-blue-600 bg-gradient-to-br text-white":
+            item.is_completed,
+        },
+      )}
       onClick={onClick}
     >
       <div className="flex flex-col items-center gap-1">
@@ -85,6 +88,14 @@ const ItemTemplate = ({ item }: IItemTemplate) => {
           </div>
         )}
       </div>
+      {!item.is_completed && (
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
+          <div
+            className="h-full bg-gradient-to-br from-blue-500 to-blue-600 bg-gradient-to-br"
+            style={{ width: `${item.progress * 100}%` }}
+          ></div>
+        </div>
+      )}
     </div>
   );
 };

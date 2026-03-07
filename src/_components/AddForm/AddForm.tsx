@@ -115,66 +115,70 @@ const AddForm = ({
   };
 
   return (
-    <div className="bg-gray-100 h-dvh w-full flex flex-col absolute top-0 left-0 z-1000">
-      <Header description={description} onClose={onClose} />
-      {isSaving && <LinearProgress />}
-      <div className="p-4 flex flex-col gap-2">
-        {fields.map((field) => {
-          if (field.type === "string") {
-            return (
-              <TextField
-                label={field.placeholder}
-                variant="outlined"
-                required
-                disabled={isSaving}
-                onChange={(...args: any[]) =>
-                  onChangeTextField(field.name, ...args)
-                }
-              />
-            );
-          }
-          if (field.type === "number") {
-            return (
+    <div className="h-dvh w-full absolute top-0 left-0 z-1000 Gymify-safe-area-inset-top">
+      <div className="bg-gray-100 h-full flex flex-col">
+        <Header description={description} onClose={onClose} />
+        {isSaving && <LinearProgress />}
+        <div className="p-4 flex flex-col gap-2">
+          {fields.map((field) => {
+            if (field.type === "string") {
+              return (
+                <TextField
+                  label={field.placeholder}
+                  variant="outlined"
+                  required
+                  disabled={isSaving}
+                  onChange={(...args: any[]) =>
+                    onChangeTextField(field.name, ...args)
+                  }
+                />
+              );
+            }
+            if (field.type === "number") {
+              return (
+                <NumberSpinner
+                  label={field.placeholder}
+                  disabled={isSaving}
+                  {...field.options}
+                  onValueChange={(...args: any[]) =>
+                    onChangeNumber(field.name, ...args)
+                  }
+                />
+              );
+            }
+            if (field.type === "date") {
+              return (
+                <DatePickerValue
+                  {...field}
+                  onChange={(...args: any[]) =>
+                    onChangeDate(field.name, ...args)
+                  }
+                />
+              );
+            }
+          })}
+          {duplicateButton && (
+            <>
+              <div className="pb-1 pt-2">
+                <Divider />
+              </div>
               <NumberSpinner
-                label={field.placeholder}
+                label="Продублировать раз"
+                defaultValue={duplicate}
                 disabled={isSaving}
-                {...field.options}
-                onValueChange={(...args: any[]) =>
-                  onChangeNumber(field.name, ...args)
-                }
+                onValueChange={onChangeDuplicate}
               />
-            );
-          }
-          if (field.type === "date") {
-            return (
-              <DatePickerValue
-                {...field}
-                onChange={(...args: any[]) => onChangeDate(field.name, ...args)}
-              />
-            );
-          }
-        })}
-        {duplicateButton && (
-          <>
-            <div className="pb-1 pt-2">
-              <Divider />
-            </div>
-            <NumberSpinner
-              label="Продублировать раз"
-              defaultValue={duplicate}
-              disabled={isSaving}
-              onValueChange={onChangeDuplicate}
+            </>
+          )}
+          <div className="mt-1 flex flex-col gap-2">
+            <PrimaryButton
+              caption="Сохранить запись"
+              icon={SaveIcon}
+              iconPosition="beforeText"
+              readOnly={isSaving}
+              onClick={saveHandler}
             />
-          </>
-        )}
-        <div className="mt-1 flex flex-col gap-2">
-          <PrimaryButton
-            caption="Сохранить запись"
-            icon={SaveIcon}
-            iconPosition="beforeText"
-            readOnly={isSaving}
-            onClick={saveHandler}
-          />
+          </div>
         </div>
       </div>
     </div>
