@@ -5,7 +5,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { EPageRoutes } from "./consts";
 import { default as BottomTabs, TABS } from "./BottomTabs";
 import { Main } from "./pages/Main/Main";
-import { Calendar } from "./pages/Calendar/Calendar";
+import { History } from "./pages/History/History";
 import { Progress } from "./pages/Progress/Progress";
 import { Exercises } from "./pages/Exercises/Exercises";
 import Approaches from "./pages/Approaches/Approaches";
@@ -13,6 +13,7 @@ import Auth from "./pages/Auth/Auth";
 import Weeks from "./pages/Weeks/Weeks";
 import Days from "./pages/Days/Days";
 
+/* Компонент, отвечающий за упраление роутингом и раскладку страницы  */
 const PageController = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,7 +31,7 @@ const PageController = () => {
 
   return (
     <div
-      className="flex flex-col overflow-hidden h-screen w-dvw absolute top-0 left-0 bg-gradient-to-br from-blue-50 to-white"
+      className="flex flex-col overflow-hidden h-screen w-dvw absolute top-0 left-0"
       style={{
         paddingTop: "env(safe-area-inset-top)",
       }}
@@ -38,7 +39,7 @@ const PageController = () => {
       <div className="h-full overflow-hidden">
         <Routes>
           <Route path={EPageRoutes.main} element={<Main />} />
-          <Route path={EPageRoutes.calendar} element={<Calendar />} />
+          <Route path={EPageRoutes.history} element={<History />} />
           <Route path={EPageRoutes.progress} element={<Progress />} />
           <Route path={EPageRoutes.auth} element={<Auth />} />
           <Route path={"/:programId" + EPageRoutes.weeks} element={<Weeks />} />
@@ -69,7 +70,7 @@ const PageController = () => {
           />
         </Routes>
       </div>
-      <div className="h-full flex-1">
+      <div className="h-full flex-1 z-2">
         <BottomTabs activeKey={activeKeyTab} onChange={onChange} />
       </div>
     </div>

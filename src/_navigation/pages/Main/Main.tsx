@@ -56,7 +56,7 @@ export const Main = () => {
   };
 
   return (
-    <div className="py-4 px-3 flex flex-col gap-3 h-full">
+    <div className="py-4 px-3 flex flex-col gap-3 h-full bg-gradient-to-br from-blue-50 to-white">
       <Typography variant="h4">Программы</Typography>
       {programs
         ? programs.map((program) => (

@@ -1,10 +1,10 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
-import { formatTime, formatTimeForDuration, IDay } from "../../../utils";
+import { formatTimeForDuration, IDay } from "../../../utils";
 
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
+import { Skeleton } from "@mui/material";
 
 interface IItemTemplateProps {
   item: IDay;
@@ -42,6 +42,23 @@ const GroupTemplate = ({ item }: IItemTemplateProps) => {
         {date}
       </div>
       <div className="text-sm text-gray-500">{item.title}</div>
+    </div>
+  );
+};
+
+const SkeletonItemTemplate = ({ index }: { index: number }) => {
+  if (index === 0) {
+    return (
+      <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between">
+        <Skeleton variant="rounded" animation="wave" height={20} width={75} />
+        <Skeleton variant="rounded" animation="wave" height={20} width={90} />
+      </div>
+    );
+  }
+  return (
+    <div className="text-card-foreground flex flex-col gap-2 p-3 bg-white">
+      <Skeleton variant="rounded" animation="wave" height={24} width={200} />
+      <Skeleton variant="rounded" animation="wave" height={20} width={145} />
     </div>
   );
 };
@@ -106,16 +123,21 @@ const RenderTemplate = ({ item }: IItemTemplateProps) => {
   return <ItemTemplate item={item} />;
 };
 
+const COUNT_SKELETONS = 15;
+const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
+
 interface IListProps {
-  items: IDay[];
+  items?: IDay[];
 }
 
 const List = ({ items }: IListProps) => {
   return (
     <div className="flex flex-col divide-y divide-gray-200">
-      {items.map((item) => (
-        <RenderTemplate key={item.id} item={item} />
-      ))}
+      {items
+        ? items.map((item) => <RenderTemplate key={item.id} item={item} />)
+        : SKELETON_ITEMS.map((item, index) => (
+            <SkeletonItemTemplate key={index} index={index} />
+          ))}
     </div>
   );
 };

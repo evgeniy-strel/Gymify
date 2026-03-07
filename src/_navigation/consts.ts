@@ -1,6 +1,6 @@
 export enum EPageRoutes {
   main = "/",
-  calendar = "/calendar",
+  history = "/history",
   progress = "/progress",
   exercises = "/exercises",
   weeks = "/weeks",

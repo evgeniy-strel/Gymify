@@ -22,7 +22,7 @@ const Header = () => {
   );
 };
 
-export const Calendar = () => {
+export const History = () => {
   const [history, setHistory] = useState<IDay[]>();
   useEffect(() => {
     HistoryService.getAll({ grouped: true }).then(setHistory);
@@ -30,9 +30,7 @@ export const Calendar = () => {
   return (
     <div className="h-full flex flex-col">
       <Header />
-      <div className="bg-white overflow-scroll">
-        {history && <List items={history} />}
-      </div>
+      <div className="bg-white overflow-scroll">{<List items={history} />}</div>
     </div>
   );
 };

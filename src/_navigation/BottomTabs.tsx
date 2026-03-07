@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback } from "react";
+import { SyntheticEvent } from "react";
 
 import { EPageRoutes } from "./consts";
 import { isIOSPWA } from "../utils";
@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeIcon from "@mui/icons-material/Home";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import HistoryIcon from "@mui/icons-material/History";
 import InsightsIcon from "@mui/icons-material/Insights";
 import { Paper } from "@mui/material";
 
@@ -18,9 +18,9 @@ export const TABS = [
     icon: <HomeIcon />,
   },
   {
-    url: EPageRoutes.calendar,
-    title: "Календарь",
-    icon: <CalendarMonthIcon />,
+    url: EPageRoutes.history,
+    title: "История",
+    icon: <HistoryIcon />,
   },
   {
     url: EPageRoutes.progress,

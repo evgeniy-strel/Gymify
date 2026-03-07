@@ -136,7 +136,7 @@ const Weeks = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-full w-full flex flex-col bg-gradient-to-br from-blue-50 to-white">
       <Header program={program} />
       {weeks?.length === 0 ? (
         <></>
