@@ -1,5 +1,3 @@
-import React from "react";
-
 import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
@@ -75,9 +73,7 @@ export const ExerciseCard = (props: IProps) => {
               "text-gray-500": !item.is_completed,
             })}
           >
-            {item.sets_count
-              ? `${item.sets_count} ${getSetFormWord(item.sets_count)}`
-              : "подходы не заполнены"}
+            {item.description}
           </div>
         </div>
         {item.is_completed ? (

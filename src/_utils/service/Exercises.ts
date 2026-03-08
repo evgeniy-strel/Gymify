@@ -4,6 +4,7 @@ export interface IExercise {
   id: string;
   day_id: string;
   title: string;
+  description: string;
   is_completed: boolean;
   sets_count: number;
   created_at: Date;
@@ -23,7 +24,7 @@ class ExercisesService {
   async getAll(
     programId: string,
     week: number,
-    day: number
+    day: number,
   ): Promise<IExercise[]> {
     try {
       const res = await api.get(`/exercises/${programId}/${week}/${day}`);
@@ -45,7 +46,7 @@ class ExercisesService {
   }
 
   async update(
-    item: Pick<IExercise, "id"> & Partial<IExercise>
+    item: Pick<IExercise, "id"> & Partial<IExercise>,
   ): Promise<IExercise | null> {
     try {
       const res = await api.put(`/exercises/${item.id}`, item);
