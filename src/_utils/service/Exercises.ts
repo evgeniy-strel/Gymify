@@ -1,12 +1,14 @@
 import api from "../axios";
 
+import { ISet } from "./Sets";
+
 export interface IExercise {
   id: string;
   day_id: string;
   title: string;
   description: string;
   is_completed: boolean;
-  sets_count: number;
+  sets: ISet[];
   created_at: Date;
 }
 

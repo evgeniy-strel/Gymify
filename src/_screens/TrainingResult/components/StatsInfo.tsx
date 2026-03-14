@@ -63,7 +63,7 @@ const getItems = (data: IWorkoutResult): IItemData[] => {
       icon: CheckOutlinedIcon,
       title: "Подходы",
       value: data.exercises.reduce(
-        (result: number, exercise: IExercise) => result + exercise.sets_count,
+        (result: number, exercise: IExercise) => result + exercise.sets.length,
         0,
       ),
     },
