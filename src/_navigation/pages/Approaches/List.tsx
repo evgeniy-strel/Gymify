@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import {
-  ICheckData,
   ITimerData,
   SetsService,
   TimersService,
@@ -125,7 +124,7 @@ const TIMER_DURATION = 90;
 const List = (props: IListProps) => {
   const [timerData, setTimerData] = useState<ITimerData>();
   const [restSetId, setRestSetId] = useState<string>();
-  const [reloadingItem, setReloadingItem] = useState<string>();
+  const [reloadingItems, setReloadingItems] = useState<string[]>([]);
   const { items, setItems } = props;
 
   const checkTimer = () => {
@@ -145,18 +144,17 @@ const List = (props: IListProps) => {
 
   const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
     const newItem: ISet = { ...item, is_completed: isCompleted };
-    setReloadingItem(newItem.id);
+    setReloadingItems((items) => [...items, newItem.id]);
     SetsService.update({
       id: newItem.id,
       is_completed: newItem.is_completed,
     });
 
-    const newItems: ISet[] = items.map((_item: ISet, _index: number) => {
-      if (_item.id === item.id) {
-        return newItem;
-      }
-      return _item;
-    });
+    setItems((items: ISet[]) =>
+      items.map((_item: ISet, _index: number) => {
+        return _item.id === item.id ? newItem : _item;
+      }),
+    );
 
     const isLast = item.id === items?.at(-1).id;
 
@@ -166,12 +164,14 @@ const List = (props: IListProps) => {
         event: newItem.id,
       });
       await checkTimer();
-      setRestSetId(newItem.id);
     } else if (newItem.id === restSetId || isLast) {
-      setRestSetId(undefined);
+      await TimersService.reset();
+      await checkTimer();
     }
-    setItems(newItems);
-    setReloadingItem(undefined);
+
+    setReloadingItems((items) =>
+      items.filter((itemId) => itemId !== newItem.id),
+    );
   };
 
   return (
@@ -187,7 +187,7 @@ const List = (props: IListProps) => {
                 index={index}
                 key={index}
                 isRest={restSetId === item.id}
-                isReloading={reloadingItem === item.id}
+                isReloading={reloadingItems.includes(item.id)}
                 timerData={timerData}
                 onToggleCheckbox={onToggleCheckBox}
               />

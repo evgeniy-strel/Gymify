@@ -33,6 +33,14 @@ class TimersService {
     }
   }
 
+  async reset(): Promise<AxiosResponse<object> | undefined> {
+    try {
+      return api.get("/timers/reset");
+    } catch (error: any) {
+      console.error("Failed to reset timer:", error);
+    }
+  }
+
   async check(): Promise<AxiosResponse<ICheckData> | undefined> {
     try {
       return api.get("/timers/check");
@@ -42,7 +50,7 @@ class TimersService {
   }
 
   private _urlBase64ToUint8Array(
-    base64String: string
+    base64String: string,
   ): Uint8Array<ArrayBuffer> {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding)
