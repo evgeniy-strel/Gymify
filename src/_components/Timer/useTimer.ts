@@ -13,13 +13,15 @@ export function useTimer(seconds: number) {
     let interval;
     interval = setInterval(() => {
       setSecondsLeft((value) => {
-        if (value === 0) {
+        const newValue = value - 1;
+
+        if (newValue === 0) {
           TimersService.check();
           clearInterval(interval);
-          return value;
+          return newValue;
         }
 
-        return value - 1;
+        return newValue;
       });
     }, 1000);
 

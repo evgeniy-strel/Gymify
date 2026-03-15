@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { useTimer } from "./useTimer";
+import { getDuration } from "./helpers";
 import { formatTime, ITimerData } from "../../utils";
 
 import clsx from "clsx";
@@ -15,9 +16,10 @@ interface ITimerProps {
  */
 const Timer = ({ className, data }: ITimerProps) => {
   const duration = useMemo<number>(
-    () => (new Date(data.end) - new Date(data.started)) / 1000,
-    [data.end, data.started]
+    () => getDuration(data.started, data.end),
+    [data.end, data.started],
   );
+
   const { secondsLeft, isFinished } = useTimer(data.secondsLeft);
 
   const formattedTime = useMemo(() => formatTime(secondsLeft), [secondsLeft]);
@@ -32,7 +34,7 @@ const Timer = ({ className, data }: ITimerProps) => {
     <div
       className={clsx(
         className,
-        `bg-blue-100 rounded-full overflow-hidden relative`
+        `bg-blue-100 rounded-full overflow-hidden relative`,
       )}
     >
       <div

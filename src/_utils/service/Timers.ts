@@ -5,8 +5,8 @@ const PUBLIC_VAPID_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY;
 
 export interface ITimerData {
   active: boolean;
-  started: Date;
-  end: Date;
+  started: string;
+  end: string;
   secondsLeft: number;
   event: string;
 }

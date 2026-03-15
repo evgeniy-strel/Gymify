@@ -1,14 +1,18 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+
 import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { useNavigate } from "react-router";
-import type { IExercise } from "../../utils";
+import type { IExercise, ITimerData } from "../../utils";
+import { CircleTimer } from "../../components";
 import DoneIcon from "@mui/icons-material/Done";
 import { Skeleton } from "@mui/material";
 
 interface IProps {
   item: IExercise;
   index: number;
+  timerData?: ITimerData;
 }
 
 const getSetFormWord = (count: number): string => {
@@ -31,7 +35,7 @@ const getSetFormWord = (count: number): string => {
 };
 
 export const ExerciseCard = (props: IProps) => {
-  const { item, index } = props;
+  const { item, index, timerData } = props;
 
   const navigate = useNavigate();
 
@@ -39,12 +43,31 @@ export const ExerciseCard = (props: IProps) => {
     navigate(item.id);
   };
 
+  const progress = useMemo(
+    () => item.sets.filter((set) => set.is_completed).length / item.sets.length,
+    [],
+  );
+
+  const calcIsTimerActive = () =>
+    Boolean(timerData && item.sets.find((set) => set.id === timerData.event));
+
+  const [isTimerActive, setIsTimerActive] = useState(calcIsTimerActive);
+
+  const finishTimer = useCallback(() => setIsTimerActive(false), []);
+
+  useEffect(() => {
+    setIsTimerActive(calcIsTimerActive);
+  }, [timerData, timerData?.active, item]);
+
   return (
     <div
-      className={clsx("rounded-xl p-5 cursor-pointer hover:shadow-xl", {
-        "bg-gradient-to-r from-blue-500 to-blue-600": item.is_completed,
-        "bg-white/85": !item.is_completed,
-      })}
+      className={clsx(
+        "rounded-xl p-5 cursor-pointer hover:shadow-xl relative overflow-hidden flex-shrink-0",
+        {
+          "bg-gradient-to-r from-blue-500 to-blue-600": item.is_completed,
+          "bg-white/85": !item.is_completed,
+        },
+      )}
       onClick={openApproaches}
     >
       <div className="flex items-center gap-4">
@@ -78,6 +101,12 @@ export const ExerciseCard = (props: IProps) => {
         </div>
         {item.is_completed ? (
           <DoneIcon className="ml-auto" sx={{ color: "white" }} />
+        ) : isTimerActive && timerData ? (
+          <CircleTimer
+            className="ml-auto"
+            data={timerData}
+            onFinish={finishTimer}
+          />
         ) : (
           <ArrowForwardIosIcon
             className="ml-auto"
@@ -86,6 +115,14 @@ export const ExerciseCard = (props: IProps) => {
           />
         )}
       </div>
+      {!item.is_completed && (
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
+          <div
+            className="h-full bg-gradient-to-br from-blue-500 to-blue-600 bg-gradient-to-br"
+            style={{ width: `${progress * 100}%` }}
+          ></div>
+        </div>
+      )}
     </div>
   );
 };

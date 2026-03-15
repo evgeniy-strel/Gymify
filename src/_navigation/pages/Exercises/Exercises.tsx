@@ -13,7 +13,9 @@ import {
   getIsAdmin,
   IDay,
   IExercise,
+  ITimerData,
   IWorkoutResult,
+  TimersService,
   WorkoutResultsService,
 } from "../../../utils";
 import { useAppResume } from "../../../hooks";
@@ -72,9 +74,10 @@ export const Exercises = () => {
   const [exercises, setExercises] = useState<IExercise[]>();
   const [day, setDay] = useState<IDay>();
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const navigate = useNavigate();
   const [showResults, setShowResults] = useState<boolean>(false);
   const [workoutResults, setWorkoutResults] = useState<IWorkoutResult>();
+
+  const [timerData, setTimerData] = useState<ITimerData>();
 
   const isAdmin = useMemo(getIsAdmin, []);
   const trainingDuration = useMemo<number>(
@@ -96,6 +99,19 @@ export const Exercises = () => {
       exercises?.every((item: IExercise) => item.is_completed)
     );
   }, [exercises]);
+
+  const checkTimer = () => {
+    return TimersService.check().then(({ data }) => {
+      if (data.status) {
+        setTimerData(data.status);
+      }
+    });
+  };
+
+  useEffect(() => {
+    checkTimer();
+  }, []);
+  useAppResume(checkTimer);
 
   const loadData = () => {
     Promise.all([
@@ -176,7 +192,12 @@ export const Exercises = () => {
           )}
           {exercises
             ? exercises.map((item, index) => (
-                <ExerciseCard key={item.id} index={index + 1} item={item} />
+                <ExerciseCard
+                  key={item.id}
+                  index={index + 1}
+                  item={item}
+                  timerData={timerData}
+                />
               ))
             : SKELETON_ITEMS.map((item, index) => (
                 <ExerciseCard.Skeleton key={index} />
