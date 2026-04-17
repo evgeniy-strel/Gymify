@@ -30,41 +30,14 @@ const AddButton = ({
   );
 };
 
-const Header = (props: any) => {
-  const navigate = useNavigate();
-
-  const redirectBack = () => {
-    navigate(-1);
-  };
-
-  return (
-    <div className="shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-2 z-10 shadow-sm">
-      <div className="flex items-center justify-between px-2 pt-1.5">
-        <div onClick={redirectBack}>
-          <ArrowBackIcon />
-        </div>
-        <div className="flex items-baseline gap-1.5">
-          <div className="text-xl">Текущий вес -</div>
-          <div className="text-xl flex items-baseline gap-1.5 font-semibold">
-            <div className="">78.6</div>
-            <div>кг</div>
-          </div>
-        </div>
-        <AddButton />
-      </div>
-      <div className="text-sm text-gray-500 text-center">
-        Последнее взвешивание - 8 января 2026
-      </div>
-    </div>
-  );
-};
-
 interface IProps {
   startAddItem: MouseEventHandler<HTMLDivElement>;
+  reloadKey: number;
 }
 
-const Header2 = ({ startAddItem }: IProps) => {
+const Header = ({ startAddItem, reloadKey }: IProps) => {
   const [currentWeight, setCurrentWeight] = useState<IBodyWeight | null>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const lastMeasure = useMemo(
     () =>
@@ -79,12 +52,15 @@ const Header2 = ({ startAddItem }: IProps) => {
   };
 
   const loadCurrentWeight = () => {
-    BodyWeightService.getCurrent().then(setCurrentWeight);
+    setIsLoading(true);
+    BodyWeightService.getCurrent()
+      .then(setCurrentWeight)
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
     loadCurrentWeight();
-  }, []);
+  }, [reloadKey]);
 
   return (
     <div className="shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-2 z-10 shadow-sm">
@@ -97,7 +73,7 @@ const Header2 = ({ startAddItem }: IProps) => {
       </div>
       <div className="text-3xl flex items-baseline gap-1.5 font-semibold text-center justify-center">
         <div>
-          {currentWeight ? (
+          {!isLoading ? (
             currentWeight?.value_kg
           ) : (
             <Skeleton
@@ -112,7 +88,7 @@ const Header2 = ({ startAddItem }: IProps) => {
       </div>
       <div className="flex gap-1 items-center text-sm text-gray-500 ml-10">
         <div>Последнее взвешивание:</div>
-        {lastMeasure ? (
+        {!isLoading ? (
           lastMeasure
         ) : (
           <Skeleton variant="rounded" animation="wave" height={20} width={90} />
@@ -158,7 +134,7 @@ export const Progress = () => {
 
   return (
     <div className="bg-gray-100 h-full w-full flex flex-col">
-      <Header2 startAddItem={startAddItem} />
+      <Header reloadKey={reloadKey} startAddItem={startAddItem} />
       <div className="flex flex-col pt-4 gap-4 overflow-scroll pb-4">
         <Graph reloadKey={reloadKey} />
         <History reloadKey={reloadKey} />
