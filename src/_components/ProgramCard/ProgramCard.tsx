@@ -1,11 +1,26 @@
 import { useCallback } from "react";
 
+import PrimaryButton from "../PrimaryButton/PrimaryButton";
+import { EPageRoutes } from "../../navigation";
+
 import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
 import { useNavigate } from "react-router";
-import { EPageRoutes } from "../../navigation";
 import { Skeleton } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+
+const ContinueButton = (props: any) => {
+  const onClick = () => {};
+
+  return (
+    <PrimaryButton
+      caption="Продолжить программу"
+      icon={PlayArrowIcon}
+      iconPosition="beforeText"
+      onClick={onClick}
+    />
+  );
+};
 
 const ProgressBar = (props: any) => {
   const { currentWeek, totalWeek } = props;
@@ -30,21 +45,6 @@ const ProgressBar = (props: any) => {
   );
 };
 
-const Icon = (props: any) => {
-  const { className, url } = props;
-
-  return (
-    <div
-      className={clsx(
-        "w-16 h-16 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg p-2 shrink-0",
-        className,
-      )}
-    >
-      <img className="w-full h-full" src={url} />
-    </div>
-  );
-};
-
 interface IProps {
   id: string;
   title: string;
@@ -54,7 +54,7 @@ interface IProps {
 }
 
 const ProgramCard = (props: IProps) => {
-  const { id, title, description, currentWeek, totalWeek } = props;
+  const { id, title, currentWeek, totalWeek } = props;
 
   const navigate = useNavigate();
 
@@ -77,6 +77,11 @@ const ProgramCard = (props: IProps) => {
         <ArrowForwardIosIcon fontSize="small" color="action" />
       </div>
       <ProgressBar currentWeek={currentWeek} totalWeek={totalWeek} />
+      {id === "put_k_150" && (
+        <div className="mt-4 rounded-xl overflow-hidden">
+          <ContinueButton />
+        </div>
+      )}
     </div>
   );
 };
