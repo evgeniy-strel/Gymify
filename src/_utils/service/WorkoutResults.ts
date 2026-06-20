@@ -17,8 +17,8 @@ export interface IWorkoutResult {
 class WorkoutResultsService {
   async get(
     programId: string,
-    weekNumber: string,
-    dayNumber: string,
+    weekNumber: string | number,
+    dayNumber: string | number,
   ): Promise<IWorkoutResult | null> {
     try {
       const res = await api.get(

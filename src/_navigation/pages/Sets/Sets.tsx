@@ -1,20 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import {
-  duplicateCall,
-  ExercisesService,
-  getIsAdmin,
-  SetsService,
-  type IExercise,
-  type ISet,
-} from "../../../utils";
+import { type ISet } from "../../../utils";
 import List from "./List";
+import { AddButton, AddForm, PrimaryButton } from "../../../components";
+import {
+  useIsAdmin,
+  useExerciseQuery,
+  useFinishExerciseMutation,
+  useSetsQuery,
+  useCreateSet,
+} from "../../../hooks";
 
 import clsx from "clsx";
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { AddButton, AddForm, PrimaryButton } from "../../../components";
 import { Skeleton } from "@mui/material";
 
 const Header = (props: any) => {
@@ -65,13 +65,19 @@ const FIELDS_FOR_ADD_FORM = [
 
 const Approaches = () => {
   const navigate = useNavigate();
-  const { exerciseId, programId, weekNumber, dayNumber } = useParams();
-  const [sets, setSets] = useState<ISet[]>();
-  const [exercise, setExercise] = useState<IExercise>();
-  const [isAdded, setIsAdded] = useState<boolean>(false);
-  const [isFinishCallActive, setIsFinishCallActive] = useState<boolean>();
+  const { exerciseId } = useParams();
+  const { data: exercise } = useExerciseQuery({
+    exerciseId,
+  });
+  const { data: sets } = useSetsQuery({
+    exerciseId,
+  });
+  const createSetMutation = useCreateSet();
 
-  const isAdmin = useMemo(getIsAdmin, []);
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const finishExerciseMutation = useFinishExerciseMutation();
+
+  const isAdmin = useIsAdmin();
 
   const allCompleted = useMemo(() => {
     return (
@@ -79,28 +85,12 @@ const Approaches = () => {
     );
   }, [sets]);
 
-  const loadData = () => {
-    Promise.all([
-      SetsService.get(exerciseId),
-      ExercisesService.getById(exerciseId),
-    ]).then((data) => {
-      setSets(data[0]);
-      setExercise(data[1]);
-    });
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [exerciseId]);
-
   const finishExercise = async () => {
-    setIsFinishCallActive(true);
-    await ExercisesService.update({
-      id: exerciseId as string,
-      is_completed: true,
+    finishExerciseMutation.mutate(exerciseId as string, {
+      onSuccess: () => {
+        navigate(-1);
+      },
     });
-    setIsFinishCallActive(false);
-    navigate(-1);
   };
 
   const startAddItem = () => {
@@ -108,22 +98,14 @@ const Approaches = () => {
   };
 
   const onSaveItem = async (item: Partial<ISet>, duplicate: number) => {
-    const dayId = `${programId}_${weekNumber}_${dayNumber}`;
-
-    const createFunc = async (count: number) => {
-      await SetsService.create({
-        ...item,
-        exercise_title: exercise?.title,
-        exercise_id: exercise?.id,
-        day_id: dayId,
-        is_completed: false,
-        order: sets ? sets.length + count : 1,
-      });
+    const newItem = {
+      ...item,
+      exercise_title: exercise?.title,
+      exercise_id: exercise?.id,
+      day_id: exercise?.day_id,
     };
 
-    await duplicateCall(createFunc, duplicate);
-
-    const answer = await loadData();
+    await createSetMutation.mutateAsync({ item: newItem, duplicate });
 
     closeAddForm();
   };
@@ -137,7 +119,7 @@ const Approaches = () => {
       <Header exercise={exercise} />
       <div className="px-2 py-3 flex flex-col gap-4 overflow-scroll">
         <div>
-          <List items={sets} setItems={setSets} />
+          <List items={sets} />
         </div>
         {false && (
           <div className="absolute top-0 left-0 transform h-dvh w-dvw z-10000">
@@ -161,7 +143,7 @@ const Approaches = () => {
         {allCompleted && (
           <PrimaryButton
             caption="Закончить упражнение"
-            isLoading={isFinishCallActive}
+            isLoading={finishExerciseMutation.isPending}
             icon={TaskAltIcon}
             onClick={finishExercise}
           />

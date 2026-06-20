@@ -1,18 +1,15 @@
-import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
+import { MouseEventHandler, useMemo, useState } from "react";
 
 import Graph from "./Graph";
 import { AddForm } from "../../../components";
+import { useCreateBodyWeight, useCurrentWeightQuery } from "../../../hooks";
+import History from "./History";
+import { formatDateNoYearSuffix } from "../../../utils";
 
-import { Skeleton, Typography } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
-import History from "./History";
-import {
-  BodyWeightService,
-  formatDateNoYearSuffix,
-  IBodyWeight,
-} from "../../../utils";
 import { Dayjs } from "dayjs";
 
 const AddButton = ({
@@ -30,41 +27,12 @@ const AddButton = ({
   );
 };
 
-const Header = (props: any) => {
-  const navigate = useNavigate();
-
-  const redirectBack = () => {
-    navigate(-1);
-  };
-
-  return (
-    <div className="shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-2 z-10 shadow-sm">
-      <div className="flex items-center justify-between px-2 pt-1.5">
-        <div onClick={redirectBack}>
-          <ArrowBackIcon />
-        </div>
-        <div className="flex items-baseline gap-1.5">
-          <div className="text-xl">Текущий вес -</div>
-          <div className="text-xl flex items-baseline gap-1.5 font-semibold">
-            <div className="">78.6</div>
-            <div>кг</div>
-          </div>
-        </div>
-        <AddButton />
-      </div>
-      <div className="text-sm text-gray-500 text-center">
-        Последнее взвешивание - 8 января 2026
-      </div>
-    </div>
-  );
-};
-
 interface IProps {
   startAddItem: MouseEventHandler<HTMLDivElement>;
 }
 
-const Header2 = ({ startAddItem }: IProps) => {
-  const [currentWeight, setCurrentWeight] = useState<IBodyWeight | null>();
+const Header = ({ startAddItem }: IProps) => {
+  const { data: currentWeight } = useCurrentWeightQuery();
   const navigate = useNavigate();
   const lastMeasure = useMemo(
     () =>
@@ -77,14 +45,6 @@ const Header2 = ({ startAddItem }: IProps) => {
   const redirectBack = () => {
     navigate(-1);
   };
-
-  const loadCurrentWeight = () => {
-    BodyWeightService.getCurrent().then(setCurrentWeight);
-  };
-
-  useEffect(() => {
-    loadCurrentWeight();
-  }, []);
 
   return (
     <div className="shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-2 z-10 shadow-sm">
@@ -135,21 +95,20 @@ const FIELDS_FOR_ADD_FORM = [
   },
 ];
 
-export const Progress = () => {
+export const BodyWeight = () => {
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const [reloadKey, setReloadKey] = useState<number>(0);
+  const createBodyWeightMutation = useCreateBodyWeight();
 
   const startAddItem = () => {
     setIsAdded(true);
   };
 
   const onSaveItem = async (item: { value_kg: number; measured_at: Dayjs }) => {
-    await BodyWeightService.create({
+    await createBodyWeightMutation.mutateAsync({
       value_kg: item.value_kg,
       measured_at: item.measured_at.toISOString(),
     });
     closeAddForm();
-    setReloadKey((value) => value + 1);
   };
 
   const closeAddForm = () => {
@@ -158,10 +117,10 @@ export const Progress = () => {
 
   return (
     <div className="bg-gray-100 h-full w-full flex flex-col">
-      <Header2 startAddItem={startAddItem} />
+      <Header startAddItem={startAddItem} />
       <div className="flex flex-col pt-4 gap-4 overflow-scroll pb-4">
-        <Graph reloadKey={reloadKey} />
-        <History reloadKey={reloadKey} />
+        <Graph />
+        <History />
       </div>
       <div>
         {isAdded && (

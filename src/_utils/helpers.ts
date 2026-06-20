@@ -50,12 +50,12 @@ export function getExerciseWordForm(count: number): string {
     (5 <= lastDigit && lastDigit <= 9) ||
     lastDigit === 0
   ) {
-    return "упражнений";
+    return `${count} упражнений`;
   }
 
   if (2 <= lastDigit && lastDigit <= 4) {
-    return "упражнения";
+    return `${count} упражнения`;
   }
 
-  return "упражнение";
+  return `${count} упражнение`;
 }

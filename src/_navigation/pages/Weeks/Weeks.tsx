@@ -1,19 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
-
+import { IProgram, IWeek } from "../../../utils";
 import {
-  ProgramsService,
-  WeeksService,
-  IProgram,
-  IWeek,
-  getIsAdmin,
-} from "../../../utils";
+  useIsAdmin,
+  useWeeksQuery,
+  useProgramQuery,
+  useCreateWeek,
+} from "../../../hooks";
+import { AddButton } from "../../../components";
 
 import { useNavigate, useParams } from "react-router";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import clsx from "clsx";
 import { Skeleton } from "@mui/material";
-import { AddButton, AddForm } from "../../../components";
 
 interface IHeaderProps {
   program?: IProgram;
@@ -114,36 +112,17 @@ const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 const Weeks = () => {
   const { programId } = useParams();
 
-  const [weeks, setWeeks] = useState<IWeek[]>();
-  const [program, setProgram] = useState<IProgram[]>();
-  const [isAdded, setIsAdded] = useState<boolean>(false);
-  const isAdmin = useMemo(getIsAdmin, []);
+  const { data: weeks } = useWeeksQuery({ programId });
+  const createWeekMutation = useCreateWeek();
+  const { data: program } = useProgramQuery({ programId });
+  const isAdmin = useIsAdmin();
 
-  const loadData = () => {
-    Promise.all([
-      WeeksService.get(programId),
-      ProgramsService.getById(programId),
-    ])
-      .then(([weeksData, programData]) => {
-        setWeeks(weeksData);
-        setProgram(programData);
-      })
-      .catch((error: any) => {
-        alert("Ошибка загрузки недель и программ", error?.message);
-      });
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const addItem = async () => {
+  const createProgram = async () => {
     if (!programId) {
       return;
     }
 
-    await WeeksService.create({ program_id: programId });
-    await loadData();
+    createWeekMutation.mutate({ program_id: programId });
   };
 
   return (
@@ -162,7 +141,10 @@ const Weeks = () => {
       )}
       {isAdmin && (
         <div className="px-3 py-3">
-          <AddButton onClick={addItem} />
+          <AddButton
+            isLoading={createWeekMutation.isPending}
+            onClick={createProgram}
+          />
         </div>
       )}
     </div>

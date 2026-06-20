@@ -7,8 +7,8 @@ export interface IDay {
   week_id: string;
   title: string;
   created_at: string;
-  started_at: string | null;
-  completed_at: string | null;
+  started_at: string | Date | null;
+  completed_at: string | Date | null;
   exercises_count: number;
 }
 
@@ -23,7 +23,7 @@ class DaysService {
     }
   }
 
-  async getAll(programId: string, week: number): Promise<IDay[]> {
+  async getAll(programId: string, week: number | string): Promise<IDay[]> {
     try {
       const res = await api.get(`/days/${programId}/${week}`);
       return res.data;

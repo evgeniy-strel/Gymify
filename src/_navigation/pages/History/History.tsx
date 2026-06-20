@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
-
-import { HistoryService, IDay } from "../../../utils";
+import { useHistoryQuery } from "../../../hooks";
 import List from "./List";
 
 import clsx from "clsx";
-import { useNavigate } from "react-router";
 
 const Header = () => {
-  const navigate = useNavigate();
-
   return (
     <div
       className={clsx(
@@ -23,10 +18,8 @@ const Header = () => {
 };
 
 export const History = () => {
-  const [history, setHistory] = useState<IDay[]>();
-  useEffect(() => {
-    HistoryService.getAll({ grouped: true }).then(setHistory);
-  }, []);
+  const { data: history } = useHistoryQuery();
+
   return (
     <div className="h-full flex flex-col">
       <Header />

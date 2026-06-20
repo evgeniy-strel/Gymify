@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 import { AddButton, AddForm, ProgramCard } from "../../../components";
-import { ProgramsService, IProgram, getIsAdmin } from "../../../utils";
+import { IProgram } from "../../../utils";
+import { useCreateProgram, useIsAdmin, useProgramsQuery } from "../../../hooks";
 
 import { Typography } from "@mui/material";
 
@@ -27,17 +28,11 @@ const FIELDS_FOR_ADD_FORM = [
 ];
 
 export const Main = () => {
-  const [programs, setPrograms] = useState<IProgram[]>();
+  const { data: programs } = useProgramsQuery();
+  const createProgramMutation = useCreateProgram();
+
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const isAdmin = useMemo(getIsAdmin, []);
-
-  const loadData = () => {
-    ProgramsService.getAll().then(setPrograms);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  const isAdmin = useIsAdmin();
 
   const startAddItem = () => {
     setIsAdded(true);
@@ -46,8 +41,7 @@ export const Main = () => {
   const onSaveItem = async (
     item: Pick<IProgram, "id" | "title" | "description">,
   ) => {
-    await ProgramsService.create(item);
-    await loadData();
+    await createProgramMutation.mutateAsync(item);
     closeAddForm();
   };
 

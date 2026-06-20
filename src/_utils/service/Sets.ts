@@ -13,7 +13,7 @@ export interface ISet {
 }
 
 class SetsService {
-  async get(exerciseId: string) {
+  async get(exerciseId: string): Promise<ISet[]> {
     try {
       const res = await api.get(`/sets/${exerciseId}`);
       return res.data;

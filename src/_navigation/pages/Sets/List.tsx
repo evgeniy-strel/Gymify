@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useState, ChangeEvent } from "react";
 
-import {
-  ITimerData,
-  SetsService,
-  TimersService,
-  type ISet,
-} from "../../../utils";
+import { ITimerData, type ISet } from "../../../utils";
 import styles from "./List.module.less";
 
 import CheckIcon from "@mui/icons-material/Check";
 import clsx from "clsx";
 import { CircularProgress, Skeleton } from "@mui/material";
 import { Timer } from "../../../components";
-import { useAppResume } from "../../../hooks";
+import {
+  useAppResume,
+  useResetTimer,
+  useStartTimer,
+  useTimerQuery,
+  useUpdateSet,
+} from "../../../hooks";
 
 const Header = () => {
   return (
@@ -47,7 +48,7 @@ const ItemTemplate = ({
   timerData,
   onToggleCheckbox,
 }: IItemTemplateProps) => {
-  const onToggleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onToggleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
     onToggleCheckbox(event.target.checked, item);
   };
 
@@ -114,7 +115,6 @@ const SkeletonItemTemplate = () => {
 
 interface IListProps {
   items?: ISet[];
-  setItems: Function;
 }
 
 const COUNT_SKELETONS = 5;
@@ -122,51 +122,35 @@ const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 const TIMER_DURATION = 90;
 
 const List = (props: IListProps) => {
-  const [timerData, setTimerData] = useState<ITimerData>();
-  const [restSetId, setRestSetId] = useState<string>();
+  const { items } = props;
+
+  const timerQuery = useTimerQuery();
+  const startTimerMutation = useStartTimer();
+  const resetTimerMutation = useResetTimer();
+
+  const timerData = timerQuery?.data?.status;
+  const restSetId = timerData?.event;
+
   const [reloadingItems, setReloadingItems] = useState<string[]>([]);
-  const { items, setItems } = props;
+  const updateSetMutation = useUpdateSet();
 
-  const checkTimer = () => {
-    return TimersService.check().then(({ data }) => {
-      if (data.status) {
-        setRestSetId(data.status.event);
-        setTimerData(data.status);
-      }
-    });
-  };
-
-  useEffect(() => {
-    checkTimer();
-  }, []);
-
-  useAppResume(checkTimer);
+  useAppResume(timerQuery.refetch);
 
   const onToggleCheckBox = async (isCompleted: boolean, item: ISet) => {
     const newItem: ISet = { ...item, is_completed: isCompleted };
-    setReloadingItems((items) => [...items, newItem.id]);
-    SetsService.update({
-      id: newItem.id,
-      is_completed: newItem.is_completed,
-    });
 
-    setItems((items: ISet[]) =>
-      items.map((_item: ISet, _index: number) => {
-        return _item.id === item.id ? newItem : _item;
-      }),
-    );
+    setReloadingItems((items) => [...items, newItem.id]);
+    updateSetMutation.mutate(newItem);
 
     const isLast = item.id === items?.at(-1).id;
 
     if (isCompleted && !isLast) {
-      await TimersService.start({
+      await startTimerMutation.mutateAsync({
         seconds: TIMER_DURATION,
         event: newItem.id,
       });
-      await checkTimer();
     } else if (newItem.id === restSetId || isLast) {
-      await TimersService.reset();
-      await checkTimer();
+      await resetTimerMutation.mutateAsync();
     }
 
     setReloadingItems((items) =>

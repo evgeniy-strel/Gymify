@@ -5,6 +5,7 @@ import {
   useState,
   Fragment,
   useCallback,
+  memo,
 } from "react";
 
 import { formatTime } from "../../utils";
@@ -60,7 +61,7 @@ const PrimaryButton = ({
 
   const formattedTime = useMemo(() => formatTime(seconds), [seconds]);
 
-  const DisplayIcon = useCallback(() => {
+  const displayIcon = useMemo(() => {
     if (isLoading) {
       return (
         <CircularProgress
@@ -71,7 +72,7 @@ const PrimaryButton = ({
     }
 
     return <Icon {...iconProps} />;
-  }, [Icon, isLoading, iconProps, color]);
+  }, [Icon, iconProps, isLoading, color]);
 
   return (
     <div
@@ -86,12 +87,12 @@ const PrimaryButton = ({
       onClick={readOnly ? emptyFunction : onClick}
     >
       <div className="flex justify-between items-center gap-2">
-        {iconPosition === "beforeText" && Icon ? <DisplayIcon /> : <></>}
+        {iconPosition === "beforeText" && Icon ? displayIcon : <></>}
         <div>{caption}</div>
-        {iconPosition === "afterText" && Icon ? <DisplayIcon /> : <></>}
+        {iconPosition === "afterText" && Icon ? displayIcon : <></>}
       </div>
       {withStopWatch && (
-        <div className="flex gap-1.5 ml-auto">
+        <div className="flex items-center gap-1.5 ml-auto">
           <AccessTimeIcon /> <div>{formattedTime}</div>
         </div>
       )}

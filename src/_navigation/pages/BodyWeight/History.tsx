@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
-import { BodyWeightService, IBodyWeight } from "../../../utils";
+import { IBodyWeight } from "../../../utils";
 
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import { Skeleton } from "@mui/material";
+import { useBodyWeightListQuery } from "../../../hooks";
 
 interface IItemTemplateProps {
   item: IBodyWeight;
@@ -38,7 +39,7 @@ const DynamicsIcon = ({ item }: IItemTemplateProps) => {
 const ItemTemplate = ({ item }: IItemTemplateProps) => {
   const date = useMemo<string>(
     () => formatDateNoYearSuffix(item.measured_at),
-    [item.measured_at]
+    [item.measured_at],
   );
 
   if (item.is_year) {
@@ -81,20 +82,8 @@ const SkeletonItemTemplate = ({ index }: { index: number }) => {
 const COUNT_SKELETONS = 10;
 const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
-interface IProps {
-  reloadKey: number;
-}
-
-const History = ({ reloadKey }: IProps) => {
-  const [items, setItems] = useState<IBodyWeight[]>();
-
-  const loadData = () => {
-    BodyWeightService.getAll({ grouped: true }).then(setItems);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [reloadKey]);
+const History = () => {
+  const { data: items } = useBodyWeightListQuery();
 
   return (
     <div className="bg-white rounded-2xl shadow-md">

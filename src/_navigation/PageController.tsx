@@ -6,9 +6,9 @@ import { EPageRoutes } from "./consts";
 import { default as BottomTabs, TABS } from "./BottomTabs";
 import { Main } from "./pages/Main/Main";
 import { History } from "./pages/History/History";
-import { Progress } from "./pages/Progress/Progress";
+import { BodyWeight } from "./pages/BodyWeight/BodyWeight";
 import { Exercises } from "./pages/Exercises/Exercises";
-import Approaches from "./pages/Approaches/Approaches";
+import Sets from "./pages/Sets/Sets";
 import Auth from "./pages/Auth/Auth";
 import Weeks from "./pages/Weeks/Weeks";
 import Days from "./pages/Days/Days";
@@ -35,7 +35,7 @@ const PageController = () => {
         <Routes>
           <Route path={EPageRoutes.main} element={<Main />} />
           <Route path={EPageRoutes.history} element={<History />} />
-          <Route path={EPageRoutes.progress} element={<Progress />} />
+          <Route path={EPageRoutes.progress} element={<BodyWeight />} />
           <Route path={EPageRoutes.auth} element={<Auth />} />
           <Route path={"/:programId" + EPageRoutes.weeks} element={<Weeks />} />
           <Route
@@ -61,7 +61,7 @@ const PageController = () => {
               "/:dayNumber" +
               "/:exerciseId"
             }
-            element={<Approaches />}
+            element={<Sets />}
           />
         </Routes>
       </div>

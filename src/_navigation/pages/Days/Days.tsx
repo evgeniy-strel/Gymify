@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  DaysService,
-  getExerciseWordForm,
-  getIsAdmin,
-  IDay,
-  IWeek,
-  WeeksService,
-} from "../../../utils";
+import { getExerciseWordForm, IDay } from "../../../utils";
 import { EPageRoutes } from "../../consts";
 import { AddButton, AddForm, PrimaryButton } from "../../../components";
+import {
+  getWeekId,
+  useCreateDay,
+  useIsAdmin,
+  useUpdateWeek,
+} from "../../../hooks";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -18,12 +17,9 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import DoneIcon from "@mui/icons-material/Done";
 import { Skeleton } from "@mui/material";
 import clsx from "clsx";
+import { useDaysQuery } from "../../../_hooks/days/query";
 
-interface IHeaderProps {
-  program: IWeek;
-}
-
-const Header = ({ program }: any) => {
+const Header = () => {
   const { weekNumber } = useParams();
   const navigate = useNavigate();
 
@@ -99,9 +95,7 @@ const ItemTemplate = ({ item }: IProps) => {
           {iconUrl && <Icon url={iconUrl} item={item} />}
           <div>
             <div className="text-xl">{item.title}</div>
-            <div>
-              {item.exercises_count} {getExerciseWordForm(item.exercises_count)}
-            </div>
+            <div>{getExerciseWordForm(item.exercises_count)}</div>
           </div>
         </div>
         {item.is_completed ? (
@@ -138,15 +132,18 @@ const FIELDS_FOR_ADD_FORM = [
 ];
 
 const Days = () => {
-  const { programId, weekNumber: weekNumberString } = useParams();
+  const { programId, weekNumber } = useParams();
   const navigate = useNavigate();
-  const weekNumber = Number(weekNumberString);
 
-  const [days, setDays] = useState<IDay[]>();
+  const { data: days } = useDaysQuery({ programId, week: weekNumber });
+  const createDayMutation = useCreateDay();
+  const updateWeekMutation = useUpdateWeek();
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const isAdmin = useMemo(getIsAdmin, []);
-  const weekId = `${programId}_${weekNumber}`;
-
+  const isAdmin = useIsAdmin();
+  const weekId = useMemo(
+    () => getWeekId(programId, weekNumber),
+    [programId, weekNumber],
+  );
   const allCompleted = useMemo(() => {
     return (
       Number(days?.length) > 0 && days?.every((item: IDay) => item.is_completed)
@@ -154,31 +151,22 @@ const Days = () => {
   }, [days]);
 
   const finishWeek = async () => {
-    await WeeksService.update({
+    updateWeekMutation.mutate({
       id: weekId as string,
       is_completed: true,
     });
     navigate(-1);
   };
 
-  const loadData = () => {
-    DaysService.getAll(programId, weekNumber).then(setDays);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const startAddItem = () => {
     setIsAdded(true);
   };
 
   const onSaveItem = async (item: Pick<IDay, "title">) => {
-    await DaysService.create({
+    await createDayMutation.mutateAsync({
       ...item,
       week_id: weekId,
     });
-    await loadData();
     closeAddForm();
   };
 

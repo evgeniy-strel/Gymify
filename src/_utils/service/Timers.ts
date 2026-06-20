@@ -41,11 +41,13 @@ class TimersService {
     }
   }
 
-  async check(): Promise<AxiosResponse<ICheckData> | undefined> {
+  async check(): Promise<ICheckData | null> {
     try {
-      return api.get("/timers/check");
+      const res = await api.get("/timers/check");
+      return res.data;
     } catch (error: any) {
       console.error("Failed to check timer:", error);
+      return null;
     }
   }
 

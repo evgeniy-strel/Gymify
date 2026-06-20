@@ -25,8 +25,8 @@ class ExercisesService {
 
   async getAll(
     programId: string,
-    week: number,
-    day: number,
+    week: number | string,
+    day: number | string,
   ): Promise<IExercise[]> {
     try {
       const res = await api.get(`/exercises/${programId}/${week}/${day}`);

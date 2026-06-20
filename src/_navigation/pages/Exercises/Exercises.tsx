@@ -1,25 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { AddButton, AddForm, PrimaryButton } from "../../../components";
 import {
-  AddButton,
-  AddForm,
-  PrimaryButton,
-  ExerciseCard,
-} from "../../../components";
-import {
-  DaysService,
-  ExercisesService,
   getExerciseWordForm,
-  getIsAdmin,
   IDay,
   IExercise,
-  ITimerData,
   IWorkoutResult,
-  TimersService,
   WorkoutResultsService,
 } from "../../../utils";
-import { useAppResume } from "../../../hooks";
+import {
+  getDayId,
+  useAppResume,
+  useCreateExercise,
+  useDayQuery,
+  useExercisesQuery,
+  useIsAdmin,
+  useTimerQuery,
+  useUpdateDay,
+} from "../../../hooks";
 import { TrainingResult } from "../../../screens";
+import ExerciseCard from "./ExerciseCard/ExerciseCard";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -49,14 +49,19 @@ const Header = (props: any) => {
         <DateRangeIcon fontSize="small" color="action" />
         <div>Неделя {weekNumber}</div>
         <div className="h-1 w-1 rounded-full bg-gray-400"></div>
-        <div>
-          {exercises ? exercises.length : "..."}{" "}
-          {exercises && getExerciseWordForm(exercises.length)}
-        </div>
+        <div>{exercises && getExerciseWordForm(exercises?.length)}</div>
       </div>
     </div>
   );
 };
+
+function useTrainingDuration(day: IDay | null | undefined): number {
+  if (!day || day.completed_at) {
+    return 0;
+  }
+
+  return Math.floor((Date.now() - new Date(day?.started_at)) / 1000);
+}
 
 const FIELDS_FOR_ADD_FORM = [
   {
@@ -71,74 +76,51 @@ const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
 export const Exercises = () => {
   const { programId, weekNumber, dayNumber } = useParams();
-  const [exercises, setExercises] = useState<IExercise[]>();
-  const [day, setDay] = useState<IDay>();
-  const [isAdded, setIsAdded] = useState<boolean>(false);
-  const [showResults, setShowResults] = useState<boolean>(false);
-  const [workoutResults, setWorkoutResults] = useState<IWorkoutResult>();
-
-  const [timerData, setTimerData] = useState<ITimerData>();
-
-  const isAdmin = useMemo(getIsAdmin, []);
-  const trainingDuration = useMemo<number>(
-    () =>
-      day?.started_at && !day?.completed_at
-        ? Math.floor((Date.now() - new Date(day?.started_at)) / 1000)
-        : 0,
-    [day?.started_at],
-  );
-
   const dayId = useMemo(
-    () => `${programId}_${weekNumber}_${dayNumber}`,
+    () => getDayId(programId, weekNumber, dayNumber),
     [programId, weekNumber, dayNumber],
   );
 
-  const allCompleted = useMemo(() => {
-    return (
+  const { data: exercises } = useExercisesQuery({
+    programId,
+    week: weekNumber,
+    day: dayNumber,
+  });
+  const createExerciseMutation = useCreateExercise();
+  const { data: day } = useDayQuery({ dayId });
+  const updateDayMutation = useUpdateDay();
+  const { data: timerData, refetch: refetchTimer } = useTimerQuery();
+
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const [workoutResults, setWorkoutResults] = useState<IWorkoutResult>();
+  const [isFinishingDay, setIsFinishingDay] = useState<boolean>(false);
+
+  const isAdmin = useIsAdmin();
+  const trainingDuration = useTrainingDuration(day);
+  const allCompleted = useMemo<boolean>(() => {
+    return Boolean(
       Number(exercises?.length) > 0 &&
-      exercises?.every((item: IExercise) => item.is_completed)
+      exercises?.every((item: IExercise) => item.is_completed),
     );
   }, [exercises]);
 
-  const checkTimer = () => {
-    return TimersService.check().then(({ data }) => {
-      if (data.status) {
-        setTimerData(data.status);
-      }
-    });
-  };
-
   useEffect(() => {
-    checkTimer();
+    refetchTimer();
   }, []);
-  useAppResume(checkTimer);
 
-  const loadData = () => {
-    Promise.all([
-      ExercisesService.getAll(programId, weekNumber, dayNumber),
-      DaysService.getById(dayId),
-    ]).then((data) => {
-      setExercises(data[0]);
-      setDay(data[1]);
-    });
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [programId, weekNumber, dayNumber]);
-  useAppResume(loadData);
+  // под вопросом
+  // useAppResume(refetchTimer);
 
   const startAddItem = () => {
     setIsAdded(true);
   };
 
   const onSaveItem = async (item: Partial<IExercise>) => {
-    const answer = await ExercisesService.create({
+    await createExerciseMutation.mutateAsync({
       ...item,
       day_id: dayId,
       order: exercises ? exercises.length + 1 : 1,
     });
-    await loadData();
     closeAddForm();
   };
 
@@ -155,26 +137,26 @@ export const Exercises = () => {
   };
 
   const finishDay = async () => {
-    await DaysService.update({
+    setIsFinishingDay(true);
+    await updateDayMutation.mutateAsync({
       id: dayId as string,
       completed_at: new Date(),
       is_completed: true,
     });
     const data = await loadShowResults();
     setWorkoutResults(data);
-    setShowResults(true);
+    setIsFinishingDay(false);
   };
 
   const startTraining = async () => {
-    const data = await DaysService.update({
+    updateDayMutation.mutate({
       id: dayId as string,
       started_at: new Date(),
     });
-    setDay(data);
   };
 
   const onCloseResults = async () => {
-    setShowResults(false);
+    setWorkoutResults(undefined);
   };
 
   return (
@@ -182,11 +164,12 @@ export const Exercises = () => {
       <div className="bg-gray-100 h-full w-full flex flex-col">
         <Header exercises={exercises} day={day} />
         <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3">
-          {exercises && !allCompleted && !day?.started_at && (
+          {Boolean(exercises?.length && !day?.started_at) && (
             <PrimaryButton
               caption="Начать тренировку"
               icon={PlayArrowIcon}
               iconPosition="beforeText"
+              isLoading={updateDayMutation.isPending}
               onClick={startTraining}
             />
           )}
@@ -196,13 +179,13 @@ export const Exercises = () => {
                   key={item.id}
                   index={index + 1}
                   item={item}
-                  timerData={timerData}
+                  timerData={timerData?.status}
                 />
               ))
             : SKELETON_ITEMS.map((item, index) => (
                 <ExerciseCard.Skeleton key={index} />
               ))}
-          {isAdmin && (
+          {isAdmin && day && !day?.completed_at && (
             <div>
               <AddButton onClick={startAddItem} />
               {isAdded && (
@@ -215,20 +198,22 @@ export const Exercises = () => {
               )}
             </div>
           )}
-          {day?.started_at && !day.completed_at && (
+          {(isFinishingDay ||
+            (exercises && day && day.started_at && !day.completed_at)) && (
             <PrimaryButton
-              readOnly={!allCompleted && exercises.length !== 0}
+              readOnly={!allCompleted}
               iconPosition="beforeText"
               icon={TaskAltIcon}
               caption="Закончить тренировку"
               onClick={finishDay}
               withStopWatch={true}
+              isLoading={isFinishingDay}
               stopWatchSeconds={trainingDuration}
             />
           )}
         </div>
       </div>
-      {showResults && (
+      {workoutResults && (
         <TrainingResult data={workoutResults} onClose={onCloseResults} />
       )}
     </>

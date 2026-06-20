@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 
-import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { useNavigate } from "react-router";
@@ -10,7 +9,7 @@ import { Skeleton } from "@mui/material";
 const ProgressBar = (props: any) => {
   const { currentWeek, totalWeek } = props;
 
-  const percent = (currentWeek / totalWeek) * 100;
+  const percent = totalWeek === 0 ? 0 : (currentWeek / totalWeek) * 100;
 
   return (
     <div>
@@ -30,21 +29,6 @@ const ProgressBar = (props: any) => {
   );
 };
 
-const Icon = (props: any) => {
-  const { className, url } = props;
-
-  return (
-    <div
-      className={clsx(
-        "w-16 h-16 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg p-2 shrink-0",
-        className,
-      )}
-    >
-      <img className="w-full h-full" src={url} />
-    </div>
-  );
-};
-
 interface IProps {
   id: string;
   title: string;
@@ -54,7 +38,7 @@ interface IProps {
 }
 
 const ProgramCard = (props: IProps) => {
-  const { id, title, description, currentWeek, totalWeek } = props;
+  const { id, title, currentWeek, totalWeek } = props;
 
   const navigate = useNavigate();
 
@@ -67,16 +51,22 @@ const ProgramCard = (props: IProps) => {
       className="w-full bg-white rounded-2xl shadow-md p-5"
       onClick={onClick}
     >
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between">
         <div>
           <div className="text-blue-600 text-xl mb-1">{title}</div>
           <div className="text-gray-600 text-sm">
-            {totalWeek}-недельная программа
+            {totalWeek === 0
+              ? "Недели программы не созданы"
+              : `${totalWeek}-недельная программа`}
           </div>
         </div>
         <ArrowForwardIosIcon fontSize="small" color="action" />
       </div>
-      <ProgressBar currentWeek={currentWeek} totalWeek={totalWeek} />
+      {totalWeek > 0 && (
+        <div className="mt-3">
+          <ProgressBar currentWeek={currentWeek} totalWeek={totalWeek} />
+        </div>
+      )}
     </div>
   );
 };

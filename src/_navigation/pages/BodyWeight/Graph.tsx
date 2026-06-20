@@ -1,12 +1,13 @@
+import { useCallback, useMemo } from "react";
+
+import { useBodyWeightGraphQuery } from "../../../hooks";
+
 import {
   areaElementClasses,
   LineChart,
-  lineElementClasses,
   MarkElementProps,
 } from "@mui/x-charts/LineChart";
 import Box from "@mui/material/Box";
-import { BodyWeightService, IBodyWeight } from "../../../utils";
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { Skeleton } from "@mui/material";
 
 const margin = { right: 24, left: -16, top: 24 };
@@ -34,36 +35,24 @@ function CustomMark(props: MarkElementProps) {
   );
 }
 
-interface IProps {
-  reloadKey: number;
-}
-
-export default function Graph({ reloadKey }: IProps) {
-  const [items, setItems] = useState<IBodyWeight[]>();
+export default function Graph() {
+  const { data: items } = useBodyWeightGraphQuery();
 
   const seriesData = useMemo(
     () => items?.map((item) => item.value_kg),
-    [items]
+    [items],
   );
   const labelsData = useMemo(
-    () => items?.map((item, index) => item.short_date),
-    [items]
+    () => items?.map((item) => item.short_date),
+    [items],
   );
 
   const Mark = useCallback(
     (props: any) => {
       return <CustomMark {...props} seriesData={seriesData} />;
     },
-    [seriesData]
+    [seriesData],
   );
-
-  const loadData = () => {
-    BodyWeightService.getGraphData().then(setItems);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [reloadKey]);
 
   return (
     <div className="bg-white rounded-2xl shadow-md px-1">

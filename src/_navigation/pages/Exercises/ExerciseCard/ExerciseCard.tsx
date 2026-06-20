@@ -4,8 +4,8 @@ import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { useNavigate } from "react-router";
-import type { IExercise, ITimerData } from "../../utils";
-import { CircleTimer } from "../../components";
+import type { IExercise, ITimerData } from "../../../../utils";
+import { CircleTimer } from "../../../../components";
 import DoneIcon from "@mui/icons-material/Done";
 import { Skeleton } from "@mui/material";
 
@@ -39,13 +39,16 @@ export const ExerciseCard = (props: IProps) => {
 
   const navigate = useNavigate();
 
-  const openApproaches = () => {
+  const openSets = () => {
     navigate(item.id);
   };
 
   const progress = useMemo(
-    () => item.sets.filter((set) => set.is_completed).length / item.sets.length,
-    [],
+    () =>
+      item.sets.length === 0
+        ? 0
+        : item.sets.filter((set) => set.is_completed).length / item.sets.length,
+    [item],
   );
 
   const calcIsTimerActive = () =>
@@ -68,7 +71,7 @@ export const ExerciseCard = (props: IProps) => {
           "bg-white/85": !item.is_completed,
         },
       )}
-      onClick={openApproaches}
+      onClick={openSets}
     >
       <div className="flex items-center gap-4">
         <div
