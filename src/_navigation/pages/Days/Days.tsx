@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { getExerciseWordForm, IDay } from "../../../utils";
 import { EPageRoutes } from "../../consts";
@@ -151,11 +151,17 @@ const Days = () => {
   }, [days]);
 
   const finishWeek = async () => {
-    updateWeekMutation.mutate({
-      id: weekId as string,
-      is_completed: true,
-    });
-    navigate(-1);
+    updateWeekMutation.mutate(
+      {
+        id: weekId as string,
+        is_completed: true,
+      },
+      {
+        onSuccess: () => {
+          navigate(-1);
+        },
+      },
+    );
   };
 
   const startAddItem = () => {
@@ -190,6 +196,7 @@ const Days = () => {
             {allCompleted && (
               <PrimaryButton
                 caption="Закончить неделю"
+                isLoading={updateWeekMutation.isPending}
                 icon={TaskAltIcon}
                 onClick={finishWeek}
               />

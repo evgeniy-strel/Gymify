@@ -26,14 +26,14 @@ export function useUpdateWeek() {
   return useMutation({
     mutationFn: (item: TUpdateWeek) => WeeksService.update(item),
 
-    onSuccess: (updatedItem: IWeek | null) => {
+    onSuccess: async (updatedItem: IWeek | null) => {
       // БЛ уже отдает обновленную неделю, сразу сетим на стейт
       if (updatedItem) {
         queryClient.setQueryData(["week", updatedItem.id], updatedItem);
       }
       // Если неделя завершена, то обновляем список недель программы
       if (updatedItem?.is_completed) {
-        queryClient.invalidateQueries({
+        await queryClient.refetchQueries({
           queryKey: ["weeks", updatedItem.program_id],
         });
       }
