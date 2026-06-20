@@ -1,10 +1,25 @@
 import { useCallback } from "react";
 
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
-import { useNavigate } from "react-router";
+import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { EPageRoutes } from "../../navigation";
+
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useNavigate } from "react-router";
 import { Skeleton } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+
+const ContinueButton = (props: any) => {
+  const onClick = () => {};
+
+  return (
+    <PrimaryButton
+      caption="Продолжить программу"
+      icon={PlayArrowIcon}
+      iconPosition="beforeText"
+      onClick={onClick}
+    />
+  );
+};
 
 const ProgressBar = (props: any) => {
   const { currentWeek, totalWeek } = props;
@@ -67,6 +82,11 @@ const ProgramCard = (props: IProps) => {
           <ProgressBar currentWeek={currentWeek} totalWeek={totalWeek} />
         </div>
       )}
+      {/* {id === "put_k_150" && (
+        <div className="mt-4 rounded-xl overflow-hidden">
+          <ContinueButton />
+        </div>
+      )} */}
     </div>
   );
 };
