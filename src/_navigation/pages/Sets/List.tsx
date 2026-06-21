@@ -1,19 +1,22 @@
 import { useState, ChangeEvent } from "react";
 
-import { ITimerData, type ISet } from "../../../utils";
 import styles from "./List.module.less";
-
-import CheckIcon from "@mui/icons-material/Check";
-import clsx from "clsx";
-import { CircularProgress, Skeleton } from "@mui/material";
+import { ITimerData, type ISet } from "../../../utils";
 import { Timer } from "../../../components";
 import {
+  getDayId,
   useAppResume,
+  useDayQuery,
   useResetTimer,
   useStartTimer,
   useTimerQuery,
   useUpdateSet,
 } from "../../../hooks";
+
+import CheckIcon from "@mui/icons-material/Check";
+import clsx from "clsx";
+import { CircularProgress, Skeleton } from "@mui/material";
+import { useParams } from "react-router";
 
 const Header = () => {
   return (
@@ -37,6 +40,7 @@ interface IItemTemplateProps {
   timerData: ITimerData;
   isRest: boolean;
   isReloading: boolean;
+  readOnly: boolean;
   onToggleCheckbox: (isCompleted: boolean, item: ISet) => void;
 }
 
@@ -46,10 +50,15 @@ const ItemTemplate = ({
   isRest,
   isReloading,
   timerData,
+  readOnly,
   onToggleCheckbox,
 }: IItemTemplateProps) => {
   const onToggleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
     onToggleCheckbox(event.target.checked, item);
+  };
+
+  const alertTrainingNotStarted = () => {
+    alert("Тренировка не начата");
   };
 
   return (
@@ -88,8 +97,14 @@ const ItemTemplate = ({
             <input
               type="checkbox"
               checked={item.is_completed}
-              className="appearance-none shrink-0 w-full h-full bg-gray-100 border border-gray-300 rounded checked:border-gray-800 checked:bg-white"
-              onChange={onToggleCheckBox}
+              className={clsx(
+                "appearance-none shrink-0 w-full h-full border rounded checked:border-gray-800 checked:bg-white",
+                {
+                  "bg-gray-50 border-gray-200": readOnly,
+                  "bg-gray-100 border-gray-300": !readOnly,
+                },
+              )}
+              onChange={readOnly ? alertTrainingNotStarted : onToggleCheckBox}
             />
             {item.is_completed && (
               <CheckIcon
@@ -123,16 +138,20 @@ const TIMER_DURATION = 90;
 
 const List = (props: IListProps) => {
   const { items } = props;
+  const { programId, weekNumber, dayNumber } = useParams();
 
   const timerQuery = useTimerQuery();
   const startTimerMutation = useStartTimer();
   const resetTimerMutation = useResetTimer();
+  const { data: day } = useDayQuery({
+    dayId: getDayId(programId, weekNumber, dayNumber),
+  });
+  const updateSetMutation = useUpdateSet();
 
   const timerData = timerQuery?.data?.status;
   const restSetId = timerData?.event;
 
   const [reloadingItems, setReloadingItems] = useState<string[]>([]);
-  const updateSetMutation = useUpdateSet();
 
   useAppResume(timerQuery.refetch);
 
@@ -168,6 +187,7 @@ const List = (props: IListProps) => {
           ? items.map((item, index) => (
               <ItemTemplate
                 item={item}
+                readOnly={!day?.started_at}
                 index={index}
                 key={index}
                 isRest={restSetId === item.id}
