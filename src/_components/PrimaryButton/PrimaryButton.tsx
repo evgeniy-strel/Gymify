@@ -50,6 +50,7 @@ const PrimaryButton = ({
   useEffect(() => {
     if (withStopWatch) {
       let intervalId;
+      setSeconds(stopWatchSeconds || 0);
       intervalId = setInterval(() => {
         setSeconds((value) => value + 1);
       }, 1000);
@@ -57,7 +58,7 @@ const PrimaryButton = ({
         clearInterval(intervalId);
       };
     }
-  }, []);
+  }, [stopWatchSeconds]);
 
   const formattedTime = useMemo(() => formatTime(seconds), [seconds]);
 

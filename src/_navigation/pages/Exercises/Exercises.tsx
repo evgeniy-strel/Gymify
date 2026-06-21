@@ -55,7 +55,7 @@ const Header = (props: any) => {
   );
 };
 
-function useTrainingDuration(day: IDay | null | undefined): number {
+function getTrainingDuration(day: IDay | null | undefined): number {
   if (!day || day.completed_at) {
     return 0;
   }
@@ -94,9 +94,12 @@ export const Exercises = () => {
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const [workoutResults, setWorkoutResults] = useState<IWorkoutResult>();
   const [isFinishingDay, setIsFinishingDay] = useState<boolean>(false);
+  const [trainingDuration, setTrainingDuration] = useState<number>(
+    getTrainingDuration(day),
+  );
 
   const isAdmin = useIsAdmin();
-  const trainingDuration = useTrainingDuration(day);
+
   const allCompleted = useMemo<boolean>(() => {
     return Boolean(
       Number(exercises?.length) > 0 &&
@@ -104,12 +107,20 @@ export const Exercises = () => {
     );
   }, [exercises]);
 
+  const updateTrainingDuration = () => {
+    setTrainingDuration(getTrainingDuration(day));
+  };
+
+  useEffect(() => {
+    updateTrainingDuration();
+  }, [day]);
+
   useEffect(() => {
     refetchTimer();
   }, []);
 
-  // под вопросом
-  // useAppResume(refetchTimer);
+  useAppResume(refetchTimer);
+  useAppResume(updateTrainingDuration);
 
   const startAddItem = () => {
     setIsAdded(true);

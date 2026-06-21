@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 
 import styles from "./List.module.less";
 import { ITimerData, type ISet } from "../../../utils";
@@ -152,6 +152,10 @@ const List = (props: IListProps) => {
   const restSetId = timerData?.event;
 
   const [reloadingItems, setReloadingItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    timerQuery.refetch();
+  }, []);
 
   useAppResume(timerQuery.refetch);
 
