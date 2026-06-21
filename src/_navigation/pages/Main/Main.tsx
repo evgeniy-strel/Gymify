@@ -61,7 +61,7 @@ export const Main = () => {
           ))}
       {isAdmin && (
         <div>
-          <AddButton onClick={startAddItem} />
+          <AddButton title="Создать программу" onClick={startAddItem} />
           {isAdded && (
             <AddForm
               onSave={onSaveItem}

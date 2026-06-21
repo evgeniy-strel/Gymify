@@ -187,7 +187,7 @@ export const Exercises = () => {
               ))}
           {isAdmin && day && !day?.completed_at && (
             <div>
-              <AddButton onClick={startAddItem} />
+              <AddButton title="Добавить упражнение" onClick={startAddItem} />
               {isAdded && (
                 <AddForm
                   onSave={onSaveItem}

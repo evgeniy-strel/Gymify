@@ -128,7 +128,7 @@ const Approaches = () => {
         )}
         {isAdmin && (
           <div>
-            <AddButton onClick={startAddItem} />
+            <AddButton title="Добавить подход" onClick={startAddItem} />
             {isAdded && (
               <AddForm
                 onSave={onSaveItem}

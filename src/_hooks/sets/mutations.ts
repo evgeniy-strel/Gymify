@@ -62,6 +62,9 @@ export function useCreateSet() {
       queryClient.invalidateQueries({
         queryKey: ["sets", item.exercise_id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["exercises", item.day_id],
+      });
     },
   });
 }

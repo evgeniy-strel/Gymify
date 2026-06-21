@@ -205,7 +205,7 @@ const Days = () => {
         )}
         {isAdmin && (
           <div className="pt-3">
-            <AddButton onClick={startAddItem} />
+            <AddButton title="Создать день" onClick={startAddItem} />
             {isAdded && (
               <AddForm
                 onSave={onSaveItem}

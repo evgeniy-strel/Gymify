@@ -142,6 +142,7 @@ const Weeks = () => {
       {isAdmin && (
         <div className="px-3 py-3">
           <AddButton
+            title="Создать неделю"
             isLoading={createWeekMutation.isPending}
             onClick={createProgram}
           />
