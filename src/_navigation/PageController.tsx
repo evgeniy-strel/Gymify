@@ -1,17 +1,18 @@
-import { useCallback, useState, SyntheticEvent, useMemo } from "react";
+import { useCallback, useState, SyntheticEvent, useMemo, lazy } from "react";
 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import { EPageRoutes } from "./consts";
 import { default as BottomTabs, TABS } from "./BottomTabs";
-import { Main } from "./pages/Main/Main";
-import { History } from "./pages/History/History";
-import { BodyWeight } from "./pages/BodyWeight/BodyWeight";
-import { Exercises } from "./pages/Exercises/Exercises";
-import Sets from "./pages/Sets/Sets";
-import Auth from "./pages/Auth/Auth";
-import Weeks from "./pages/Weeks/Weeks";
-import Days from "./pages/Days/Days";
+
+const Main = lazy(() => import("../features/programs/ProgramsPage"));
+const Exercises = lazy(() => import("../features/exercises/ExercisesPage"));
+const BodyWeight = lazy(() => import("../features/bodyWeight/BodyWeightPage"));
+const Sets = lazy(() => import("../features/sets/SetsPage"));
+const Auth = lazy(() => import("../features/auth/AuthPage"));
+const Weeks = lazy(() => import("../features/weeks/WeeksPage"));
+const History = lazy(() => import("../features/history/HistoryPage"));
+const Days = lazy(() => import("../features/days/DaysPage"));
 
 /* Компонент, отвечающий за упраление роутингом и раскладку страницы  */
 const PageController = () => {
