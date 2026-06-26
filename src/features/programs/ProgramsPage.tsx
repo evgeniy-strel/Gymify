@@ -1,4 +1,4 @@
-import { lazy, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 
 import { IProgram } from "./api/ProgramsService";
 import { useCreateProgram } from "./hooks/mutations";
@@ -52,6 +52,10 @@ const Main = () => {
   const closeAddForm = () => {
     setIsAdded(false);
   };
+
+  useEffect(() => {
+    setTimeout(() => import("../weeks/WeeksPage"), 1000);
+  }, []);
 
   return (
     <div className="py-4 px-3 flex flex-col gap-3 h-full bg-gradient-to-br from-blue-50 to-white">
