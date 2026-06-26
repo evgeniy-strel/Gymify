@@ -65,13 +65,12 @@ export const ExerciseCard = (props: IProps) => {
   return (
     <div
       className={clsx(
-        "rounded-xl p-5 cursor-pointer hover:shadow-xl relative overflow-hidden flex-shrink-0",
+        "select-none rounded-xl p-5 cursor-pointer hover:shadow-xl relative overflow-hidden flex-shrink-0 duration-200 ease-out",
         {
           "bg-gradient-to-r from-blue-500 to-blue-600": item.is_completed,
           "bg-white/85": !item.is_completed,
         },
       )}
-      onClick={openSets}
     >
       <div className="flex items-center gap-4">
         <div

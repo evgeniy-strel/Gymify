@@ -19,13 +19,13 @@ import {
   useUpdateDay,
 } from "../../../hooks";
 import { TrainingResult } from "../../../screens";
-import ExerciseCard from "./ExerciseCard/ExerciseCard";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import ExercisesList from "./List";
 
 const Header = (props: any) => {
   const { weekNumber, dayNumber } = useParams();
@@ -70,9 +70,6 @@ const FIELDS_FOR_ADD_FORM = [
     placeholder: "Название упражнения",
   },
 ];
-
-const COUNT_SKELETONS = 5;
-const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
 export const Exercises = () => {
   const { programId, weekNumber, dayNumber } = useParams();
@@ -175,7 +172,7 @@ export const Exercises = () => {
       <div className="bg-gray-100 h-full w-full flex flex-col">
         <Header exercises={exercises} day={day} />
         <div className="flex flex-col gap-2.5 py-3 overflow-scroll px-3">
-          {Boolean(exercises?.length && !day?.started_at) && (
+          {Boolean(exercises?.length && day && !day?.started_at) && (
             <PrimaryButton
               caption="Начать тренировку"
               icon={PlayArrowIcon}
@@ -184,18 +181,7 @@ export const Exercises = () => {
               onClick={startTraining}
             />
           )}
-          {exercises
-            ? exercises.map((item, index) => (
-                <ExerciseCard
-                  key={item.id}
-                  index={index + 1}
-                  item={item}
-                  timerData={timerData?.status}
-                />
-              ))
-            : SKELETON_ITEMS.map((item, index) => (
-                <ExerciseCard.Skeleton key={index} />
-              ))}
+          <ExercisesList exercises={exercises} timerData={timerData} />
           {isAdmin && day && !day?.completed_at && (
             <div>
               <AddButton title="Добавить упражнение" onClick={startAddItem} />
