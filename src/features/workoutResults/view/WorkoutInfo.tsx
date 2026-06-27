@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { IWorkoutResult } from "../../../utils";
+import type { IWorkoutResult } from "../api/WorkoutResults";
 
 import SquareOutlinedIcon from "@mui/icons-material/SquareOutlined";
 import ChangeHistoryOutlinedIcon from "@mui/icons-material/ChangeHistoryOutlined";
@@ -30,7 +30,7 @@ const ItemTemplate = ({ item }: IItemTemplateProps) => {
   );
 };
 
-export const getItems = (data: IWorkoutResult): IItemData[] => {
+const getItems = (data: IWorkoutResult): IItemData[] => {
   const program = data.program;
   return [
     {
@@ -51,7 +51,7 @@ export const getItems = (data: IWorkoutResult): IItemData[] => {
   ];
 };
 
-export const TrainingInfo = ({ data }: { data: IWorkoutResult }) => {
+const TrainingInfo = ({ data }: { data: IWorkoutResult }) => {
   const items = useMemo<IItemData[]>(() => getItems(data), [data]);
 
   return (
@@ -62,3 +62,5 @@ export const TrainingInfo = ({ data }: { data: IWorkoutResult }) => {
     </div>
   );
 };
+
+export default TrainingInfo;

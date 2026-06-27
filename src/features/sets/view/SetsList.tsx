@@ -19,6 +19,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import clsx from "clsx";
 import { CircularProgress, Skeleton } from "@mui/material";
 import { useParams } from "react-router";
+import { ConnectToActions } from "../../../actions";
 
 const Header = () => {
   return (
@@ -78,16 +79,13 @@ const ItemTemplate = ({
         <div className="flex items-center justify-center min-w-10 text-center py-2 px-2 rounded-lg text-sm bg-gray-100 text-gray-600">
           #{index + 1}
         </div>
-        <input
-          className="w-full text-center py-2 px-2 rounded-lg text-sm bg-gray-100 text-gray-600"
-          type="number"
-          value={item.weight_percent}
-        />
-        <input
-          className="w-full text-center py-2 px-2 rounded-lg text-sm bg-gray-100 text-gray-600"
-          type="number"
-          value={item.reps}
-        />
+        <div className="w-full text-center py-2 px-2 rounded-lg text-sm bg-gray-100 text-gray-600">
+          {item.weight_percent}
+        </div>
+
+        <div className="w-full text-center py-2 px-2 rounded-lg text-sm bg-gray-100 text-gray-600">
+          {item.reps}
+        </div>
         {isReloading && (
           <CircularProgress
             size="100%"
@@ -122,6 +120,8 @@ const ItemTemplate = ({
   );
 };
 
+const ItemTemplateWithActions = ConnectToActions(ItemTemplate);
+
 const SkeletonItemTemplate = () => {
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden">
@@ -154,6 +154,7 @@ const List = (props: IListProps) => {
   const restSetId = timerData?.event;
 
   const [reloadingItems, setReloadingItems] = useState<string[]>([]);
+  const [activeActionsItem, setActiveActionsItem] = useState<string>();
 
   useEffect(() => {
     timerQuery.refetch();
@@ -183,6 +184,10 @@ const List = (props: IListProps) => {
     );
   };
 
+  const onActionClick = (id) => {
+    setActiveActionsItem(id);
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <div>
@@ -191,15 +196,19 @@ const List = (props: IListProps) => {
       <div className="flex flex-col gap-2.5">
         {items
           ? items.map((item, index) => (
-              <ItemTemplate
+              <ItemTemplateWithActions
+                key={item.id}
+                itemKey={item.id}
                 item={item}
                 readOnly={!day?.started_at}
                 index={index}
-                key={index}
                 isRest={restSetId === item.id}
                 isReloading={reloadingItems.includes(item.id)}
                 timerData={timerData}
                 onToggleCheckbox={onToggleCheckBox}
+                showActions={activeActionsItem === item.id}
+                onClick={() => setActiveActionsItem("")}
+                onActionClick={onActionClick}
               />
             ))
           : SKELETON_ITEMS.map((item, index) => (

@@ -9,14 +9,14 @@ import DeleteDialog from "./DeleteDialog";
 interface IActionProps {
   itemKey: string;
   showActions: boolean;
-  onActionClick?: (id: string, action: string) => void;
-  onClick?: () => void;
+  onActionClick: (id: string) => void;
+  onClick?: (id: string) => void;
 }
 
 type TItemProps = Record<string, unknown>;
 
-const ConnectToActions = (Item: FunctionComponent<TItemProps>) => {
-  return function Wrapped(props: IActionProps & TItemProps) {
+const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
+  return function Wrapped(props: IActionProps & T) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const { onActionClick, onClick, showActions, ...itemProps } = props;
 
@@ -37,10 +37,9 @@ const ConnectToActions = (Item: FunctionComponent<TItemProps>) => {
 
         {/* OVERLAY */}
         <div
+          // onClick={showActions ? onClick : undefined}
           className={clsx(
-            "absolute inset-0 z-10 rounded-xl",
-            "transition-all duration-200 ease-out",
-            showActions ? "pointer-events-auto" : "pointer-events-none",
+            "absolute inset-0 z-10 rounded-xl pointer-events-none transition-all duration-200 ease-out",
           )}
         >
           {/* 🌫 BLUR LAYER */}

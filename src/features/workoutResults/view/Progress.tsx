@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { IWorkoutResult } from "../../../utils";
+import { IWorkoutResult } from "../api/WorkoutResults";
 
 import ArrowRightAltOutlinedIcon from "@mui/icons-material/ArrowRightAltOutlined";
 import CountUp from "react-countup";

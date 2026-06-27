@@ -6,7 +6,6 @@ import { CircleTimer } from "../../../components";
 
 import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useNavigate } from "react-router";
 import DoneIcon from "@mui/icons-material/Done";
 import { Skeleton } from "@mui/material";
 
@@ -37,12 +36,6 @@ const getSetFormWord = (count: number): string => {
 
 export const ExerciseCard = (props: IProps) => {
   const { item, index, timerData } = props;
-
-  const navigate = useNavigate();
-
-  const openSets = () => {
-    navigate(item.id);
-  };
 
   const progress = useMemo(
     () =>

@@ -1,7 +1,8 @@
-import api from "../axios";
-import type { IDay } from "../../features/weeks/api/DaysService";
-import type { IExercise } from "../../features/exercises/api/ExercisesService";
-import type { IProgram } from "../../features/main/api/ProgramsService";
+import { api } from "../../../utils";
+
+import type { IDay } from "../../days/api/DaysService";
+import type { IExercise } from "../..//exercises/api/ExercisesService";
+import type { IProgram } from "../../programs/api/ProgramsService";
 
 export interface IWorkoutResult {
   program: IProgram;

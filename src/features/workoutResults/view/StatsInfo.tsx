@@ -1,10 +1,9 @@
-import React, { useMemo } from "react";
+import { useMemo, ElementType } from "react";
 
-import {
-  formatTimeForDuration,
-  IExercise,
-  IWorkoutResult,
-} from "../../../utils";
+import type { IWorkoutResult } from "../api/WorkoutResults";
+
+import type { IExercise } from "../../exercises/api/ExercisesService";
+import { formatTimeForDuration } from "../../../utils";
 
 import HourglassBottomOutlinedIcon from "@mui/icons-material/HourglassBottomOutlined";
 import FitnessCenterOutlinedIcon from "@mui/icons-material/FitnessCenterOutlined";
@@ -12,7 +11,7 @@ import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import CountUp from "react-countup";
 
 interface IItemData {
-  icon: React.ElementType;
+  icon: ElementType;
   title: string;
   value: number;
   formatter?: (n: number) => string;

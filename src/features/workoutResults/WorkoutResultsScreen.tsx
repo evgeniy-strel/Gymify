@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { TrainingInfo } from "./components/TrainingInfo";
-import Progress from "./components/Progress";
-import StatsInfo from "./components/StatsInfo";
+import WorkoutInfo from "./view/WorkoutInfo";
+import Progress from "./view/Progress";
+import StatsInfo from "./view/StatsInfo";
+import type { IWorkoutResult } from "./api/WorkoutResults";
+
 import { PrimaryButton } from "../../components";
 import { EPageRoutes } from "../../navigation";
-import { IWorkoutResult } from "../../utils";
 
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -29,7 +30,7 @@ interface IProps {
   onClose: Function;
 }
 
-const TrainingResult = ({ onClose, data }: IProps) => {
+const WorkoutResultsScreen = ({ onClose, data }: IProps) => {
   const [isConfettiRecycle, setIConfettiRecycle] = useState<boolean>(true);
   const navigate = useNavigate();
   const [isClosing, setIsClosing] = useState<boolean>(false);
@@ -62,7 +63,7 @@ const TrainingResult = ({ onClose, data }: IProps) => {
         <div className="mb-2">
           <Header />
         </div>
-        <TrainingInfo data={data} />
+        <WorkoutInfo data={data} />
         <Progress data={data} />
         <StatsInfo data={data} />
         <PrimaryButton
@@ -92,4 +93,4 @@ const TrainingResult = ({ onClose, data }: IProps) => {
   );
 };
 
-export default TrainingResult;
+export default WorkoutResultsScreen;

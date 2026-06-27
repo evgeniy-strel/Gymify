@@ -3,8 +3,6 @@ export { default as api } from "./_utils/axios";
 
 export { default as TimersService } from "./_utils/service/Timers";
 export type { ITimerData, ICheckData } from "./_utils/service/Timers";
-export { default as WorkoutResultsService } from "./_utils/service/WorkoutResults";
-export type { IWorkoutResult } from "./_utils/service/WorkoutResults";
 
 export {
   duplicateCall,

@@ -9,15 +9,15 @@ import { getDayId } from "../days/utils/helpers";
 import { useUpdateDay } from "../days/hooks/mutations";
 import { useDayQuery } from "../days/hooks/query";
 import type { IDay } from "./../days/api/DaysService";
-import {
-  getExerciseWordForm,
-  IWorkoutResult,
-  WorkoutResultsService,
-} from "../../utils";
+import { getExerciseWordForm } from "../../utils";
 import { AddButton, PrimaryButton } from "../../components";
 import { useAppResume, useIsAdmin, useTimerQuery } from "../../hooks";
-import { TrainingResult } from "../../screens";
 import AddForm from "../../shared/view/AddForm/AddForm";
+import WorkoutResultsScreen from "../workoutResults/WorkoutResultsScreen";
+import {
+  default as WorkoutResultsService,
+  IWorkoutResult,
+} from "../workoutResults/api/WorkoutResults";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -209,7 +209,7 @@ const Exercises = () => {
         </div>
       </div>
       {workoutResults && (
-        <TrainingResult data={workoutResults} onClose={onCloseResults} />
+        <WorkoutResultsScreen data={workoutResults} onClose={onCloseResults} />
       )}
     </>
   );

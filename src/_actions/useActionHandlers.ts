@@ -1,38 +1,32 @@
 import { useRef } from "react";
 
-type Action<T> = {
-  id: T;
-  x: number;
-  y: number;
-};
-
 type Options<T> = {
-  onAction: (data: Action<T>) => void; // long press / RMB
+  onAction: (id: T) => void; // long press / RMB
   onClick?: (id: T) => void; // обычный клик
   delay?: number;
 };
-
-const OFFSET_FOR_MOBILE = 33;
 
 export function useActionHandlers<T = string>(options: Options<T>) {
   const timerRef = useRef<number | null>(null);
   const movedRef = useRef(false);
   const longPressRef = useRef(false);
+  const fromTouchRef = useRef(false);
 
-  const delay = options.delay ?? 500;
+  const delay = options.delay ?? 450;
 
   const bind = (id: T) => ({
     // 🖱 ПКМ → меню
     onContextMenu: (e: React.MouseEvent) => {
       e.preventDefault();
 
+      if (fromTouchRef.current) {
+        fromTouchRef.current = false;
+        return;
+      }
+
       longPressRef.current = true;
 
-      options.onAction({
-        id,
-        x: e.clientX,
-        y: e.clientY,
-      });
+      options.onAction(id);
     },
 
     // 👆 обычный клик
@@ -49,20 +43,17 @@ export function useActionHandlers<T = string>(options: Options<T>) {
 
     // 📱 touch start
     onTouchStart: (e: React.TouchEvent) => {
+      e.preventDefault();
+
       movedRef.current = false;
       longPressRef.current = false;
-
-      const touch = e.touches[0];
+      fromTouchRef.current = true;
 
       timerRef.current = window.setTimeout(() => {
         if (!movedRef.current) {
           longPressRef.current = true;
 
-          options.onAction({
-            id,
-            x: touch.clientX - OFFSET_FOR_MOBILE,
-            y: touch.clientY - OFFSET_FOR_MOBILE,
-          });
+          options.onAction(id);
         }
       }, delay);
     },
@@ -71,6 +62,7 @@ export function useActionHandlers<T = string>(options: Options<T>) {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
+      fromTouchRef.current = true;
     },
 
     onTouchMove: () => {
