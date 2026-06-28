@@ -9,7 +9,7 @@ const Main = lazy(() => import("../features/programs/ProgramsPage"));
 const Exercises = lazy(() => import("../features/exercises/ExercisesPage"));
 const BodyWeight = lazy(() => import("../features/bodyWeight/BodyWeightPage"));
 const Sets = lazy(() => import("../features/sets/SetsPage"));
-const Auth = lazy(() => import("../features/auth/AuthPage"));
+const Settings = lazy(() => import("../features/settings/SettingsPage"));
 const Weeks = lazy(() => import("../features/weeks/WeeksPage"));
 const History = lazy(() => import("../features/history/HistoryPage"));
 const Days = lazy(() => import("../features/days/DaysPage"));
@@ -37,7 +37,7 @@ const PageController = () => {
           <Route path={EPageRoutes.main} element={<Main />} />
           <Route path={EPageRoutes.history} element={<History />} />
           <Route path={EPageRoutes.progress} element={<BodyWeight />} />
-          <Route path={EPageRoutes.auth} element={<Auth />} />
+          <Route path={EPageRoutes.settings} element={<Settings />} />
           <Route path={"/:programId" + EPageRoutes.weeks} element={<Weeks />} />
           <Route
             path={"/:programId" + EPageRoutes.weeks + "/:weekNumber"}

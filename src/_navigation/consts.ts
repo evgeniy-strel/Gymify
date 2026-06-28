@@ -5,5 +5,5 @@ export enum EPageRoutes {
   exercises = "/exercises",
   weeks = "/weeks",
   days = "/days",
-  auth = "/auth",
+  settings = "/settings",
 }

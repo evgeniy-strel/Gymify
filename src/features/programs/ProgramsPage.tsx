@@ -10,7 +10,7 @@ import { useIsAdmin } from "../../hooks";
 import { ConnectToActions, TActions } from "../../actions";
 import { EPageRoutes } from "../../navigation";
 
-import { Typography } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router";
 
 const AddForm = lazy(() => import("../../shared/view/AddForm/AddForm"));
@@ -35,6 +35,23 @@ const FIELDS_FOR_ADD_FORM = [
     placeholder: "Описание",
   },
 ];
+
+const Header = () => {
+  const navigate = useNavigate();
+
+  const openSettings = () => {
+    navigate(EPageRoutes.settings);
+  };
+
+  return (
+    <div className="shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pb-1 z-10 shadow-sm">
+      <div className="flex items-center justify-between p-2">
+        <div className="text-xl">Программы</div>
+        <SettingsIcon onClick={openSettings} />
+      </div>
+    </div>
+  );
+};
 
 const ProgramCardWithActions = ConnectToActions(ProgramCard);
 
@@ -78,33 +95,35 @@ const Main = () => {
   }, []);
 
   return (
-    <div className="py-4 px-3 flex flex-col gap-3 h-full bg-gradient-to-br from-blue-50 to-white">
-      <Typography variant="h4">Программы</Typography>
-      {programs
-        ? programs.map((program) => (
-            <ProgramCardWithActions
-              key={program.id}
-              item={program}
-              onClick={onClick}
-              onActionComplete={onActionComplete}
-            />
-          ))
-        : SKELETON_ITEMS.map((item, index) => (
-            <ProgramCard.Skeleton key={index} />
-          ))}
-      {isAdmin && (
-        <div>
-          <AddButton title="Создать программу" onClick={startAddItem} />
-          {isAdded && (
-            <AddForm
-              onSave={onSaveItem}
-              onClose={closeAddForm}
-              fields={FIELDS_FOR_ADD_FORM}
-              description={`Введите данные программы`}
-            />
-          )}
-        </div>
-      )}
+    <div className="h-full flex flex-col">
+      <Header />
+      <div className="py-4 px-3 flex flex-col gap-3 h-full bg-gray-100 to-white">
+        {programs
+          ? programs.map((program) => (
+              <ProgramCardWithActions
+                key={program.id}
+                item={program}
+                onClick={onClick}
+                onActionComplete={onActionComplete}
+              />
+            ))
+          : SKELETON_ITEMS.map((item, index) => (
+              <ProgramCard.Skeleton key={index} />
+            ))}
+        {isAdmin && (
+          <div>
+            <AddButton title="Создать программу" onClick={startAddItem} />
+            {isAdded && (
+              <AddForm
+                onSave={onSaveItem}
+                onClose={closeAddForm}
+                fields={FIELDS_FOR_ADD_FORM}
+                description={`Введите данные программы`}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
