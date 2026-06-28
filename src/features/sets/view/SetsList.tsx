@@ -2,7 +2,7 @@ import { useState, ChangeEvent, useEffect } from "react";
 
 import styles from "./SetsList.module.less";
 import type { ISet } from "../api/SetsService";
-import { useUpdateSet } from "../hooks/mutations";
+import { useDeleteSet, useUpdateSet } from "../hooks/mutations";
 
 import { useDayQuery } from "../../days/hooks/query";
 import { getDayId } from "../../days/utils/helpers";
@@ -14,12 +14,12 @@ import {
   useStartTimer,
   useTimerQuery,
 } from "../../../hooks";
+import { ConnectToActions, TActions } from "../../../actions";
 
 import CheckIcon from "@mui/icons-material/Check";
 import clsx from "clsx";
 import { CircularProgress, Skeleton } from "@mui/material";
 import { useParams } from "react-router";
-import { ConnectToActions } from "../../../actions";
 
 const Header = () => {
   return (
@@ -149,12 +149,12 @@ const List = (props: IListProps) => {
     dayId: getDayId(programId, weekNumber, dayNumber),
   });
   const updateSetMutation = useUpdateSet();
+  const deleteSetMutation = useDeleteSet();
 
   const timerData = timerQuery?.data?.status;
   const restSetId = timerData?.event;
 
   const [reloadingItems, setReloadingItems] = useState<string[]>([]);
-  const [activeActionsItem, setActiveActionsItem] = useState<string>();
 
   useEffect(() => {
     timerQuery.refetch();
@@ -184,8 +184,10 @@ const List = (props: IListProps) => {
     );
   };
 
-  const onActionClick = (id) => {
-    setActiveActionsItem(id);
+  const onActionComplete = (actionId: TActions, id: string) => {
+    if (actionId === "delete") {
+      deleteSetMutation.mutate(id);
+    }
   };
 
   return (
@@ -206,9 +208,7 @@ const List = (props: IListProps) => {
                 isReloading={reloadingItems.includes(item.id)}
                 timerData={timerData}
                 onToggleCheckbox={onToggleCheckBox}
-                showActions={activeActionsItem === item.id}
-                onClick={() => setActiveActionsItem("")}
-                onActionClick={onActionClick}
+                onActionComplete={onActionComplete}
               />
             ))
           : SKELETON_ITEMS.map((item, index) => (

@@ -1,5 +1,6 @@
 export { ERoles, getIsAdmin, saveRoleToLocalStorage } from "./_utils/auth";
 export { default as api } from "./_utils/axios";
+export { useApiError } from "./_utils/hooks/useApiError";
 
 export { default as TimersService } from "./_utils/service/Timers";
 export type { ITimerData, ICheckData } from "./_utils/service/Timers";

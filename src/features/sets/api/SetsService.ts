@@ -43,6 +43,16 @@ class SetsService {
       return null;
     }
   }
+
+  async delete(setId: ISet["id"]): Promise<ISet> {
+    try {
+      const res = await api.delete(`/sets/${setId}`);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to delete set:", error);
+      throw error;
+    }
+  }
 }
 
 export default new SetsService();

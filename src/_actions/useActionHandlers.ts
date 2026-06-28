@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { ActionsContext } from "./ActionsContext";
 
 type Options<T> = {
   onAction: (id: T) => void; // long press / RMB
@@ -11,6 +12,8 @@ export function useActionHandlers<T = string>(options: Options<T>) {
   const movedRef = useRef(false);
   const longPressRef = useRef(false);
   const fromTouchRef = useRef(false);
+
+  const { activeId, setActiveId } = useContext(ActionsContext);
 
   const delay = options.delay ?? 450;
 
@@ -31,7 +34,7 @@ export function useActionHandlers<T = string>(options: Options<T>) {
 
     // 👆 обычный клик
     onClick: (e: React.MouseEvent) => {
-      if (longPressRef.current) {
+      if (longPressRef.current || activeId === id) {
         longPressRef.current = false;
         e.preventDefault();
         e.stopPropagation();
@@ -73,6 +76,12 @@ export function useActionHandlers<T = string>(options: Options<T>) {
       }
     },
   });
+
+  useEffect(() => {
+    return () => {
+      setActiveId(null);
+    };
+  }, []);
 
   return { bind };
 }

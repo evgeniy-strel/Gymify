@@ -58,6 +58,16 @@ class ExercisesService {
       return null;
     }
   }
+
+  async delete(exerciseId: IExercise["id"]): Promise<IExercise> {
+    try {
+      const res = await api.delete(`/exercises/${exerciseId}`);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to delete exercise:", error);
+      throw error;
+    }
+  }
 }
 
 export default new ExercisesService();

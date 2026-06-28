@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { IDay } from "./api/DaysService";
-import { useCreateDay } from "./hooks/mutations";
+import { useCreateDay, useDeleteDay } from "./hooks/mutations";
 import { useDaysQuery } from "./hooks/query";
 
 import { AddButton, PrimaryButton } from "../../components";
@@ -11,6 +11,7 @@ import { useIsAdmin } from "../../hooks";
 import { getWeekId } from "../weeks/utils/helpers";
 import { useUpdateWeek } from "../weeks/hooks/mutations";
 import AddForm from "../../shared/view/AddForm/AddForm";
+import { ConnectToActions, TActions } from "../../actions";
 
 import { useNavigate, useParams } from "react-router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -74,12 +75,6 @@ interface IProps {
 }
 
 const ItemTemplate = ({ item }: IProps) => {
-  const navigate = useNavigate();
-
-  const onClick = useCallback(() => {
-    navigate(EPageRoutes.days.slice(1) + "/" + item.number);
-  }, []);
-
   const iconUrl = useMemo(() => MAP_ICON[item.title], [item]);
 
   return (
@@ -89,7 +84,6 @@ const ItemTemplate = ({ item }: IProps) => {
         "bg-gradient-to-r from-blue-500 to-blue-600 text-white":
           item.is_completed,
       })}
-      onClick={onClick}
     >
       <div className="flex items-center justify-between">
         <div className="flex gap-4 items-center">
@@ -112,6 +106,8 @@ const ItemTemplate = ({ item }: IProps) => {
     </div>
   );
 };
+
+const ItemTemplateWithActions = ConnectToActions(ItemTemplate);
 
 const SkeletonItemTemplate = () => {
   return (
@@ -139,6 +135,7 @@ const Days = () => {
   const { data: days } = useDaysQuery({ programId, week: weekNumber });
   const createDayMutation = useCreateDay();
   const updateWeekMutation = useUpdateWeek();
+  const deleteDayMutation = useDeleteDay();
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const isAdmin = useIsAdmin();
   const weekId = useMemo(
@@ -181,6 +178,17 @@ const Days = () => {
     setIsAdded(false);
   };
 
+  const onClick = (id: string) => {
+    const dayNumber = days?.find((item) => item.id === id)?.number;
+    navigate(EPageRoutes.days.slice(1) + "/" + dayNumber);
+  };
+
+  const onActionComplete = (actionId: TActions, id: string) => {
+    if (actionId === "delete") {
+      deleteDayMutation.mutate(id);
+    }
+  };
+
   return (
     <div className="h-full w-full flex flex-col bg-gradient-to-br from-blue-50 to-white">
       <Header />
@@ -190,7 +198,14 @@ const Days = () => {
         ) : (
           <div className="flex flex-col gap-3">
             {days
-              ? days.map((item) => <ItemTemplate key={item.id} item={item} />)
+              ? days.map((item) => (
+                  <ItemTemplateWithActions
+                    key={item.id}
+                    item={item}
+                    onClick={onClick}
+                    onActionComplete={onActionComplete}
+                  />
+                ))
               : SKELETON_ITEMS.map((item, index) => (
                   <SkeletonItemTemplate key={index} />
                 ))}

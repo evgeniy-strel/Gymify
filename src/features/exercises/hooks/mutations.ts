@@ -1,3 +1,4 @@
+import { useApiError } from "../../../utils";
 import {
   default as ExercisesService,
   IExercise,
@@ -34,5 +35,23 @@ export function useFinishExerciseMutation() {
         queryKey: ["exercises", exerciseId],
       });
     },
+  });
+}
+
+export function useDeleteExercise() {
+  const queryClient = useQueryClient();
+  const { handleError } = useApiError();
+
+  return useMutation({
+    mutationFn: (id: string) => ExercisesService.delete(id),
+
+    onSuccess: (deletedExercise: IExercise) => {
+      if (deletedExercise) {
+        queryClient.invalidateQueries({
+          queryKey: ["exercises", deletedExercise.day_id],
+        });
+      }
+    },
+    onError: handleError,
   });
 }

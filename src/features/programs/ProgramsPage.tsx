@@ -1,12 +1,17 @@
 import { lazy, useEffect, useState } from "react";
 
 import { IProgram } from "./api/ProgramsService";
-import { useCreateProgram } from "./hooks/mutations";
+import { useCreateProgram, useDeleteProgram } from "./hooks/mutations";
 import { useProgramsQuery } from "./hooks/query";
 import ProgramCard from "./view/ProgramCard";
+
 import { AddButton } from "../../components";
 import { useIsAdmin } from "../../hooks";
+import { ConnectToActions, TActions } from "../../actions";
+import { EPageRoutes } from "../../navigation";
+
 import { Typography } from "@mui/material";
+import { useNavigate } from "react-router";
 
 const AddForm = lazy(() => import("../../shared/view/AddForm/AddForm"));
 
@@ -31,9 +36,12 @@ const FIELDS_FOR_ADD_FORM = [
   },
 ];
 
+const ProgramCardWithActions = ConnectToActions(ProgramCard);
+
 const Main = () => {
   const { data: programs } = useProgramsQuery();
   const createProgramMutation = useCreateProgram();
+  const deleteProgramMutation = useDeleteProgram();
 
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const isAdmin = useIsAdmin();
@@ -53,6 +61,18 @@ const Main = () => {
     setIsAdded(false);
   };
 
+  const navigate = useNavigate();
+
+  const onClick = (id: string) => {
+    navigate("/" + id + EPageRoutes.weeks);
+  };
+
+  const onActionComplete = (actionId: TActions, id: string) => {
+    if (actionId === "delete") {
+      deleteProgramMutation.mutate(id);
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => import("../weeks/WeeksPage"), 1000);
   }, []);
@@ -62,7 +82,12 @@ const Main = () => {
       <Typography variant="h4">Программы</Typography>
       {programs
         ? programs.map((program) => (
-            <ProgramCard key={program.id} {...program} />
+            <ProgramCardWithActions
+              key={program.id}
+              item={program}
+              onClick={onClick}
+              onActionComplete={onActionComplete}
+            />
           ))
         : SKELETON_ITEMS.map((item, index) => (
             <ProgramCard.Skeleton key={index} />

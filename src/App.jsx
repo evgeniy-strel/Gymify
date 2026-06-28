@@ -2,6 +2,8 @@ import "./App.css";
 import "./common.less";
 
 import { PageController } from "./navigation";
+import { SnackbarProvider } from "notistack";
+import { ActionsProvider } from "./actions";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -23,9 +25,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
-      <Router>
-        <PageController />
-      </Router>
+      <SnackbarProvider maxSnack={3}>
+        <ActionsProvider>
+          <Router>
+            <PageController />
+          </Router>
+        </ActionsProvider>
+      </SnackbarProvider>
     </QueryClientProvider>
   );
 }

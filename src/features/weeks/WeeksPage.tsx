@@ -1,11 +1,12 @@
 import type { IWeek } from "./api/WeeksService";
 import { useWeeksQuery } from "./hooks/query";
-import { useCreateWeek } from "./hooks/mutations";
+import { useCreateWeek, useDeleteWeek } from "./hooks/mutations";
 import { useProgramQuery } from "../programs/hooks/query";
 
 import type { IProgram } from "../programs/api/ProgramsService";
 import { useIsAdmin } from "../../hooks";
 import { AddButton } from "../../components";
+import { ConnectToActions, TActions } from "../../actions";
 
 import { useNavigate, useParams } from "react-router";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -54,12 +55,6 @@ interface IItemTemplate {
 }
 
 const ItemTemplate = ({ item }: IItemTemplate) => {
-  const navigate = useNavigate();
-
-  const onClick = () => {
-    navigate(String(item.number));
-  };
-
   return (
     <div
       className={clsx(
@@ -69,7 +64,6 @@ const ItemTemplate = ({ item }: IItemTemplate) => {
             item.is_completed,
         },
       )}
-      onClick={onClick}
     >
       <div className="flex flex-col items-center gap-1">
         <div className="text-xs">Нед</div>
@@ -98,6 +92,8 @@ const ItemTemplate = ({ item }: IItemTemplate) => {
   );
 };
 
+const ItemTemplateWithActions = ConnectToActions(ItemTemplate);
+
 const SkeletonItemTemplate = () => {
   return (
     <div className="w-full h-full rounded-xl overflow-hidden">
@@ -111,9 +107,11 @@ const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
 const Weeks = () => {
   const { programId } = useParams();
+  const navigate = useNavigate();
 
   const { data: weeks } = useWeeksQuery({ programId });
   const createWeekMutation = useCreateWeek();
+  const deleteWeekMutation = useDeleteWeek();
   const { data: program } = useProgramQuery({ programId });
   const isAdmin = useIsAdmin();
 
@@ -125,6 +123,19 @@ const Weeks = () => {
     createWeekMutation.mutate({ program_id: programId });
   };
 
+  const onActionComplete = (actionId: TActions, id: string) => {
+    if (actionId === "delete") {
+      deleteWeekMutation.mutate(id);
+    }
+  };
+
+  const onItemClick = (id: string) => {
+    const item = weeks?.find((item) => item.id === id);
+    if (item?.number) {
+      navigate(String(item.number));
+    }
+  };
+
   return (
     <div className="h-full w-full flex flex-col bg-gradient-to-br from-blue-50 to-white">
       <Header program={program} />
@@ -133,7 +144,14 @@ const Weeks = () => {
       ) : (
         <div className="py-4 px-3 grid grid-cols-4 gap-3">
           {weeks
-            ? weeks.map((item) => <ItemTemplate key={item.id} item={item} />)
+            ? weeks.map((item) => (
+                <ItemTemplateWithActions
+                  key={item.id}
+                  item={item}
+                  onClick={onItemClick}
+                  onActionComplete={onActionComplete}
+                />
+              ))
             : SKELETON_ITEMS.map((item, index) => (
                 <SkeletonItemTemplate key={index} />
               ))}

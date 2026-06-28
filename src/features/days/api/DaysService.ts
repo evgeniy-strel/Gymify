@@ -53,6 +53,16 @@ class DaysService {
       return null;
     }
   }
+
+  async delete(dayId: IDay["id"]): Promise<IDay | null> {
+    try {
+      const res = await api.delete(`/days/${dayId}`);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to update day:", error);
+      throw error;
+    }
+  }
 }
 
 export default new DaysService();

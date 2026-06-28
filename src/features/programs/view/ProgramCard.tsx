@@ -1,10 +1,7 @@
-import { useCallback } from "react";
-
 import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
-import { EPageRoutes } from "../../../navigation";
+import { IProgram } from "../api/ProgramsService";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useNavigate } from "react-router";
 import { Skeleton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
@@ -45,27 +42,15 @@ const ProgressBar = (props: any) => {
 };
 
 interface IProps {
-  id: string;
-  title: string;
-  description: string;
-  currentWeek: number;
-  totalWeek: number;
+  item: IProgram;
 }
 
 const ProgramCard = (props: IProps) => {
-  const { id, title, currentWeek, totalWeek } = props;
-
-  const navigate = useNavigate();
-
-  const onClick = useCallback(() => {
-    navigate("/" + id + EPageRoutes.weeks);
-  }, [id]);
+  const { item } = props;
+  const { id, title, currentWeek, totalWeek } = item;
 
   return (
-    <div
-      className="w-full bg-white rounded-2xl shadow-md p-5"
-      onClick={onClick}
-    >
+    <div className="w-full bg-white rounded-2xl shadow-md p-5">
       <div className="flex items-center justify-between">
         <div>
           <div className="text-blue-600 text-xl mb-1">{title}</div>

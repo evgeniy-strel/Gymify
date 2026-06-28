@@ -1,4 +1,5 @@
 import { IProgram, default as ProgramsService } from "../api/ProgramsService";
+import { useApiError } from "../../../utils";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -13,5 +14,19 @@ export function useCreateProgram() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["programs"] });
     },
+  });
+}
+
+export function useDeleteProgram() {
+  const queryClient = useQueryClient();
+  const { handleError } = useApiError();
+
+  return useMutation({
+    mutationFn: (id: string) => ProgramsService.delete(id),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+    },
+    onError: handleError,
   });
 }

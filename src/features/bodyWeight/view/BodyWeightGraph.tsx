@@ -10,7 +10,7 @@ import {
 import Box from "@mui/material/Box";
 import { Skeleton } from "@mui/material";
 
-const margin = { right: 24, left: -16, top: 24 };
+const margin = { right: 24, left: -4, top: 24 };
 
 function CustomMark(props: MarkElementProps) {
   const { x, y, color } = props;

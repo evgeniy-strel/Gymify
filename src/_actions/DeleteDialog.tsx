@@ -14,10 +14,11 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 interface IProps {
   onDelete?: Function;
   onClose?: Function;
+  itemName?: string;
 }
 
 export default function AlertDialog(props: IProps) {
-  const { onDelete, onClose } = props;
+  const { onDelete, onClose, itemName = "" } = props;
 
   const handleClose = () => {
     onClose?.();
@@ -85,7 +86,8 @@ export default function AlertDialog(props: IProps) {
         </Box>
 
         <Typography fontWeight={600} fontSize={18} textAlign="center">
-          Удалить запись?
+          {`Удалить запись ${itemName ? '"' + itemName + '"' : ""}`.trim() +
+            "?"}
         </Typography>
       </Box>
 

@@ -1,3 +1,4 @@
+import { useApiError } from "../../../utils";
 import { IWeek, default as WeeksService } from "../api/WeeksService";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,6 +14,9 @@ export function useCreateWeek() {
     onSuccess: async (_, item: TCreateWeek) => {
       await queryClient.invalidateQueries({
         queryKey: ["weeks", item.program_id],
+      });
+      queryClient.refetchQueries({
+        queryKey: ["programs"],
       });
     },
   });
@@ -36,7 +40,29 @@ export function useUpdateWeek() {
         await queryClient.refetchQueries({
           queryKey: ["weeks", updatedItem.program_id],
         });
+        queryClient.refetchQueries({
+          queryKey: ["programs"],
+        });
       }
     },
+  });
+}
+
+export function useDeleteWeek() {
+  const queryClient = useQueryClient();
+  const { handleError } = useApiError();
+
+  return useMutation({
+    mutationFn: (id: string) => WeeksService.delete(id),
+
+    onSuccess: (deletedWeek: IWeek) => {
+      queryClient.invalidateQueries({
+        queryKey: ["weeks", deletedWeek.program_id],
+      });
+      queryClient.refetchQueries({
+        queryKey: ["programs"],
+      });
+    },
+    onError: handleError,
   });
 }

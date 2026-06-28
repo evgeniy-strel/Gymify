@@ -41,6 +41,16 @@ class ProgramsService {
       return null;
     }
   }
+
+  async delete(programId: IProgram["id"]): Promise<IProgram> {
+    try {
+      const res = await api.delete(`/programs/${programId}`);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to delete program", error);
+      throw error;
+    }
+  }
 }
 
 export default new ProgramsService();

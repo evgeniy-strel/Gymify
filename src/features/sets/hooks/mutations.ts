@@ -1,5 +1,5 @@
 import { default as SetsService, ISet } from "../api/SetsService";
-import { duplicateCall } from "../../../utils";
+import { duplicateCall, useApiError } from "../../../utils";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -67,5 +67,24 @@ export function useCreateSet() {
         queryKey: ["exercises", item.day_id],
       });
     },
+  });
+}
+
+export function useDeleteSet() {
+  const queryClient = useQueryClient();
+  const { handleError } = useApiError();
+
+  return useMutation({
+    mutationFn: (id: string) => SetsService.delete(id),
+
+    onSuccess: (deletedSet: ISet) => {
+      queryClient.invalidateQueries({
+        queryKey: ["sets", deletedSet.exercise_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["exercises", deletedSet.day_id],
+      });
+    },
+    onError: handleError,
   });
 }

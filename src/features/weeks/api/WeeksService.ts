@@ -41,6 +41,16 @@ class WeeksService {
       return null;
     }
   }
+
+  async delete(weekId: IWeek["id"]): Promise<IWeek> {
+    try {
+      const res = await api.delete(`/weeks/${weekId}`);
+      return res.data;
+    } catch (error) {
+      console.error("Failed to delete week:", error);
+      throw error;
+    }
+  }
 }
 
 export default new WeeksService();

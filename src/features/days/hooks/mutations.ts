@@ -1,4 +1,5 @@
 import { default as DaysService, IDay } from "../api/DaysService";
+import { useApiError } from "../../../utils";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -32,5 +33,23 @@ export function useUpdateDay() {
         queryClient.invalidateQueries({ queryKey: ["history"] });
       }
     },
+  });
+}
+
+export function useDeleteDay() {
+  const queryClient = useQueryClient();
+  const { handleError } = useApiError();
+
+  return useMutation({
+    mutationFn: (id: string) => DaysService.delete(id),
+
+    onSuccess: (deletedDay: IDay | null) => {
+      if (deletedDay) {
+        queryClient.invalidateQueries({
+          queryKey: ["days", deletedDay.week_id],
+        });
+      }
+    },
+    onError: handleError,
   });
 }
