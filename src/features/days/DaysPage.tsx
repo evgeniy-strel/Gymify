@@ -7,7 +7,7 @@ import { useDaysQuery } from "./hooks/query";
 import { AddButton, PrimaryButton } from "../../components";
 import { getExerciseWordForm } from "../../utils";
 import { EPageRoutes } from "../../navigation";
-import { useIsAdmin } from "../../hooks";
+import { useIsAdmin } from "../../auth/hooks/query";
 import { getWeekId } from "../weeks/utils/helpers";
 import { useUpdateWeek } from "../weeks/hooks/mutations";
 import AddForm from "../../shared/view/AddForm/AddForm";
@@ -137,7 +137,7 @@ const Days = () => {
   const updateWeekMutation = useUpdateWeek();
   const deleteDayMutation = useDeleteDay();
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const isAdmin = useIsAdmin();
+  const { data: isAdmin } = useIsAdmin();
   const weekId = useMemo(
     () => getWeekId(programId, weekNumber),
     [programId, weekNumber],

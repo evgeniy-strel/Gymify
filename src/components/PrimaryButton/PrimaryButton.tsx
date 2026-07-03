@@ -25,7 +25,7 @@ interface IProps {
   withStopWatch?: boolean;
   stopWatchSeconds?: number;
   isLoading?: boolean;
-  color?: "primary" | "light";
+  color?: "primary" | "light" | "unaccented";
 }
 
 const emptyFunction = () => {};
@@ -83,6 +83,7 @@ const PrimaryButton = ({
           "bg-blue-400 text-blue-100": color === "primary" && readOnly,
           "bg-blue-600 text-white": color === "primary" && !readOnly,
           "bg-white text-blue-600": color === "light",
+          "bg-gray-100 text-gray-600": color === "unaccented",
         },
       )}
       onClick={readOnly ? emptyFunction : onClick}

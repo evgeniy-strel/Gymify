@@ -11,7 +11,8 @@ import { useDayQuery } from "../days/hooks/query";
 import type { IDay } from "./../days/api/DaysService";
 import { getExerciseWordForm } from "../../utils";
 import { AddButton, PrimaryButton } from "../../components";
-import { useAppResume, useIsAdmin, useTimerQuery } from "../../hooks";
+import { useAppResume, useTimerQuery } from "../../hooks";
+import { useIsAdmin } from "../../auth/hooks/query";
 import AddForm from "../../shared/view/AddForm/AddForm";
 import WorkoutResultsScreen from "../workoutResults/WorkoutResultsScreen";
 import {
@@ -93,7 +94,7 @@ const Exercises = () => {
     getTrainingDuration(day),
   );
 
-  const isAdmin = useIsAdmin();
+  const { data: isAdmin } = useIsAdmin();
 
   const allCompleted = useMemo<boolean>(() => {
     return Boolean(

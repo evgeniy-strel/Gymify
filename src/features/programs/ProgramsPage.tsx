@@ -6,7 +6,7 @@ import { useProgramsQuery } from "./hooks/query";
 import ProgramCard from "./view/ProgramCard";
 
 import { AddButton } from "../../components";
-import { useIsAdmin } from "../../hooks";
+import { useIsAdmin } from "../../auth/hooks/query";
 import { ConnectToActions, TActions } from "../../actions";
 import { EPageRoutes } from "../../navigation";
 
@@ -61,7 +61,7 @@ const Main = () => {
   const deleteProgramMutation = useDeleteProgram();
 
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const isAdmin = useIsAdmin();
+  const { data: isAdmin } = useIsAdmin();
 
   const startAddItem = () => {
     setIsAdded(true);

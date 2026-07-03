@@ -1,4 +1,3 @@
-export { ERoles, getIsAdmin, saveRoleToLocalStorage } from "./_utils/auth";
 export { default as api } from "./_utils/axios";
 export { useApiError } from "./_utils/hooks/useApiError";
 

@@ -8,7 +8,7 @@ import { useCreateSet } from "./hooks/mutations";
 import { useExerciseQuery } from "../exercises/hooks/query";
 import { useFinishExerciseMutation } from "../exercises/hooks/mutations";
 import { AddButton, PrimaryButton } from "../../components";
-import { useIsAdmin } from "../../hooks";
+import { useIsAdmin } from "../../auth/hooks/query";
 import AddForm from "../../shared/view/AddForm/AddForm";
 
 import clsx from "clsx";
@@ -77,7 +77,7 @@ const Approaches = () => {
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const finishExerciseMutation = useFinishExerciseMutation();
 
-  const isAdmin = useIsAdmin();
+  const { data: isAdmin } = useIsAdmin();
 
   const allCompleted = useMemo(() => {
     return (

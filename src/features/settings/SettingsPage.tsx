@@ -1,6 +1,6 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router";
-import AdminSwitcher from "./view/AdminSwitcher";
+import AdminSwitcher from "./view/AdminSwitcher/AdminSwitcher";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -29,8 +29,6 @@ const SettingsPage = () => {
       <Header />
       <div className="bg-gray-100 py-3 px-2 h-full">
         <AdminSwitcher />
-        {/* <div>Админ</div> */}
-        {/* <Switch checked={isAdmin} onChange={onChangeRole} /> */}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { api } from "../../../utils";
-import type { IDay } from "../../weeks/api/DaysService";
+import type { IDay } from "../../days/api/DaysService";
 
 class HistoryService {
   async getAll({ grouped }: { grouped?: boolean } = {}): Promise<IDay[]> {

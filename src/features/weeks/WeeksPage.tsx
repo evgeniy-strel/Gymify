@@ -4,7 +4,7 @@ import { useCreateWeek, useDeleteWeek } from "./hooks/mutations";
 import { useProgramQuery } from "../programs/hooks/query";
 
 import type { IProgram } from "../programs/api/ProgramsService";
-import { useIsAdmin } from "../../hooks";
+import { useIsAdmin } from "../../auth/hooks/query";
 import { AddButton } from "../../components";
 import { ConnectToActions, TActions } from "../../actions";
 
@@ -113,7 +113,7 @@ const Weeks = () => {
   const createWeekMutation = useCreateWeek();
   const deleteWeekMutation = useDeleteWeek();
   const { data: program } = useProgramQuery({ programId });
-  const isAdmin = useIsAdmin();
+  const { data: isAdmin } = useIsAdmin();
 
   const createProgram = async () => {
     if (!programId) {
