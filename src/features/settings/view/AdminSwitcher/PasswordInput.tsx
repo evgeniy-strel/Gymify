@@ -31,7 +31,7 @@ const PasswordInput = ({
           <TextField
             className="w-full"
             label="Пароль"
-            type="text"
+            type="password"
             variant="outlined"
             value={password}
             error={!!error}
