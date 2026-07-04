@@ -3,6 +3,7 @@ import { useState } from "react";
 import PasswordInput from "./PasswordInput";
 import { useIsAdmin } from "../../../../auth/hooks/query";
 import { useAuth, useLogout } from "../../../../auth/hooks/mutations";
+import { IAuthResult } from "../../../../auth/api/AuthService";
 
 import { Switch } from "@mui/material";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
@@ -13,6 +14,7 @@ const AdminSwitcher = () => {
   const authMutation = useAuth();
   const logoutMutation = useLogout();
   const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const [isPasswordSuccessfull, setIsPasswordSuccessfull] = useState<boolean>();
 
   const onToggle = () => {
     if (isLoading) return;
@@ -25,8 +27,19 @@ const AdminSwitcher = () => {
   };
 
   const tryAuth = async (password: string) => {
-    await authMutation.mutateAsync(password);
+    authMutation.mutateAsync(password).then((result: IAuthResult) => {
+      if (result.success) {
+        setShowPasswordInput(false);
+        setIsPasswordSuccessfull(true);
+      } else {
+        setIsPasswordSuccessfull(false);
+      }
+    });
+  };
+
+  const onCancel = () => {
     setShowPasswordInput(false);
+    setIsPasswordSuccessfull(undefined);
   };
 
   return (
@@ -66,7 +79,11 @@ const AdminSwitcher = () => {
 
       {showPasswordInput && (
         <PasswordInput
-          onCancel={() => setShowPasswordInput(false)}
+          isLoading={authMutation.isPending}
+          error={
+            isPasswordSuccessfull === false ? "Неверный пароль" : undefined
+          }
+          onCancel={onCancel}
           onSubmit={tryAuth}
         />
       )}

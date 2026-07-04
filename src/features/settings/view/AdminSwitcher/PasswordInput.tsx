@@ -4,11 +4,18 @@ import { TextField } from "@mui/material";
 import { PrimaryButton } from "../../../../components";
 
 interface IPasswordInputProps {
+  isLoading?: boolean;
+  error?: string;
   onCancel?: () => void;
   onSubmit?: (password: string) => void;
 }
 
-const PasswordInput = ({ onCancel, onSubmit }: IPasswordInputProps) => {
+const PasswordInput = ({
+  isLoading,
+  error,
+  onCancel,
+  onSubmit,
+}: IPasswordInputProps) => {
   const [password, setPassword] = useState("");
 
   return (
@@ -21,13 +28,14 @@ const PasswordInput = ({ onCancel, onSubmit }: IPasswordInputProps) => {
           <div className="text-gray-400 text-sm text-center mb-5">
             Для включения режима администратора
           </div>
-
           <TextField
             className="w-full"
             label="Пароль"
-            type="password"
+            type="text"
             variant="outlined"
             value={password}
+            error={!!error}
+            helperText={error}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -35,7 +43,6 @@ const PasswordInput = ({ onCancel, onSubmit }: IPasswordInputProps) => {
               }
             }}
           />
-
           <div className="flex mt-4 gap-2 items-stretch">
             <PrimaryButton
               caption="Отмена"
@@ -43,6 +50,7 @@ const PasswordInput = ({ onCancel, onSubmit }: IPasswordInputProps) => {
               onClick={onCancel}
             />
             <PrimaryButton
+              isLoading={isLoading}
               caption="Войти"
               onClick={() => onSubmit?.(password)}
             />
