@@ -18,15 +18,6 @@
 
 ## 🚀 Возможности
 
-
-### 🔐 Админский функционал
-
-Для получения роли администратора нужно авторизоваться, после чего появляется возможность:
-
-* создавать тренировочные программы;
-* ввести прогресс;
-* удалять ненужные данные.
-
 ---
 
 ### 💪 Тренировочные программы
@@ -41,9 +32,27 @@
 * получать push-уведомление об окончании таймера;
 * по окончанию тренировки получить статистику по ней.
 
+<details>
+  <summary>Программы/Недели/Дни</summary>
+  <p>
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/programs.jpg?raw=true" width="270">
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/weeks.jpg?raw=true" width="270">
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/days.jpg?raw=true" width="270">
+  </p>
+</details>
+
+<details>
+  <summary>Упражнения/Подходы/Результат</summary>
+  <p>
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/exercises.jpg?raw=true" width="270">
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/sets.jpg?raw=true" width="270">
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/results.jpg?raw=true" width="270">
+  </p>
+</details>
+
 ---
 
-### 📈 История тренировок
+### 📜 История тренировок
 
 История сохраняется автоматически после окончания тренировочного дня.
 
@@ -53,9 +62,16 @@
 * итоги количества тренировок за каждый месяц;
 * дата и продолжительность каждой тренировки.
 
+<details>
+  <summary>Скриншот</summary>
+  <p>
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/history.jpg?raw=true" width="330">
+  </p>
+</details>
+
 ---
 
-### ⚖️ Прогресс
+###  📈  Прогресс
 
 Отдельный раздел для отслеживания изменения веса.
 
@@ -64,6 +80,45 @@
 * график сводки за последние полгода;
 * историю всех взвешиваний с группировкой по году;
 * динамика по сравнению с предыдущим днем.
+
+<details>
+  <summary>Скриншот</summary>
+  <p>
+    <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/progress.jpg?raw=true" width="330">
+  </p>
+</details>
+
+---
+
+### 🔐 Админский функционал
+
+Для получения роли администратора нужно авторизоваться, после чего появляется возможность:
+
+* создавать тренировочные программы;
+* ввести прогресс;
+* удалять ненужные данные.
+
+<details>
+  <summary>Скриншоты</summary>
+<table>
+  <tr>
+    <th align="center">Настройки</th>
+    <th align="center">Пример создания</th>
+    <th align="center">Пример удаления (зажатие пальцем)</th>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/settings.jpg?raw=true" width="270" alt="Настройки">
+    </td>
+    <td>
+      <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/creating.jpg?raw=true" width="270" alt="Создание">
+    </td>
+    <td>
+      <img src="https://github.com/evgeniy-strel/Gymify/blob/master/readme/deleting.jpg?raw=true" width="270" alt="Удаление">
+    </td>
+  </tr>
+</table>
+</details>
 
 ---
 
