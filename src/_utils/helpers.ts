@@ -24,6 +24,10 @@ export const formatTime = (seconds: number): string => {
 };
 
 export const formatTimeForDuration = (seconds: number): string => {
+  if (seconds < 60) {
+    return `${seconds}с`;
+  }
+
   const hours = Math.floor(seconds / 3600);
   const min = Math.floor(seconds / 60) - hours * 60;
 
