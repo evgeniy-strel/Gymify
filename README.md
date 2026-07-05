@@ -1,8 +1,8 @@
 # 🏋️ Gymify
 
-Мобильное PWA-приложение, разработанное с  целью облегчения ведения тренировочных программ в тренажерном зале.
+Мобильное PWA-приложение, разработанное с  целью ведения тренировочных программ в зале.
 
----
+Опробовать: https://gymify-ten.vercel.app/
 
 ## 🛠 Технологии
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
@@ -17,8 +17,6 @@
 ![Push API](https://img.shields.io/badge/Push_API-FF6B6B?style=for-the-badge&logo=webpush&logoColor=white)
 
 ## 🚀 Возможности
-
----
 
 ### 💪 Тренировочные программы
 
@@ -120,7 +118,8 @@
 </table>
 </details>
 
----
+## 🎬 Видеодемонстрация
+[![Демо видео](https://github.com/evgeniy-strel/Gymify/blob/master/readme/demo-gif.gif?raw=true)](https://github.com/evgeniy-strel/Gymify/blob/master/readme/demo-gif.gif)
 
 ## 🏗️ Архитектура
 
