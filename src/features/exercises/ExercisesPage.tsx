@@ -12,7 +12,7 @@ import type { IDay } from "./../days/api/DaysService";
 import { getExerciseWordForm } from "../../utils";
 import { AddButton, PrimaryButton } from "../../components";
 import { useAppResume, useTimerQuery } from "../../hooks";
-import { useIsAdmin } from "../../auth/hooks/query";
+import { useCanCreate } from "../../auth/hooks/query";
 import AddForm from "../../shared/view/AddForm/AddForm";
 import WorkoutResultsScreen from "../workoutResults/WorkoutResultsScreen";
 import {
@@ -94,7 +94,7 @@ const Exercises = () => {
     getTrainingDuration(day),
   );
 
-  const { data: isAdmin } = useIsAdmin();
+  const canCreate = useCanCreate();
 
   const allCompleted = useMemo<boolean>(() => {
     return Boolean(
@@ -181,7 +181,7 @@ const Exercises = () => {
             />
           )}
           <ExercisesList exercises={exercises} timerData={timerData} />
-          {isAdmin && day && !day?.completed_at && (
+          {canCreate && day && !day?.completed_at && (
             <div>
               <AddButton title="Добавить упражнение" onClick={startAddItem} />
               {isAdded && (

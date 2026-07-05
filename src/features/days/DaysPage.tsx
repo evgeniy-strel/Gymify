@@ -7,7 +7,7 @@ import { useDaysQuery } from "./hooks/query";
 import { AddButton, PrimaryButton } from "../../components";
 import { getExerciseWordForm } from "../../utils";
 import { EPageRoutes } from "../../navigation";
-import { useIsAdmin } from "../../auth/hooks/query";
+import { useCanCreate } from "../../auth/hooks/query";
 import { getWeekId } from "../weeks/utils/helpers";
 import { useUpdateWeek } from "../weeks/hooks/mutations";
 import AddForm from "../../shared/view/AddForm/AddForm";
@@ -137,7 +137,7 @@ const Days = () => {
   const updateWeekMutation = useUpdateWeek();
   const deleteDayMutation = useDeleteDay();
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const { data: isAdmin } = useIsAdmin();
+  const canCreate = useCanCreate();
   const weekId = useMemo(
     () => getWeekId(programId, weekNumber),
     [programId, weekNumber],
@@ -219,7 +219,7 @@ const Days = () => {
             )}
           </div>
         )}
-        {isAdmin && (
+        {canCreate && (
           <div className="pt-3">
             <AddButton title="Создать день" onClick={startAddItem} />
             {isAdded && (

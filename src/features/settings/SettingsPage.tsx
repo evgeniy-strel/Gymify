@@ -1,6 +1,6 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router";
-import AdminSwitcher from "./view/AdminSwitcher/AdminSwitcher";
+import AdminSwitcher from "./AdminSwitcher/view/AdminSwitcher";
 
 const Header = () => {
   const navigate = useNavigate();

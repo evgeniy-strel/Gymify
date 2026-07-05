@@ -4,7 +4,7 @@ import { useCreateWeek, useDeleteWeek } from "./hooks/mutations";
 import { useProgramQuery } from "../programs/hooks/query";
 
 import type { IProgram } from "../programs/api/ProgramsService";
-import { useIsAdmin } from "../../auth/hooks/query";
+import { useCanCreate } from "../../auth/hooks/query";
 import { AddButton } from "../../components";
 import { ConnectToActions, TActions } from "../../actions";
 
@@ -113,7 +113,7 @@ const Weeks = () => {
   const createWeekMutation = useCreateWeek();
   const deleteWeekMutation = useDeleteWeek();
   const { data: program } = useProgramQuery({ programId });
-  const { data: isAdmin } = useIsAdmin();
+  const canCreate = useCanCreate();
 
   const createProgram = async () => {
     if (!programId) {
@@ -157,7 +157,7 @@ const Weeks = () => {
               ))}
         </div>
       )}
-      {isAdmin && (
+      {canCreate && (
         <div className="px-3 py-3">
           <AddButton
             title="Создать неделю"

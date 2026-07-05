@@ -6,7 +6,7 @@ import { useProgramsQuery } from "./hooks/query";
 import ProgramCard from "./view/ProgramCard";
 
 import { AddButton } from "../../components";
-import { useIsAdmin } from "../../auth/hooks/query";
+import { useCanCreate } from "../../auth/hooks/query";
 import { ConnectToActions, TActions } from "../../actions";
 import { EPageRoutes } from "../../navigation";
 
@@ -61,7 +61,7 @@ const Main = () => {
   const deleteProgramMutation = useDeleteProgram();
 
   const [isAdded, setIsAdded] = useState<boolean>(false);
-  const { data: isAdmin } = useIsAdmin();
+  const canCreate = useCanCreate();
 
   const startAddItem = () => {
     setIsAdded(true);
@@ -110,7 +110,7 @@ const Main = () => {
           : SKELETON_ITEMS.map((item, index) => (
               <ProgramCard.Skeleton key={index} />
             ))}
-        {isAdmin && (
+        {canCreate && (
           <div>
             <AddButton title="Создать программу" onClick={startAddItem} />
             {isAdded && (

@@ -6,6 +6,7 @@ import { useActionHandlers } from "./useActionHandlers";
 import DeleteIcon from "@mui/icons-material/Delete";
 import clsx from "clsx";
 import DeleteDialog from "./DeleteDialog";
+import { useCanDelete } from "../auth/hooks/query";
 
 export type TActions = "delete";
 
@@ -24,6 +25,7 @@ const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
 
     const { activeId, setActiveId } = useContext(ActionsContext);
     const itemKey = (props.itemKey || props?.item?.id) as string;
+    const canDelete = useCanDelete();
     const showActions = activeId === itemKey;
 
     const onAction = () => {
@@ -55,7 +57,6 @@ const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
 
         {/* OVERLAY */}
         <div
-          // onClick={showActions ? onClick : undefined}
           className={clsx(
             "absolute inset-0 z-10 rounded-xl pointer-events-none transition-all duration-200 ease-out",
           )}
@@ -79,19 +80,21 @@ const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
                 : "opacity-0 scale-100 invisible",
             )}
           >
-            <div
-              className={clsx({
-                "pointer-events-auto": actionsClickable,
-                "pointer-events-none": !actionsClickable,
-              })}
-              onClick={() => {
-                if (!actionsClickable) return;
-                setShowDeleteDialog(true);
-              }}
-            >
-              <DeleteIcon fontSize="large" sx={{ color: "white" }} />
-              <div className="text-white text-sm">Удалить</div>
-            </div>
+            {canDelete && (
+              <div
+                className={clsx({
+                  "pointer-events-auto": actionsClickable,
+                  "pointer-events-none": !actionsClickable,
+                })}
+                onClick={() => {
+                  if (!actionsClickable) return;
+                  setShowDeleteDialog(true);
+                }}
+              >
+                <DeleteIcon fontSize="large" sx={{ color: "white" }} />
+                <div className="text-white text-sm">Удалить</div>
+              </div>
+            )}
           </div>
 
           {/* DIALOG */}
