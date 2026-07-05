@@ -37,7 +37,7 @@ const GroupTemplate = ({ item }: IItemTemplateProps) => {
     .trim();
 
   return (
-    <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between">
+    <div className="bg-gray-50 px-3 py-2 border-b border-gray-200 flex justify-between">
       <div className="text-sm font-semibold text-gray-600 capitalize">
         {date}
       </div>
@@ -49,7 +49,7 @@ const GroupTemplate = ({ item }: IItemTemplateProps) => {
 const SkeletonItemTemplate = ({ index }: { index: number }) => {
   if (index === 0) {
     return (
-      <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between">
+      <div className="bg-gray-50 px-3 py-2 border-b border-gray-200 flex justify-between">
         <Skeleton variant="rounded" animation="wave" height={20} width={75} />
         <Skeleton variant="rounded" animation="wave" height={20} width={90} />
       </div>

@@ -221,7 +221,7 @@ const Days = () => {
         )}
         {canCreate && (
           <div className="pt-3">
-            <AddButton title="Создать день" onClick={startAddItem} />
+            <AddButton title="Добавить день" onClick={startAddItem} />
             {isAdded && (
               <AddForm
                 onSave={onSaveItem}
