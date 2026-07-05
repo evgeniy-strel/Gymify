@@ -6,6 +6,7 @@ import { useCurrentWeightQuery } from "./hooks/query";
 import { useCreateBodyWeight } from "./hooks/mutations";
 import { formatDateNoYearSuffix } from "../../utils";
 import AddForm from "../../shared/view/AddForm/AddForm";
+import { useCanCreate } from "../../auth/hooks/query";
 
 import { Skeleton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -35,6 +36,7 @@ interface IProps {
 const Header = ({ startAddItem }: IProps) => {
   const { data: currentWeight } = useCurrentWeightQuery();
   const navigate = useNavigate();
+  const canCreate = useCanCreate();
   const lastMeasure = useMemo(
     () =>
       currentWeight?.measured_at
@@ -54,7 +56,11 @@ const Header = ({ startAddItem }: IProps) => {
           <ArrowBackIcon />
         </div>
         <div className="text-xl">Текущий вес</div>
-        <AddButton onClick={startAddItem} />
+        {canCreate ? (
+          <AddButton onClick={startAddItem} />
+        ) : (
+          <div className="w-[28px]"></div>
+        )}
       </div>
       <div className="text-3xl flex items-baseline gap-1.5 font-semibold text-center justify-center">
         <div>
