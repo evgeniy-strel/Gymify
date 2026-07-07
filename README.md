@@ -2,7 +2,7 @@
 
 Мобильное PWA-приложение, разработанное с  целью ведения тренировочных программ в зале.
 
-Опробовать: https://gymify-ten.vercel.app/
+Опробовать (только на чтение): https://gymify-ten.vercel.app/
 
 ## 🛠 Технологии
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
