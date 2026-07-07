@@ -5,7 +5,7 @@ import { useProgramQuery } from "../programs/hooks/query";
 
 import type { IProgram } from "../programs/api/ProgramsService";
 import { useCanCreate } from "../../auth/hooks/query";
-import { AddButton } from "../../components";
+import AddButton from "../../shared/AddButton/AddButton";
 import { ConnectToActions, TActions } from "../../actions";
 
 import { useNavigate, useParams } from "react-router";

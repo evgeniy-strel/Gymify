@@ -5,7 +5,7 @@ import { useCreateProgram, useDeleteProgram } from "./hooks/mutations";
 import { useProgramsQuery } from "./hooks/query";
 import ProgramCard from "./view/ProgramCard";
 
-import { AddButton } from "../../components";
+import AddButton from "../../shared/AddButton/AddButton";
 import { useCanCreate } from "../../auth/hooks/query";
 import { ConnectToActions, TActions } from "../../actions";
 import { EPageRoutes } from "../../navigation";
@@ -13,7 +13,7 @@ import { EPageRoutes } from "../../navigation";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router";
 
-const AddForm = lazy(() => import("../../shared/view/AddForm/AddForm"));
+const AddForm = lazy(() => import("../../shared/AddForm/AddForm"));
 
 const COUNT_SKELETONS = 3;
 const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);

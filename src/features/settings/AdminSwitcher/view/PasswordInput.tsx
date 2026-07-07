@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextField } from "@mui/material";
 
-import { PrimaryButton } from "../../../../components";
+import PrimaryButton from "../../../../shared/PrimaryButton/PrimaryButton";
 
 interface IPasswordInputProps {
   isLoading?: boolean;

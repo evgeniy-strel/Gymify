@@ -1,4 +1,4 @@
-import { useApiError } from "../../utils";
+import { useApiError } from "../../hooks";
 import AuthService from "../api/AuthService";
 import {
   saveAuthKeyToLocalStorage,

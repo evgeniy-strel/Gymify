@@ -1,4 +1,4 @@
-import { useApiError } from "../../../utils";
+import { useApiError } from "../../../hooks";
 import { IWeek, default as WeeksService } from "../api/WeeksService";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";

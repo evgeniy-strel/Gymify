@@ -1,4 +1,4 @@
-import { useApiError } from "../../../utils";
+import { useApiError } from "../../../hooks";
 import {
   default as ExercisesService,
   IExercise,

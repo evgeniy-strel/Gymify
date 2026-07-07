@@ -1,4 +1,4 @@
-import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
+import PrimaryButton from "../../../shared/PrimaryButton/PrimaryButton";
 import { IProgram } from "../api/ProgramsService";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";

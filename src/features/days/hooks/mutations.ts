@@ -1,5 +1,5 @@
 import { default as DaysService, IDay } from "../api/DaysService";
-import { useApiError } from "../../../utils";
+import { useApiError } from "../../../hooks";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

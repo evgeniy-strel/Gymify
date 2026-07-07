@@ -1,8 +1,5 @@
-import {
-  AUTH_LOCAL_STORAGE_NAME,
-  AVAILABLE_MODIFY_ACTIONS,
-  EAvailableModifyActions,
-} from "./consts";
+import { AVAILABLE_MODIFY_ACTIONS, EAvailableModifyActions } from "./consts";
+import { AUTH_LOCAL_STORAGE_NAME } from "../../apiClient";
 
 export const getAuthKeyFromLocalStorage = (): string | null => {
   return localStorage.getItem(AUTH_LOCAL_STORAGE_NAME);

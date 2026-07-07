@@ -1,4 +1,4 @@
-import { api } from "../../../utils";
+import { api } from "../../../apiClient";
 
 import { ISet } from "../../sets/api/SetsService";
 

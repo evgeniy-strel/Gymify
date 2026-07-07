@@ -5,7 +5,7 @@ import History from "./view/BodyWeightHistory";
 import { useCurrentWeightQuery } from "./hooks/query";
 import { useCreateBodyWeight } from "./hooks/mutations";
 import { formatDateNoYearSuffix } from "../../utils";
-import AddForm from "../../shared/view/AddForm/AddForm";
+import AddForm from "../../shared/AddForm/AddForm";
 import { useCanCreate } from "../../auth/hooks/query";
 
 import { Skeleton } from "@mui/material";

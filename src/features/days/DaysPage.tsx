@@ -4,13 +4,14 @@ import { IDay } from "./api/DaysService";
 import { useCreateDay, useDeleteDay } from "./hooks/mutations";
 import { useDaysQuery } from "./hooks/query";
 
-import { AddButton, PrimaryButton } from "../../components";
+import AddButton from "../../shared/AddButton/AddButton";
+import PrimaryButton from "../../shared/PrimaryButton/PrimaryButton";
 import { getExerciseWordForm } from "../../utils";
 import { EPageRoutes } from "../../navigation";
 import { useCanCreate } from "../../auth/hooks/query";
 import { getWeekId } from "../weeks/utils/helpers";
 import { useUpdateWeek } from "../weeks/hooks/mutations";
-import AddForm from "../../shared/view/AddForm/AddForm";
+import AddForm from "../../shared/AddForm/AddForm";
 import { ConnectToActions, TActions } from "../../actions";
 
 import { useNavigate, useParams } from "react-router";

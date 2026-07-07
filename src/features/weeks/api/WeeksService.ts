@@ -1,4 +1,4 @@
-import { api } from "../../../utils";
+import { api } from "../../../apiClient";
 
 export interface IWeek {
   id: string;

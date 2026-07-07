@@ -1,9 +1,13 @@
 import { useState } from "react";
 
 import PasswordInput from "./PasswordInput";
-import { useIsAdmin } from "../../../../auth/hooks/query";
-import { useAuth, useLogout } from "../../../../auth/hooks/mutations";
-import { IAuthResult } from "../../../../auth/api/AuthService";
+import {
+  useAuth,
+  useLogout,
+  useIsAdmin,
+  IAuthResult,
+  EAvailableModifyActions,
+} from "../../../../auth";
 
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -11,7 +15,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import clsx from "clsx";
 import ItemTemplate from "../ItemTemplate";
 import { useModifyActions } from "../hooks/useModifyActions";
-import { EAvailableModifyActions } from "../../../../auth/utils/consts";
 
 const AdminSwitcher = () => {
   const { data: isAdmin, isLoading } = useIsAdmin();

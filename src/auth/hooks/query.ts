@@ -1,8 +1,8 @@
 import AuthService from "../api/AuthService";
-
-import { useQuery } from "@tanstack/react-query";
 import { getAvailableModifyActions } from "../utils/helpers";
 import { EAvailableModifyActions } from "../utils/consts";
+
+import { useQuery } from "@tanstack/react-query";
 
 export function useIsAdmin() {
   return useQuery<boolean>({

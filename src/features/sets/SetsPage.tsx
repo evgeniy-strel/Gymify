@@ -7,9 +7,10 @@ import { useCreateSet } from "./hooks/mutations";
 
 import { useExerciseQuery } from "../exercises/hooks/query";
 import { useFinishExerciseMutation } from "../exercises/hooks/mutations";
-import { AddButton, PrimaryButton } from "../../components";
+import AddButton from "../../shared/AddButton/AddButton";
+import PrimaryButton from "../../shared/PrimaryButton/PrimaryButton";
 import { useCanCreate } from "../../auth/hooks/query";
-import AddForm from "../../shared/view/AddForm/AddForm";
+import AddForm from "../../shared/AddForm/AddForm";
 
 import clsx from "clsx";
 import { useNavigate, useParams } from "react-router";

@@ -6,14 +6,9 @@ import { useDeleteSet, useUpdateSet } from "../hooks/mutations";
 
 import { useDayQuery } from "../../days/hooks/query";
 import { getDayId } from "../../days/utils/helpers";
-import { ITimerData } from "../../../utils";
-import { Timer } from "../../../components";
-import {
-  useAppResume,
-  useResetTimer,
-  useStartTimer,
-  useTimerQuery,
-} from "../../../hooks";
+import { Timer, ITimerData } from "../../../timer";
+import { useAppResume } from "../../../hooks";
+import { useResetTimer, useStartTimer, useTimerQuery } from "../../../timer";
 import { ConnectToActions, TActions } from "../../../actions";
 
 import CheckIcon from "@mui/icons-material/Check";

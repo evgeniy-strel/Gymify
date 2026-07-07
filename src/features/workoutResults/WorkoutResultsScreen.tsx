@@ -5,7 +5,7 @@ import Progress from "./view/Progress";
 import StatsInfo from "./view/StatsInfo";
 import type { IWorkoutResult } from "./api/WorkoutResults";
 
-import { PrimaryButton } from "../../components";
+import PrimaryButton from "../../shared/PrimaryButton/PrimaryButton";
 import { EPageRoutes } from "../../navigation";
 
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";

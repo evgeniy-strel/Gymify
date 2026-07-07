@@ -1,4 +1,3 @@
-export { useAppResume } from "./_hooks/useAppResume";
-
-export { useTimerQuery } from "./_hooks/timers/query";
-export { useStartTimer, useResetTimer } from "./_hooks/timers/mutations";
+/* Библиотека для общих хуков */
+export { useAppResume } from "./hooks/useAppResume";
+export { useApiError } from "./hooks/useApiError";

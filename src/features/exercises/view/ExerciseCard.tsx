@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { IExercise } from "../api/ExercisesService";
-import type { ITimerData } from "../../../utils";
-import { CircleTimer } from "../../../components";
+import { CircleTimer, ITimerData } from "../../../timer";
 
 import clsx from "clsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";

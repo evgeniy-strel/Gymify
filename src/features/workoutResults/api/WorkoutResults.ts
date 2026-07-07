@@ -1,4 +1,4 @@
-import { api } from "../../../utils";
+import { api } from "../../../apiClient";
 
 import type { IDay } from "../../days/api/DaysService";
 import type { IExercise } from "../..//exercises/api/ExercisesService";

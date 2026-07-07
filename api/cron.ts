@@ -1,4 +1,4 @@
-import { api } from "../src/utils";
+import { api } from "../src/apiClient";
 
 export default async function handler(req: any, res: any) {
   try {

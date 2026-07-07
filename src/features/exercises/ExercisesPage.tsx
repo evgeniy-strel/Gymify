@@ -10,10 +10,12 @@ import { useUpdateDay } from "../days/hooks/mutations";
 import { useDayQuery } from "../days/hooks/query";
 import type { IDay } from "./../days/api/DaysService";
 import { getExerciseWordForm } from "../../utils";
-import { AddButton, PrimaryButton } from "../../components";
-import { useAppResume, useTimerQuery } from "../../hooks";
+import AddButton from "../../shared/AddButton/AddButton";
+import PrimaryButton from "../../shared/PrimaryButton/PrimaryButton";
+import { useAppResume } from "../../hooks";
+import { useTimerQuery } from "../../timer";
 import { useCanCreate } from "../../auth/hooks/query";
-import AddForm from "../../shared/view/AddForm/AddForm";
+import AddForm from "../../shared/AddForm/AddForm";
 import WorkoutResultsScreen from "../workoutResults/WorkoutResultsScreen";
 import {
   default as WorkoutResultsService,
