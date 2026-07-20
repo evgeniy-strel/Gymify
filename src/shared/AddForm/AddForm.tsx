@@ -21,7 +21,7 @@ const Header = (props: IHeaderProps) => {
   return (
     <div
       className={clsx(
-        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pt-1 pb-2 z-10 shadow-sm",
+        "shrink-0 bg-white backdrop-blur-sm border-b border-gray-200 px-2 pt-1 pb-2 z-10 shadow-xs",
       )}
     >
       <div className="flex items-center" onClick={props.onClose}>
@@ -110,7 +110,7 @@ const AddForm = ({
   };
 
   return (
-    <div className="h-dvh w-full absolute top-0 left-0 z-1000 Gymify-safe-area-inset-top">
+    <div className="h-dvh w-full absolute top-0 left-0 z-10000 Gymify-safe-area-inset-top">
       <div className="bg-gray-100 h-full flex flex-col">
         <Header description={description} onClose={onClose} />
         {isSaving && <LinearProgress />}
