@@ -14,10 +14,11 @@ interface IProps {
   onDelete?: Function;
   onClose?: Function;
   itemName?: string;
+  isLoading?: boolean;
 }
 
 export default function DeleteDialog(props: IProps) {
-  const { onDelete, onClose, itemName = "" } = props;
+  const { onDelete, onClose, itemName = "", isLoading } = props;
 
   const handleClose = () => {
     onClose?.();
@@ -96,6 +97,7 @@ export default function DeleteDialog(props: IProps) {
           fullWidth
           variant="contained"
           onClick={handleDelete}
+          loading={isLoading}
           sx={{
             borderRadius: 3,
             py: 1.2,
@@ -112,6 +114,7 @@ export default function DeleteDialog(props: IProps) {
 
         <Button
           fullWidth
+          disabled={isLoading}
           onClick={handleClose}
           sx={{
             borderRadius: 3,

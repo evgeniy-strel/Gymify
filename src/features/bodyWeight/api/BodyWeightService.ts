@@ -56,6 +56,16 @@ class BodyWeightService {
       return null;
     }
   }
+
+  async delete(id: IBodyWeight["id"]): Promise<IBodyWeight | null> {
+    try {
+      const res = await api.delete(`/bodyWeight/${id}`);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error deleting bodyWeight:", error);
+      return null;
+    }
+  }
 }
 
 export default new BodyWeightService();

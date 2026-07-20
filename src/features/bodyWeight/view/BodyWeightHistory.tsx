@@ -2,6 +2,8 @@ import { useMemo } from "react";
 
 import { IBodyWeight } from "../api/BodyWeightService";
 import { useBodyWeightListQuery } from "../hooks/query";
+import { useDeleteBodyWeight } from "../hooks/mutations";
+import { ConnectToActions, TActions } from "../../../actions";
 
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -63,6 +65,8 @@ const ItemTemplate = ({ item }: IItemTemplateProps) => {
   );
 };
 
+const ItemTemplateWithActions = ConnectToActions(ItemTemplate);
+
 const SkeletonItemTemplate = ({ index }: { index: number }) => {
   if (index === 0) {
     return (
@@ -84,6 +88,13 @@ const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
 const History = () => {
   const { data: items } = useBodyWeightListQuery();
+  const deleteBodyWeightMutation = useDeleteBodyWeight();
+
+  const onActionComplete = (actionId: TActions, id: string) => {
+    if (actionId === "delete") {
+      return deleteBodyWeightMutation.mutateAsync(id);
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-md">
@@ -92,7 +103,13 @@ const History = () => {
       </div>
       <div className="divide-y divide-gray-200">
         {items?.length
-          ? items.map((item) => <ItemTemplate key={item.id} item={item} />)
+          ? items.map((item) => (
+              <ItemTemplateWithActions
+                key={item.id}
+                item={item}
+                onActionComplete={onActionComplete}
+              />
+            ))
           : SKELETON_ITEMS.map((item, index) => (
               <SkeletonItemTemplate key={index} index={index} />
             ))}

@@ -12,7 +12,11 @@ export type TActions = "delete";
 
 interface IActionProps {
   itemKey?: string;
-  onActionComplete?: (actionId: TActions, itemKey: string) => void;
+  /* В случае возвращения промиса будет показан индикатор до его завершения */
+  onActionComplete?: (
+    actionId: TActions,
+    itemKey: string,
+  ) => void | Promise<void>;
   onClick?: (id: string) => void;
 }
 
@@ -22,6 +26,7 @@ const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
 
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [actionsClickable, setActionsClickable] = useState<boolean>(false);
+    const [isActionInProgress, setIsActionInProgress] = useState<boolean>();
 
     const { activeId, setActiveId } = useContext(ActionsContext);
     const itemKey = (props.itemKey || props?.item?.id) as string;
@@ -36,6 +41,15 @@ const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
       onAction,
       onClick,
     });
+
+    const onDelete = async () => {
+      try {
+        setIsActionInProgress(true);
+        await onActionComplete?.("delete", itemKey);
+      } finally {
+        setIsActionInProgress(false);
+      }
+    };
 
     useEffect(() => {
       if (showActions) {
@@ -102,7 +116,8 @@ const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
             <DeleteDialog
               onClose={() => setShowDeleteDialog(false)}
               itemName={props.item?.title}
-              onDelete={() => onActionComplete?.("delete", itemKey)}
+              isLoading={isActionInProgress}
+              onDelete={onDelete}
             />
           )}
         </div>
