@@ -37,6 +37,7 @@ const ExercisesList = ({ exercises, timerData }: IProps) => {
         ? exercises.map((item, index) => (
             <ItemTemplateWithActions
               key={item.id}
+              actions={["delete"]}
               itemKey={item.id}
               index={index + 1}
               item={item}

@@ -147,6 +147,7 @@ const Weeks = () => {
             ? weeks.map((item) => (
                 <ItemTemplateWithActions
                   key={item.id}
+                  actions={["delete"]}
                   item={item}
                   onClick={onItemClick}
                   onActionComplete={onActionComplete}

@@ -195,6 +195,7 @@ const List = (props: IListProps) => {
           ? items.map((item, index) => (
               <ItemTemplateWithActions
                 key={item.id}
+                actions={["delete"]}
                 itemKey={item.id}
                 item={item}
                 readOnly={!day?.started_at}

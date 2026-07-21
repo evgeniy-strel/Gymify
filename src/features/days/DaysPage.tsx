@@ -202,6 +202,7 @@ const Days = () => {
               ? days.map((item) => (
                   <ItemTemplateWithActions
                     key={item.id}
+                    actions={["delete"]}
                     item={item}
                     onClick={onClick}
                     onActionComplete={onActionComplete}

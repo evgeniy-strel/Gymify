@@ -106,6 +106,7 @@ const History = () => {
           ? items.map((item) => (
               <ItemTemplateWithActions
                 key={item.id}
+                actions={["delete"]}
                 item={item}
                 onActionComplete={onActionComplete}
               />

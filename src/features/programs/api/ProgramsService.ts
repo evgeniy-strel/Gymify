@@ -51,6 +51,18 @@ class ProgramsService {
       throw error;
     }
   }
+
+  async duplicate(
+    programId: IProgram["id"],
+  ): Promise<Pick<IProgram, "id"> | null> {
+    try {
+      const res = await api.post(`/programs/${programId}/duplicate`);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error creating program:", error);
+      return null;
+    }
+  }
 }
 
 export default new ProgramsService();

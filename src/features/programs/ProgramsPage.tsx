@@ -1,7 +1,11 @@
 import { lazy, useEffect, useState } from "react";
 
 import { IProgram } from "./api/ProgramsService";
-import { useCreateProgram, useDeleteProgram } from "./hooks/mutations";
+import {
+  useCreateProgram,
+  useDeleteProgram,
+  useDuplicateProgram,
+} from "./hooks/mutations";
 import { useProgramsQuery } from "./hooks/query";
 import ProgramCard from "./view/ProgramCard";
 
@@ -59,6 +63,7 @@ const Main = () => {
   const { data: programs } = useProgramsQuery();
   const createProgramMutation = useCreateProgram();
   const deleteProgramMutation = useDeleteProgram();
+  const duplicateProgramMutation = useDuplicateProgram();
 
   const [isAdded, setIsAdded] = useState<boolean>(false);
   const canCreate = useCanCreate();
@@ -87,6 +92,8 @@ const Main = () => {
   const onActionComplete = (actionId: TActions, id: string) => {
     if (actionId === "delete") {
       deleteProgramMutation.mutate(id);
+    } else if (actionId === "duplicate") {
+      duplicateProgramMutation.mutate(id);
     }
   };
 
@@ -102,6 +109,7 @@ const Main = () => {
           ? programs.map((program) => (
               <ProgramCardWithActions
                 key={program.id}
+                actions={["delete", "duplicate"]}
                 item={program}
                 onClick={onClick}
                 onActionComplete={onActionComplete}

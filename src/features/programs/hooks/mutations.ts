@@ -30,3 +30,15 @@ export function useDeleteProgram() {
     onError: handleError,
   });
 }
+
+export function useDuplicateProgram() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: IProgram["id"]) => ProgramsService.duplicate(id),
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["programs"] });
+    },
+  });
+}

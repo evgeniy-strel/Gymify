@@ -11,7 +11,7 @@ import {
 
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import DeleteIcon from "@mui/icons-material/Delete";
+import MenuIcon from "@mui/icons-material/Menu";
 import clsx from "clsx";
 import ItemTemplate from "../ItemTemplate";
 import { useModifyActions } from "../hooks/useModifyActions";
@@ -81,9 +81,9 @@ const AdminSwitcher = () => {
               onToggle={() => toggleAction(EAvailableModifyActions.CREATE)}
             />
             <ItemTemplate
-              title="Удаление"
-              description="Удаление записей"
-              icon={DeleteIcon}
+              title="Опции записей"
+              description="Удаление и дублирование"
+              icon={MenuIcon}
               isOn={availableModifyActions.includes(
                 EAvailableModifyActions.DELETE,
               )}
