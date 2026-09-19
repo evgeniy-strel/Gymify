@@ -10,6 +10,16 @@ export interface IProgram {
 }
 
 class ProgramsService {
+  async getNextWorkout(programId: string): Promise<{
+    weekNumber: number;
+    dayNumber?: number;
+  } | null> {
+    const { data } = await api.get(
+      `/programs/${encodeURIComponent(programId)}/next-workout`,
+    );
+    return data;
+  }
+
   async create(
     item: Pick<IProgram, "id" | "title" | "description">,
   ): Promise<IProgram | null> {

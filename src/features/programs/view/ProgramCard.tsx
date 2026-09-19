@@ -1,22 +1,8 @@
-import PrimaryButton from "../../../shared/PrimaryButton/PrimaryButton";
+import ContinueWorkoutButton from "./ContinueWorkoutButton";
 import { IProgram } from "../api/ProgramsService";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Skeleton } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-
-const ContinueButton = (props: any) => {
-  const onClick = () => {};
-
-  return (
-    <PrimaryButton
-      caption="Продолжить программу"
-      icon={PlayArrowIcon}
-      iconPosition="beforeText"
-      onClick={onClick}
-    />
-  );
-};
 
 const ProgressBar = (props: any) => {
   const { currentWeek, totalWeek } = props;
@@ -47,7 +33,8 @@ interface IProps {
 
 const ProgramCard = (props: IProps) => {
   const { item } = props;
-  const { id, title, currentWeek, totalWeek } = item;
+  const { title, currentWeek, totalWeek } = item;
+  const canContinue = totalWeek > 0 && currentWeek < totalWeek;
 
   return (
     <div className="w-full bg-white rounded-2xl shadow-md p-5">
@@ -67,11 +54,11 @@ const ProgramCard = (props: IProps) => {
           <ProgressBar currentWeek={currentWeek} totalWeek={totalWeek} />
         </div>
       )}
-      {/* {id === "put_k_150" && (
-        <div className="mt-4 rounded-xl overflow-hidden">
-          <ContinueButton />
+      {canContinue && (
+        <div className="mt-4">
+          <ContinueWorkoutButton programId={item.id} />
         </div>
-      )} */}
+      )}
     </div>
   );
 };
