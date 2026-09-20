@@ -1,13 +1,17 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
-import { formatTimeForDuration, IDay } from "../../../utils";
+import { formatTimeForDuration } from "../../../utils";
+import type { IHistoryItem } from "../api/HistoryService";
+import { ConnectToActions } from "../../../actions";
+import { useIsAdmin } from "../../../auth/hooks/query";
+import EditHistoryDialog from "./EditHistoryDialog";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import { Skeleton } from "@mui/material";
 
 interface IItemTemplateProps {
-  item: IDay;
+  item: IHistoryItem;
 }
 
 function formatDateNoYearSuffix(date: string | Date): string {
@@ -115,19 +119,41 @@ const ItemTemplate = ({ item }: IItemTemplateProps) => {
   );
 };
 
+const ItemWithActions = ConnectToActions(ItemTemplate);
+
 const RenderTemplate = ({ item }: IItemTemplateProps) => {
+  const { data: isAdmin } = useIsAdmin();
+  const [isEditing, setIsEditing] = useState(false);
+
   if (item.is_month) {
     return <GroupTemplate item={item} />;
   }
 
-  return <ItemTemplate item={item} />;
+  if (!isAdmin) {
+    return <ItemTemplate item={item} />;
+  }
+
+  return (
+    <>
+      <ItemWithActions
+        item={item}
+        actions={["edit"]}
+        onActionComplete={(action) => {
+          if (action === "edit") setIsEditing(true);
+        }}
+      />
+      {isEditing && (
+        <EditHistoryDialog item={item} onClose={() => setIsEditing(false)} />
+      )}
+    </>
+  );
 };
 
 const COUNT_SKELETONS = 15;
 const SKELETON_ITEMS = new Array(COUNT_SKELETONS).fill(0);
 
 interface IListProps {
-  items?: IDay[];
+  items?: IHistoryItem[];
 }
 
 const List = ({ items }: IListProps) => {

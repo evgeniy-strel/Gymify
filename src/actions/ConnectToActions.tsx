@@ -9,8 +9,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import clsx from "clsx";
 import DeleteAction from "./view/DeleteAction";
 import DuplicateAction from "./view/DuplicateAction";
+import EditAction from "./view/EditAction";
 
-export type TActions = "delete" | "duplicate";
+export type TActions = "delete" | "duplicate" | "edit";
 
 interface IActionProps {
   actions: TActions[];
@@ -106,6 +107,15 @@ const ConnectToActions = <T extends object>(Item: FunctionComponent<T>) => {
               { "justify-center": false, "justify-around": true },
             )}
           >
+            {actions.includes("edit") && (
+              <EditAction
+                disabled={!actionsClickable}
+                onClick={() => {
+                  setActiveId(null);
+                  onActionComplete?.("edit", itemKey);
+                }}
+              />
+            )}
             {actions.includes("delete") && canDelete && (
               <DeleteAction
                 disabled={!actionsClickable}

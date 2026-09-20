@@ -1,8 +1,12 @@
 import { api } from "../../../apiClient";
 import type { IDay } from "../../days/api/DaysService";
 
+export interface IHistoryItem extends IDay {
+  is_month?: boolean;
+}
+
 class HistoryService {
-  async getAll({ grouped }: { grouped?: boolean } = {}): Promise<IDay[]> {
+  async getAll({ grouped }: { grouped?: boolean } = {}): Promise<IHistoryItem[]> {
     try {
       const res = await api.get(`/history`, {
         params: {

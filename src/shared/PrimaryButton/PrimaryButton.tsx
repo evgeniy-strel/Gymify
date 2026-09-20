@@ -26,6 +26,7 @@ interface IProps {
   stopWatchSeconds?: number;
   isLoading?: boolean;
   color?: "primary" | "light" | "unaccented";
+  size?: "small" | "medium" | "large";
 }
 
 const emptyFunction = () => {};
@@ -44,6 +45,7 @@ const PrimaryButton = ({
   stopWatchSeconds,
   isLoading,
   color = "primary",
+  size = "medium",
 }: IProps) => {
   const [seconds, setSeconds] = useState<number>(stopWatchSeconds || 0);
 
@@ -78,12 +80,15 @@ const PrimaryButton = ({
   return (
     <div
       className={clsx(
-        "rounded-lg w-full p-3.5 flex items-center justify-center text-lg px-4",
+        "rounded-lg w-full flex items-center justify-center text-lg",
         {
           "bg-blue-400 text-blue-100": color === "primary" && readOnly,
           "bg-blue-600 text-white": color === "primary" && !readOnly,
           "bg-white text-blue-600": color === "light",
           "bg-gray-100 text-gray-600": color === "unaccented",
+          'p-3.5 px-4': size === "medium",
+          'p-2.5 px-3': size === "small",
+          'p-4 px-5': size === "large",
         },
       )}
       onClick={readOnly ? emptyFunction : onClick}
